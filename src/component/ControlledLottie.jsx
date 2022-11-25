@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import Lottie from 'react-lottie'
-import animationData from '../lotties/77-im-thirsty.json'
+import animationData from '../66364-transfer.json'
 
 class ControlledLottie extends Component {
   state = {isStopped: false, isPaused: false}

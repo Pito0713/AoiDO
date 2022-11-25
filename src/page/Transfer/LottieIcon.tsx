@@ -2,17 +2,16 @@ import React from 'react'
 import * as RN from 'react-native';
 import LottieView from 'lottie-react-native';
 
-
 class LottieIcon extends React.PureComponent {
-  render(){
+  render() {
     return (
       <RN.View style={styles.container}>
-        <LottieView 
-          source={require('../../assets/296-react-logo.json')}
-          style={{height: 500, width: 500}}
-          autoPlay 
+        {/* <LottieView
+          source={require('../../assets/66364-transfer.json')}
+          style={{ height: 500, width: 500 }}
+          autoPlay
           loop
-        />
+        /> */}
       </RN.View>
     );
   }

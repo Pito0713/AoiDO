@@ -1,80 +1,87 @@
-import { configureStore,createSlice } from '@reduxjs/toolkit'
+import { configureStore, createSlice } from '@reduxjs/toolkit'
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux'
 import { persistStore, persistReducer } from 'redux-persist'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-
 type RootState = ReturnType<typeof store.getState>
 type AppDispatch = typeof store.dispatch
 
-interface CounterState {
-  counter: number,
-  showCounter: boolean
+interface State {
+  token: string | undefined | null,
+  account: string,
+  password: string,
+  rememberInfo: boolean
+}
+interface action {
+  err?: string,
+  key?: string,
+  type?: string,
+  payload?: {
+    [Key in string]?: string | undefined
+  }
 }
 
-const initialState = { 
-  counter: 0,
-  showCounter: true 
-} as CounterState
+const initialState = {
+  token: '',
+  account: '',
+  password: '',
+  rememberInfo: false
+} as State
 
-const incrementMiddleWare = store => next => action => {
-  if (action.type === 'counter/increment') {
-    console.log(action.type);
+const reduxText = (action: any) => {
+  let Text = (action) ? `redeux [${action.type}] ${action.payload}` : `[redeuxError]`
+  return Text
+}
+
+const accountMiddleWare = (store: any) => (next: any) => (action: action) => {
+  if (action.type === 'register/SET_ACCOUNT') {
+    let TextRes = reduxText(action)
+    console.log(TextRes)
+  }
+  next(action);
+}
+const tokenMiddleWare = (store: any) => (next: any) => (action: action) => {
+  if (action.type === 'register/SET_TOKEN') {
+    let TextRes = reduxText(action)
+    console.log(TextRes)
+  }
+  next(action);
+}
+const rememberInfoMiddleWare = (store: any) => (next: any) => (action: action) => {
+  if (action.type === 'register/SET_REMEMBERINFO') {
+    let TextRes = reduxText(action)
+    console.log(TextRes)
   }
   next(action);
 }
 
-const decrementMiddleWare = store => next => action => {
-  if (action.type === 'counter/decrement') {
-    console.log(action.type);
-  }
-  next(action);
-}
-
-const increaseMiddleWare = store => next => action => {
-  // if (action.type === 'counter/increase') {
-  //   return action(store.dispatch, store.getState)
-  // }
-  next(action);
-}
-
-const toggleCounterMiddleware = store => next => action => {
-  if (action.type === 'counter/toggleCounter') {
-    console.log(action.type);
-  }
-  next(action);
-}
-
-const counterSlice = createSlice({
-  name: "counter",
+const registerSlice = createSlice({
+  name: "register",
   initialState,
   reducers: {
-    increment(state) {
-      state.counter++;
+    SET_ACCOUNT(state, action) {
+      state.account = action.payload;
     },
-    decrement(state) {
-      state.counter--;
+    SET_TOKEN(state, action) {
+      state.token = action.payload;
     },
-    increase(state, action) {
-      state.counter = state.counter + action.payload;
+    SET_REMEMBERINFO(state, action) {
+      state.rememberInfo = action.payload;
     },
-    toggleCounter(state) {
-      state.showCounter = !state.showCounter;
-    }
   }
 });
-const persistConfig = { key: 'root', version: 1 ,storage: AsyncStorage}
-const persistedReducer = persistReducer(persistConfig, counterSlice.reducer);
 
+const persistConfig = { key: 'root', version: 1, storage: AsyncStorage }
+const persistedReducer = persistReducer(persistConfig, registerSlice.reducer);
 
 const store = configureStore({
   reducer: persistedReducer,
-  middleware: [incrementMiddleWare, decrementMiddleWare, increaseMiddleWare, toggleCounterMiddleware],
+  middleware: [accountMiddleWare, tokenMiddleWare, rememberInfoMiddleWare],
 })
 
 const persistor = persistStore(store)
 
 export const useAppDispatch: () => AppDispatch = useDispatch
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector
-export const counterActions = counterSlice.actions;
-export {store ,persistor};
+export const registerActions = registerSlice.actions;
+export { store, persistor };

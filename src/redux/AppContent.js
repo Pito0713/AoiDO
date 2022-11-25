@@ -7,15 +7,41 @@ const AppContext = React.createContext();
 
 const Colors = {
   default: '#000000',
-  primary: '#fc9a19',
+  primary: '#f5a442',
   errorText: '#bf0000',
-  // input
-  inputContainer: '#dedede',
-  loginText: '#0571d3',
-  // border
-  borderColor: '#d1d1d1',
+  textPrimary: '#FFFFFF',
+  // proudcut
+  proudcut:{
+    cardContianer: '#ffc852',
+    cardTitle: '#d44b2c',
+    cardTitleText: '#FFFFFF',
+    cardText: '#4d4537',
+  },
+  
+  // Logistics
+  Logistics:{
+    cardContianer: '#FFFFFF',
+    cardTitle: '#d6572d',
+    cardTitleText: '#FFFFFF',
+    cardText: '#4d4537',
+    borderColor: '#4d402d'
+  },
 
-  priceComponentbgColor: '#e5e5e5'
+  // Logistics
+  Transfer:{
+    cardTitle: '#f2c274',
+    cardTitleText: '#453f36',
+  },
+
+  // input
+  inputContainer: '#faefe3',
+  inputText: '#a0ed9a',
+  // border
+  borderColor: '#1b1a1c',
+  registerText: '#285724',
+  platformDefault: '#959595',
+  // search
+  BottomBackgroud: '#6a3dd4',
 };
 
 /////////////////////////////////////////////////////
@@ -26,7 +52,7 @@ const LoadingView = ({ visible }) => {
       animationType="fade"
       transparent
       visible={visible}
-      onRequestClose={() => {}}
+      onRequestClose={() => { }}
     >
       <RN.View style={{
         ...RN.StyleSheet.absoluteFillObject,
@@ -55,6 +81,7 @@ const AppProvider = ({ children }) => {
   const [initialized, setInitialized] = React.useState(false);
 
   React.useEffect(() => {
+    // 初始化
     setInitialized(true);
     RN.AppState.addEventListener('change', handleAppStateChange);
     return () => {
@@ -74,7 +101,7 @@ const AppProvider = ({ children }) => {
     setLoading: setLoading,
     initialized: initialized,
     setInitialized: setInitialized,
-     ///////////////////////
+    ///////////////////////
   };
 
   return (
@@ -85,4 +112,4 @@ const AppProvider = ({ children }) => {
   );
 };
 
-export { AppContext, AppProvider};
+export { AppContext, AppProvider };

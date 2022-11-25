@@ -1,13 +1,42 @@
 import * as React from 'react';
 import { Provider } from 'react-redux';
-import {store, persistor} from './redux/store';
-import { AppProvider } from './redux/AppContent';
+import { store, persistor, useAppSelector } from './redux/store';
+import { AppProvider, AppContext } from './redux/AppContent';
 import { PersistGate } from 'redux-persist/integration/react'
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { authedPages } from './router/routes';
+import { authedPages, unAuthedPages } from './router/routes';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 const Stack = createNativeStackNavigator();
+
+const UnAuthedPages = () => {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator
+        initialRouteName="sign"
+        screenOptions={{
+          headerShown: false,
+          headerShadowVisible: false,
+          headerTitleAlign: 'center',
+          headerTransparent: true,
+          headerStyle: {
+            backgroundColor: 'transparent'
+          },
+        }}
+      >
+        {unAuthedPages.map((item) => (
+          <Stack.Screen
+            key={item.name}
+            name={item.name}
+            component={item.component}
+            options={item.options}
+          />
+        ))}
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+};
 
 const AuthedPage = () => {
   return (
@@ -16,10 +45,10 @@ const AuthedPage = () => {
         initialRouteName="main"
         screenOptions={{
           headerShown: false,
-          headerShadowVisible: false, 
+          headerShadowVisible: false,
           headerTitleAlign: 'center',
           headerTransparent: true,
-          headerStyle:{
+          headerStyle: {
             backgroundColor: 'transparent'
           },
         }}
@@ -37,18 +66,38 @@ const AuthedPage = () => {
   );
 };
 const LaunchPage = () => {
-  return (
-    <AuthedPage />
-  );
+  const appCtx = React.useContext(AppContext);
+  const [checklogin, setCheckLogin] = React.useState(false);
+  const reduxToken = useAppSelector(state => state.token)
+  const reduxAccount = useAppSelector(state => state.account)
+
+  const init = async () => {
+    // 登入 token判斷
+    if (!['', null, undefined].includes(reduxToken) && !['', null, undefined].includes(reduxAccount)) {
+      setCheckLogin(true);
+    } else {
+      setCheckLogin(false);
+    }
+  };
+
+  React.useEffect(() => {
+    if (appCtx.initialized) {
+      setTimeout(init, 500);
+    }
+  });
+
+  return checklogin ? (<AuthedPage />) : (<UnAuthedPages />)
 };
 
-const App = () => { 
+const App = () => {
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
-        <AppProvider>
-          <LaunchPage />
-        </AppProvider>
+        <GestureHandlerRootView style={{ flex: 1 }}>
+          <AppProvider>
+            <LaunchPage />
+          </AppProvider>
+        </GestureHandlerRootView>
       </PersistGate>
     </Provider>
   );
