@@ -3,7 +3,7 @@ import * as RN from 'react-native';
 import { AppContext } from '../../redux/AppContent';
 import { useFormik } from "formik";
 import * as UI from 'react-native-ui-lib';
-import service from "../service/service";
+import service from "../Service/Service";
 import { useNavigation } from '@react-navigation/native';
 import { registerActions, useAppSelector, useAppDispatch } from '../../redux/store';
 const windowHeight = RN.Dimensions.get('window').height;

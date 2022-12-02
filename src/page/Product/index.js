@@ -2,7 +2,7 @@ import React from "react";
 import * as RN from 'react-native';
 import * as UI from 'react-native-ui-lib';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
-import service from "../service/service";
+import service from "../Service/Service";
 import { AppContext } from '../../redux/AppContent';
 import { useAppSelector } from '../../redux/store';
 import Fillter from '../../component/Filter'

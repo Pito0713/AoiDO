@@ -4,7 +4,7 @@ import * as UI from 'react-native-ui-lib';
 import { AppContext } from '../../redux/AppContent';
 import Goback from '../../component/Goback'
 import { useNavigation, useIsFocused } from '@react-navigation/native';
-import service from "../service/service";
+import service from "../Service/Service";
 import { useAppSelector } from '../../redux/store';
 import { launchImageLibrary } from 'react-native-image-picker';
 import { useFormik } from "formik";

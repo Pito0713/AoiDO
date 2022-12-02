@@ -4,7 +4,7 @@ import * as UI from 'react-native-ui-lib';
 
 import { useAppSelector } from '../redux/store';
 import { AppContext } from '../redux/AppContent';
-import service from "../page/service/service";
+import service from "../page/Service/Service";
 import { useNavigation, useIsFocused } from '@react-navigation/native';
 
 const Fillter = (e) => {
