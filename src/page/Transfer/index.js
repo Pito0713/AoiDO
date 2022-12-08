@@ -8,11 +8,14 @@ import { useIsFocused } from '@react-navigation/native';
 import { useAppSelector } from '../../redux/store';
 
 import { AppContext } from '../../redux/AppContent';
-import LottieIcon from './LottieIcon'
+// import LottieIcon from './LottieIcon'
 import Goback from '../../component/Goback'
 import InputGroup from './InputGroup'
+import ScrollViewComponent from "../../component/ScrollViewComponent";
 
 const windowWidth = RN.Dimensions.get('window').width;
+const windowHeight = RN.Dimensions.get('window').height;
+
 
 const Transfer = ({ route }) => {
   const appCtx = React.useContext(AppContext);
@@ -48,6 +51,18 @@ const Transfer = ({ route }) => {
     if (!['', null, undefined].includes(response?.data)) setPlatform(response.data)
   }
 
+  const Content = () => {
+    return (
+      !['', null, undefined].includes(exchangeValue) && !['', null, undefined].includes(platformValue) ?
+        <InputGroup exchangeValue={exchangeValue} platformValue={platformValue} />
+        :
+        <RN.View style={styles.choeseContent}>
+          <RN.Text style={{ fontSize: 25 }}>請選擇貨幣跟平台</RN.Text>
+        </RN.View>
+    )
+  }
+
+
   React.useEffect(() => {
     (async () => {
       if (isFocused) await getExchange()
@@ -65,7 +80,7 @@ const Transfer = ({ route }) => {
           enableModalBlur={false}
           onChange={(e) => setExchangeValue(e)}
           topBarProps={{ title: '貨幣選項' }}
-          style={[styles.pickerContent, { borderColor: appCtx.Colors.borderColor}]}
+          style={[styles.pickerContent, { borderColor: appCtx.Colors.borderColor }]}
           showSearch
           searchPlaceholder={'搜尋貨幣'}
           migrateTextField
@@ -81,7 +96,7 @@ const Transfer = ({ route }) => {
           enableModalBlur={false}
           onChange={(e) => setPlatformValue(e)}
           topBarProps={{ title: 'coin' }}
-          style={[styles.pickerContent, { borderColor: appCtx.Colors.borderColor}]}
+          style={[styles.pickerContent, { borderColor: appCtx.Colors.borderColor }]}
           showSearch
           searchPlaceholder={'Search a coin'}
           migrateTextField
@@ -92,24 +107,14 @@ const Transfer = ({ route }) => {
           ))}
         </UI.Picker>
       </RN.View>
-      <RN.ScrollView>
-        <RN.KeyboardAvoidingView >
-          <RN.TouchableOpacity activeOpacity={1} onPress={RN.Keyboard.dismiss}>
-            {
-              !['', null, undefined].includes(exchangeValue) && !['', null, undefined].includes(platformValue) ?
-                <InputGroup exchangeValue={exchangeValue} platformValue={platformValue} />
-                : <RN.View><LottieIcon /></RN.View>
-            }
-          </RN.TouchableOpacity>
-        </RN.KeyboardAvoidingView>
-      </RN.ScrollView>
+      <ScrollViewComponent item={Content} />
     </RN.SafeAreaView>
   );
 };
 
 const styles = RN.StyleSheet.create({
   container: {
-    // flex: 1,
+    flex: 1,
   },
   pickerContainer: {
     marginBottom: 30,
@@ -124,6 +129,11 @@ const styles = RN.StyleSheet.create({
     borderBottomWidth: 1,
     borderRightWidth: 1,
   },
+  choeseContent: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: windowHeight - 210
+  }
 });
 
 export default Transfer;
