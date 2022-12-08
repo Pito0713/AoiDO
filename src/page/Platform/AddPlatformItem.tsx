@@ -7,14 +7,14 @@ import service from "../Service/Service";
 import Goback from '../../component/Goback'
 import { useNavigation } from '@react-navigation/native';
 import { useAppSelector } from '../../redux/store';
-import { Hint } from "react-native-ui-lib";
+import ScrollViewComponent from "../../component/ScrollViewComponent";
+
 interface PlatformItem {
   label?: string
   rate?: string
   token?: string
 }
-
-const AddPlatformItem = () => {
+const Content = () => {
   const appCtx = React.useContext(AppContext);
   const navigation = useNavigation();
   const reduxToken = useAppSelector(state => state.token)
@@ -55,10 +55,6 @@ const AddPlatformItem = () => {
 
 
   return (
-    <UI.View useSafeArea={true} style={styles.container}>
-      <RN.KeyboardAvoidingView behavior={RN.Platform.OS === "ios" ? "padding" : "height"}>
-        <RN.TouchableOpacity activeOpacity={1} onPress={RN.Keyboard.dismiss}>
-          <Goback />
           <UI.View style={styles.itemContainer}>
             <UI.View style={styles.inputContainer}>
               <UI.View style={styles.inputText}>
@@ -104,8 +100,14 @@ const AddPlatformItem = () => {
             </UI.TouchableOpacity>
 
           </UI.View>
-        </RN.TouchableOpacity>
-      </RN.KeyboardAvoidingView>
+  );
+};
+
+const AddPlatformItem = () => {
+  return (
+    <UI.View useSafeArea={true} style={styles.container}>
+      <Goback />
+      <ScrollViewComponent item={Content}/>
     </UI.View>
   );
 };
@@ -135,6 +137,7 @@ const styles = RN.StyleSheet.create({
   },
   registerContainer: {
     marginTop: 20,
+    marginBottom: 20,
     justifyContent: 'center',
     alignItems: 'center',
     width: '100%',

@@ -17,6 +17,11 @@ const Colors = {
     cardTitleText: '#FFFFFF',
     cardText: '#4d4537',
   },
+
+  proudcutFilter:{
+    borderPrimary: '#4d4537',
+    Text: '#4d4537',
+  },
   
   // Logistics
   Logistics:{
@@ -29,6 +34,18 @@ const Colors = {
 
   // Logistics
   Transfer:{
+    cardTitle: '#f2c274',
+    cardTitleText: '#453f36',
+  },
+
+  // Setting
+  Setting:{
+    cardTitle: '#f2c274',
+    cardText: '#4d4537',
+  },
+
+  // Platform
+  Platform:{
     cardTitle: '#f2c274',
     cardTitleText: '#453f36',
   },

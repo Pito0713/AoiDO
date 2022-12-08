@@ -103,6 +103,11 @@ const PlatformPage = () => {
   return (
     <RN.SafeAreaView style={styles.container}>
       <Goback />
+      <RN.View style={[styles.listContainer,{borderColor: appCtx.Colors.proudcutFilter.borderPrimary}]}>
+        <RN.Text style={[styles.listText,{borderColor: appCtx.Colors.proudcutFilter.text}]}>* 點擊分類可以查類別商品</RN.Text>
+        <RN.Text style={[styles.listText,{borderColor: appCtx.Colors.proudcutFilter.text}]}>* 長按可刪除分類別</RN.Text>
+        <RN.Text style={[styles.listText,{borderColor: appCtx.Colors.proudcutFilter.text}]}>* 請注意刪除類別, 類別商品會連同刪除</RN.Text>
+      </RN.View>
       <RN.ScrollView >
         <UI.View style={styles.container}>
           {productFilter.length > 0 ? productFilter.map((item, index) => {
@@ -152,6 +157,19 @@ const styles = RN.StyleSheet.create({
   },
   itemContentText: {
     fontSize: 20
+  },
+  listContainer: {
+    alignItems: 'flex-start',
+    justifyContent: 'center',
+    marginLeft: 10,
+    marginRight: 10,
+    flexWrap: 'wrap',
+    padding: 10
+  },
+  listText: {
+    textAlign: 'center',
+    margin: 2,
+    fontSize: 12.5,
   }
 
 });

@@ -13,7 +13,7 @@ interface ProductFilterItem {
   token?: string
 }
 
-const AddProductFilterItem = ({ route }: { route: any }) => {
+const ProductFilterItem = ({ route }: { route: any }) => {
   const target = route?.params?.item
   const appCtx = React.useContext(AppContext);
   const reduxToken = useAppSelector(state => state.token)
@@ -64,9 +64,7 @@ const AddProductFilterItem = ({ route }: { route: any }) => {
 
   React.useEffect(() => {
     (async () => {
-      await appCtx.setLoading(true)
       if (isFocused) await postAllProduct()
-      await appCtx.setLoading(false)
     })();
   }, [isFocused]);
 
@@ -124,8 +122,9 @@ const styles = RN.StyleSheet.create({
   itemContentText: {
     paddingLeft: 20,
     fontSize: 15
-  }
+  },
+
 
 });
 
-export default AddProductFilterItem;
+export default ProductFilterItem;

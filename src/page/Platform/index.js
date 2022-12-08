@@ -57,6 +57,11 @@ const PlatformPage = () => {
   return (
     <RN.SafeAreaView style={styles.container}>
       <Goback />
+      <RN.View style={[styles.listContainer,{borderColor: appCtx.Colors.Platform.borderPrimary}]}>
+        <RN.Text style={[styles.listText,{borderColor: appCtx.Colors.Platform.text}]}>* 預設費用無法調整</RN.Text>
+        <RN.Text style={[styles.listText,{borderColor: appCtx.Colors.Platform.text}]}>* 長按可刪除分類別</RN.Text>
+      </RN.View>
+
       <RN.ScrollView >
         <UI.View style={styles.container}>
           {platform.length > 0 ? platform.map((item, index) => {
@@ -65,14 +70,14 @@ const PlatformPage = () => {
                 <UI.Card style={styles.itemContainer} onLongPress={() => deleteItem(item._id)} key={index}>
                   <UI.View style={styles.itemContent} >
                     <UI.Text style={styles.itemContentText} >{item.label}</UI.Text>
-                    <UI.Text style={styles.itemContentText}>{item.rate}</UI.Text>
+                    <UI.Text style={styles.itemContentText}>{item.rate} %</UI.Text>
                   </UI.View>
                 </UI.Card>
                 :
                 <UI.Card style={styles.itemContainer} key={index}>
                   <UI.View style={styles.itemContent} >
                     <UI.Text style={[styles.itemContentText, { color: appCtx.Colors.platformDefault }]}>{item.label}</UI.Text>
-                    <UI.Text style={[styles.itemContentText, { color: appCtx.Colors.platformDefault }]}>{item.rate}</UI.Text>
+                    <UI.Text style={[styles.itemContentText, { color: appCtx.Colors.platformDefault }]}>{item.rate} %</UI.Text>
                   </UI.View>
                 </UI.Card>
             )
@@ -116,6 +121,19 @@ const styles = RN.StyleSheet.create({
   itemContentText: {
     paddingLeft: 20,
     fontSize: 20
+  },
+    listContainer: {
+    alignItems: 'flex-start',
+    justifyContent: 'center',
+    marginLeft: 10,
+    marginRight: 10,
+    flexWrap: 'wrap',
+    padding: 10
+  },
+  listText: {
+    textAlign: 'center',
+    margin: 2,
+    fontSize: 12.5,
   }
 
 });
