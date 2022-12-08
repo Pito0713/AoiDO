@@ -17,6 +17,11 @@ const Colors = {
     cardTitleText: '#FFFFFF',
     cardText: '#4d4537',
   },
+
+  proudcutFilter:{
+    borderPrimary: '#4d4537',
+    Text: '#4d4537',
+  },
   
   // Logistics
   Logistics:{
