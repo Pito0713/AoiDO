@@ -33,6 +33,12 @@ const Colors = {
     cardTitleText: '#453f36',
   },
 
+  // Platform
+  Platform:{
+    cardTitle: '#f2c274',
+    cardTitleText: '#453f36',
+  },
+
   // input
   inputContainer: '#faefe3',
   inputText: '#a0ed9a',
