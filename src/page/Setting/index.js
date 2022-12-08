@@ -3,8 +3,10 @@ import * as RN from 'react-native';
 import * as UI from 'react-native-ui-lib';
 import { registerActions, useAppDispatch } from '../../redux/store';
 import { useNavigation } from '@react-navigation/native';
+import { AppContext } from '../../redux/AppContent';
 
 const Setting = () => {
+  const appCtx = React.useContext(AppContext);
   const dispatch = useAppDispatch();
   const navigation = useNavigation();
 
@@ -12,34 +14,41 @@ const Setting = () => {
     dispatch(registerActions.SET_TOKEN(''));
   }
 
+  const List =[
+    {title: '自訂平台費用', action: ()=>navigation.navigate('platform')},
+    {title: '自訂商品分類', action: ()=>navigation.navigate('productFilter')},
+    {title: '修改密碼', action: ()=>navigation.navigate('handPassWord')},
+    {title: '登出', action: ()=> logOut()},
+  ]
+
   return (
     <RN.SafeAreaView style={styles.container}>
-      <UI.ListItem style={styles.itemContainer} onPress={() => navigation.navigate('platform')}>
-        <UI.Text style={styles.text}>自訂平台費用</UI.Text>
-      </UI.ListItem>
-      <UI.ListItem style={styles.itemContainer} onPress={() => navigation.navigate('productFilter')}>
-        <UI.Text style={styles.text}>自訂商品分類</UI.Text>
-      </UI.ListItem>
-      <UI.ListItem style={styles.itemContainer} onPress={() => navigation.navigate('handPassWord')}>
-        <UI.Text style={styles.text}>修改密碼</UI.Text>
-      </UI.ListItem>
-      <UI.ListItem style={styles.itemContainer} onPress={() => logOut()}>
-        <UI.Text style={styles.text}>登出</UI.Text>
-      </UI.ListItem>
+      {List.map((item, index)=>{
+        return (<UI.TouchableOpacity style={[styles.itemContainer,{backgroundColor: appCtx.Colors.Setting.cardTitle}]} onPress={item.action}>
+          <UI.Text style={[styles.text,{color: appCtx.Colors.Setting.cardText}]}>{item.title}</UI.Text>
+        </UI.TouchableOpacity>)
+      })}
     </RN.SafeAreaView>
   );
 };
 const styles = RN.StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: 30
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   itemContainer: {
-    height: 70,
-    alignItems: 'center'
+    marginTop: 25,
+    height: 60,
+    alignItems: 'center',
+    borderRadius: 5,
+    borderWidth: 1.5,
+    justifyContent: 'center',
+    width: '75%',
   },
   text: {
-    fontSize: 17
+    fontSize: 17.5,
+    borderWidth: 0,
   }
 });
 

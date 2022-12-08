@@ -33,6 +33,12 @@ const Colors = {
     cardTitleText: '#453f36',
   },
 
+  // Setting
+  Setting:{
+    cardTitle: '#f2c274',
+    cardText: '#4d4537',
+  },
+
   // input
   inputContainer: '#faefe3',
   inputText: '#a0ed9a',
