@@ -9,6 +9,7 @@ import { useAppSelector } from '../../redux/store';
 import { launchImageLibrary } from 'react-native-image-picker';
 import { useFormik } from "formik";
 import { useIsFocused } from '@react-navigation/native';
+import ScrollViewComponent from "../../component/ScrollViewComponent";
 
 const windowWidth = RN.Dimensions.get('window').width;
 const windowHeight = RN.Dimensions.get('window').height;
@@ -65,7 +66,7 @@ const Content = () => {
       }
       const response = await service.postAddProduct(submitData);
       await appCtx.setLoading(false);
-      if (response?.status === 'success') navigation.navigate('product')
+      if (response?.status === 'success') navigation.goBack()
     }
   }
 
@@ -82,7 +83,7 @@ const Content = () => {
 
       if (!values.describe) errors.describe = '*' + "字數必須少於12";
       if (!reg.test(values.price)) errors.price = '*' + "必須數字且最多小數點後第2位";
-      if(!category.label && !category.value) setIsCategory(true)
+      if (!category.label && !category.value) setIsCategory(true)
       else setIsCategory(false)
 
       return errors;
@@ -92,7 +93,6 @@ const Content = () => {
       resetForm()
       setCategory({ label: '', value: '' })
       setPhoto({})
-  
     },
   });
 
@@ -129,7 +129,6 @@ const Content = () => {
     const response = await service.postUploadImage(submitData);
     if (response?.data) return response.data
   };
-
 
   const postProductFilter = async () => {
     // call api
@@ -177,7 +176,7 @@ const Content = () => {
                 {formik.errors.describe}
               </UI.Text>
             </UI.View>
-            : <UI.View />
+              : <UI.View />
           }
         </UI.View>
         <UI.View>
@@ -257,21 +256,8 @@ const Content = () => {
 const LogisticsItem = () => {
   return (
     <RN.SafeAreaView style={styles.container}>
-      {RN.Platform.OS !== "ios" ?
-        <RN.KeyboardAvoidingView keyboardVerticalOffset={windowHeight}>
-          <RN.TouchableOpacity activeOpacity={1} onPress={RN.Keyboard.dismiss}>
-            <Goback />
-            <Content />
-          </RN.TouchableOpacity>
-        </RN.KeyboardAvoidingView>
-        :
-        <RN.KeyboardAvoidingView behavior={"position"}>
-          <RN.TouchableOpacity activeOpacity={1} onPress={RN.Keyboard.dismiss} >
-            <Goback />
-            <Content />
-          </RN.TouchableOpacity>
-        </RN.KeyboardAvoidingView>
-      }
+      <Goback />
+      <ScrollViewComponent item={Content}></ScrollViewComponent>
     </RN.SafeAreaView>
   );
 };

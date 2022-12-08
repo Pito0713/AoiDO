@@ -8,6 +8,7 @@ import { useNavigation } from '@react-navigation/native';
 import service from "../Service/Service";
 import moment from 'moment'
 import { useFormik } from "formik";
+import ScrollViewComponent from "../../component/ScrollViewComponent";
 
 const windowHeight = RN.Dimensions.get('window').height;
 
@@ -17,7 +18,7 @@ interface Item {
   remark?: string,
 }
 
-const Content = ({ route }: { route: any }) => {
+const Content = (route : { params: any }) => {
   const appCtx = React.useContext(AppContext);
   const navigation = useNavigation<Nav>();
   type Nav = {
@@ -168,21 +169,8 @@ const Content = ({ route }: { route: any }) => {
 const LogisticsItem = ({ route }: { route: any }) => {
   return (
     <RN.SafeAreaView style={styles.container}>
-      {RN.Platform.OS !== "ios" ?
-        <RN.KeyboardAvoidingView keyboardVerticalOffset={windowHeight}>
-          <RN.TouchableOpacity activeOpacity={1} onPress={RN.Keyboard.dismiss}>
-            <Goback />
-            <Content route={route} />
-          </RN.TouchableOpacity>
-        </RN.KeyboardAvoidingView>
-        :
-        <RN.KeyboardAvoidingView behavior={"position"}>
-          <RN.TouchableOpacity activeOpacity={1} onPress={RN.Keyboard.dismiss} >
-            <Goback />
-            <Content route={route} />
-          </RN.TouchableOpacity>
-        </RN.KeyboardAvoidingView>
-      }
+      <Goback />
+      <ScrollViewComponent item={()=>Content(route)}/>
     </RN.SafeAreaView>
   );
 };

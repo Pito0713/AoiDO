@@ -9,6 +9,7 @@ import service from "../Service/Service";
 import moment from 'moment'
 import { useAppSelector } from '../../redux/store';
 import { useFormik } from "formik";
+import ScrollViewComponent from "../../component/ScrollViewComponent";
 
 const windowHeight = RN.Dimensions.get('window').height;
 
@@ -142,21 +143,8 @@ const Content = () => {
 const AddLogisticsItem = () => {
   return (
     <RN.SafeAreaView style={styles.container}>
-      {RN.Platform.OS !== "ios" ?
-        <RN.KeyboardAvoidingView keyboardVerticalOffset={windowHeight}>
-          <RN.TouchableOpacity activeOpacity={1} onPress={RN.Keyboard.dismiss}>
-            <Goback />
-            <Content />
-          </RN.TouchableOpacity>
-        </RN.KeyboardAvoidingView>
-        :
-        <RN.KeyboardAvoidingView behavior={"position"}>
-          <RN.TouchableOpacity activeOpacity={1} onPress={RN.Keyboard.dismiss} >
-            <Goback />
-            <Content />
-          </RN.TouchableOpacity>
-        </RN.KeyboardAvoidingView>
-      }
+      <Goback />
+      <ScrollViewComponent item={Content}/>
     </RN.SafeAreaView>
   );
 };
