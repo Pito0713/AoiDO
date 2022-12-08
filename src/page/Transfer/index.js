@@ -2,7 +2,7 @@ import React from "react";
 import * as RN from 'react-native';
 import * as UI from 'react-native-ui-lib';
 
-import service from "../service/service";
+import service from "../Service/Service";
 import numeral from 'numeral';
 import { useIsFocused } from '@react-navigation/native';
 import { useAppSelector } from '../../redux/store';

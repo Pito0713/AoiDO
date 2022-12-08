@@ -5,7 +5,7 @@ import { AppContext } from '../../redux/AppContent';
 import Goback from '../../component/Goback'
 import DatePicker from '../../component/DatePicker'
 import { useNavigation } from '@react-navigation/native';
-import service from "../service/service";
+import service from "../Service/Service";
 import moment from 'moment'
 import { useAppSelector } from '../../redux/store';
 import { useFormik } from "formik";

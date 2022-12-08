@@ -2,7 +2,7 @@ import React from "react";
 import * as RN from 'react-native';
 import * as UI from 'react-native-ui-lib';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
-import service from "../service/service";
+import service from "../Service/Service";
 import { AppContext } from '../../redux/AppContent';
 import { useAppSelector } from '../../redux/store';
 import Goback from '../../component/Goback'
@@ -142,7 +142,7 @@ const styles = RN.StyleSheet.create({
     marginRight: 10,
     marginLeft: 10,
     alignItems: 'center',
-    borderWidth: 1.5,
+    borderWidth: 1.5
   },
   itemContent: {
     flexDirection: 'row',
