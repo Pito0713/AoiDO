@@ -164,6 +164,7 @@ const styles = RN.StyleSheet.create({
   },
   itemContentTextTitle: {
     margin: 5,
+    marginBottom: 10,
     fontSize: 12,
   },
   searchContainer: {
@@ -180,6 +181,7 @@ const styles = RN.StyleSheet.create({
     borderTopLeftRadius: 10,
     borderBottomLeftRadius: 10,
     borderWidth:1.5,
+    borderRightWidth: 0,
     flex: 7.5
   },
   searchContentText: {

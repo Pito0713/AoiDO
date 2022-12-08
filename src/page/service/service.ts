@@ -136,7 +136,7 @@ const Service = {
   postAllCargos: async (submitData: Cargo) => {
     let data = await fetchApi_AuthData(
       'POST',
-      `http://192.168.23.225:8082/allCargos`,
+      `http://192.168.23.199:8082/allCargos`,
       '',
       submitData,
     );
@@ -146,7 +146,7 @@ const Service = {
   postAddCargo: async (submitData: Cargo) => {
     let data = await fetchApi_AuthData(
       'POST',
-      `http://192.168.23.225:8082/addCargo`,
+      `http://192.168.23.199:8082/addCargo`,
       '',
       submitData
     );
@@ -156,7 +156,7 @@ const Service = {
   patchUpdateCargo: async (submitData: Cargo) => {
     let data = await fetchApi_AuthData(
       'PATCH',
-      `http://192.168.23.225:8082/updateCargo/`,
+      `http://192.168.23.199:8082/updateCargo/`,
       submitData.id,
       submitData
     );
@@ -166,7 +166,7 @@ const Service = {
   deleteCargo: async (submitData: Cargo) => {
     let data = await fetchApi_AuthData(
       'DELETE',
-      `http://192.168.23.225:8082/delCargo/`,
+      `http://192.168.23.199:8082/delCargo/`,
       submitData.id,
       {},
     );
@@ -176,7 +176,7 @@ const Service = {
   postRegister: async (submitData: register) => {
     let data = await fetchApi_AuthData(
       'POST',
-      `http://192.168.23.225:8082/register`,
+      `http://192.168.23.199:8082/register`,
       '',
       submitData
     );
@@ -185,7 +185,7 @@ const Service = {
   postLogin: async (submitData: register) => {
     let data = await fetchApi_AuthData(
       'POST',
-      `http://192.168.23.225:8082/login`,
+      `http://192.168.23.199:8082/login`,
       '',
       submitData
     );
@@ -194,7 +194,7 @@ const Service = {
   postPlatformRate: async (submitData: Platform) => {
     let data = await fetchApi_AuthData(
       'POST',
-      `http://192.168.23.225:8082/platformRate`,
+      `http://192.168.23.199:8082/platformRate`,
       '',
       submitData,
     );
@@ -204,7 +204,7 @@ const Service = {
   postCreateModifyRate: async (submitData: Platform) => {
     let data = await fetchApi_AuthData(
       'POST',
-      `http://192.168.23.225:8082/createModifyRate`,
+      `http://192.168.23.199:8082/createModifyRate`,
       '',
       submitData
     );
@@ -214,7 +214,7 @@ const Service = {
   deleteModifyRate: async (submitData: Platform) => {
     let data = await fetchApi_AuthData(
       'DELETE',
-      `http://192.168.23.225:8082/deleteModifyRate`,
+      `http://192.168.23.199:8082/deleteModifyRate`,
       '',
       submitData
     );
@@ -224,7 +224,7 @@ const Service = {
   postSearchCargo: async (submitData: Cargo) => {
     let data = await fetchApi_AuthData(
       'POST',
-      `http://192.168.23.225:8082/searchCargo`,
+      `http://192.168.23.199:8082/searchCargo`,
       '',
       submitData
     );
@@ -234,7 +234,7 @@ const Service = {
   postHandPassWord: async (submitData: Cargo) => {
     let data = await fetchApi_AuthData(
       'POST',
-      `http://192.168.23.225:8082/handPassWord`,
+      `http://192.168.23.199:8082/handPassWord`,
       '',
       submitData
     );
@@ -243,7 +243,7 @@ const Service = {
   postAllProduct: async (submitData: Cargo) => {
     let data = await fetchApi_AuthData(
       'POST',
-      `http://192.168.23.225:8082/allProduct`,
+      `http://192.168.23.199:8082/allProduct`,
       '',
       submitData
     );
@@ -252,7 +252,7 @@ const Service = {
   postAddProduct: async (submitData: Cargo) => {
     let data = await fetchApi_AuthData(
       'POST',
-      `http://192.168.23.225:8082/addProduct`,
+      `http://192.168.23.199:8082/addProduct`,
       '',
       submitData
     );
@@ -261,7 +261,7 @@ const Service = {
   postUploadProduct: async (submitData: Product) => {
     let data = await fetchApi_AuthData(
       'POST',
-      `http://192.168.23.225:8082/uploadProduct`,
+      `http://192.168.23.199:8082/uploadProduct`,
       '',
       submitData
     );
@@ -271,7 +271,7 @@ const Service = {
   deleteProductOne: async (submitData: Cargo) => {
     let data = await fetchApi_AuthData(
       'DELETE',
-      `http://192.168.23.225:8082/deleteProductOne/`,
+      `http://192.168.23.199:8082/deleteProductOne/`,
       submitData.id,
       {},
     );
@@ -281,7 +281,7 @@ const Service = {
   deleteProductCategory: async (submitData: Cargo) => {
     let data = await fetchApi_AuthData(
       'DELETE',
-      `http://192.168.23.225:8082/deleteProductCategory`,
+      `http://192.168.23.199:8082/deleteProductCategory`,
       '',
       submitData,
     );
@@ -291,7 +291,7 @@ const Service = {
   postUploadImage: async (submitData: FormData | undefined) => {
     let data = await fetchApi_upload_file(
       'POST',
-      `http://192.168.23.225:8082/uploadImage`,
+      `http://192.168.23.199:8082/uploadImage`,
       '',
       submitData
     );
@@ -301,7 +301,7 @@ const Service = {
   postProductFilter: async (submitData: Platform) => {
     let data = await fetchApi_AuthData(
       'POST',
-      `http://192.168.23.225:8082/productFilter`,
+      `http://192.168.23.199:8082/productFilter`,
       '',
       submitData,
     );
@@ -311,7 +311,7 @@ const Service = {
   postCreateProductFilter: async (submitData: Platform) => {
     let data = await fetchApi_AuthData(
       'POST',
-      `http://192.168.23.225:8082/createProductFilter`,
+      `http://192.168.23.199:8082/createProductFilter`,
       '',
       submitData
     );
@@ -321,7 +321,7 @@ const Service = {
   deleteProductFilter: async (submitData: Platform) => {
     let data = await fetchApi_AuthData(
       'DELETE',
-      `http://192.168.23.225:8082/deleteProductFilter`,
+      `http://192.168.23.199:8082/deleteProductFilter`,
       '',
       submitData
     );

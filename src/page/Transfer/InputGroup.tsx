@@ -31,6 +31,8 @@ const InputGroup = (value: exchangeValue) => {
   const [Packaging, setPackaging] = React.useState<string | number>(0);
   // 平台費用
   const [platformCost, setPlatformCost] = React.useState<string | number>(0);
+  // 金流費用
+  const [cashFeeCost, setCashFeeCost] = React.useState<string | number>(0);
   // 平台運費
   const [platformLogistics, setPlatformLogistics] = React.useState<string | number>(0);
   // 負擔平台運費
@@ -53,25 +55,28 @@ const InputGroup = (value: exchangeValue) => {
 
   React.useEffect(() => {
     if (
-      ![0, '', null, undefined].includes(costPrice) &&
-      ![0, '', null, undefined].includes(fare) &&
-      ![0, '', null, undefined].includes(Packaging)
+      ![0, '', null, undefined].includes(costPrice)
     ) {
+      // 成本
       let transformCost = (Number(costPrice) / exchangeValue)
-      let costTotal = Number(fare) + Number(Packaging) + Number(platformCost)
+      // 商品運費 + 包裝費 + 平台費用 + 手續費
+      let costTotal = Number(fare) + Number(Packaging) + Number(platformCost) + (Number(price) * Number(cashFeeCost) / 100)
 
       let benefitPricetarget = 0
       let suggestedPricetarget = 0
       isPlatformLogistics ?
+        // 成本 + 商品運費 + 包裝費 + 平台費用 + 手續費 + 預計收益佔比 + 平台運費
         suggestedPricetarget = Number(transformCost) + Number(costTotal) + (Number(transformCost) * Number(proportion) / 100) + Number(platformLogistics) :
         suggestedPricetarget = Number(transformCost) + Number(costTotal) + (Number(transformCost) * Number(proportion) / 100)
       isPlatformLogistics ?
+        // 售價 - 商品運費 - 包裝費 - 平台費用 - 手續費 - 成本 - 平台運費
         benefitPricetarget = Number(price) - Number(costTotal) - Number(transformCost) - Number(platformLogistics) :
         benefitPricetarget = Number(price) - Number(costTotal) - Number(transformCost)
       setBenefit(numeral(benefitPricetarget).format('0.00'))
       setSuggestedPrice(numeral(suggestedPricetarget).format('0.00'))
     }
-  }, [costPrice, fare, Packaging, platformCost, price, proportion, isPlatformLogistics, platformLogistics])
+  }, [costPrice, fare, Packaging, platformCost, price, proportion, isPlatformLogistics, platformLogistics, cashFeeCost])
+
 
   const cleaner = () => {
     setCostPrice(0)
@@ -92,8 +97,15 @@ const InputGroup = (value: exchangeValue) => {
 
   return (
     <RN.View style={styles.container}>
+      <RN.View style={styles.listContainer}>
+        <RN.Text style={styles.listText}>* 基本成本 = 成本 + 商品運費 + 包裝費 + 平台運費</RN.Text>
+        <RN.Text style={styles.listText}>* 總手續費 = 售價 * 金流費用% + 售價 * 平台費用%</RN.Text>
+        <RN.Text style={styles.listText}>* 預計收益 = 售價 - 基本成本 - 總手續費 </RN.Text>
+        <RN.Text style={styles.listText}>* 建議售價 = 基本成本 + 總手續費 + 收益佔比</RN.Text>
+      </RN.View>
+      {/* /* /* /* 成本價 */}
       <RN.View style={styles.inputContainer}>
-        <RN.Text style={styles.inputText}>成本價</RN.Text>
+        <RN.Text style={styles.inputText}>成本</RN.Text>
         <RN.TextInput
           style={styles.input}
           onChangeText={(e) => Number(e) !== 0 ? setCostPrice(Number(e)) : setCostPrice(e)}
@@ -102,11 +114,12 @@ const InputGroup = (value: exchangeValue) => {
           keyboardType="numeric"
         />
         <RN.Text style={styles.exchangeValueText}>{value.exchangeValue.label}</RN.Text>
-        <RN.View style={styles.inputTextDescription} />
       </RN.View>
       <RN.View style={styles.inputContainer}>
         <RN.Text style={styles.costPriceTransform}> = {numeral(Number(costPrice) / exchangeValue).format('0.00')} TWD</RN.Text>
       </RN.View>
+
+      {/* /* /* /* 商品運費 */}
       <RN.View style={styles.inputContainer}>
         <RN.Text style={styles.inputText}>商品運費</RN.Text>
         <RN.TextInput
@@ -117,8 +130,9 @@ const InputGroup = (value: exchangeValue) => {
           keyboardType="numeric"
         />
         <RN.Text style={styles.exchangeValueText}>台幣</RN.Text>
-        <RN.View style={styles.inputTextDescription} />
       </RN.View>
+
+      {/* /* /* /* 包裝費 */}
       <RN.View style={styles.inputContainer}>
         <RN.Text style={styles.inputText}>包裝費</RN.Text>
         <RN.TextInput
@@ -129,8 +143,9 @@ const InputGroup = (value: exchangeValue) => {
           keyboardType="numeric"
         />
         <RN.Text style={styles.exchangeValueText}>台幣</RN.Text>
-        <RN.View style={styles.inputTextDescription} />
       </RN.View>
+
+      {/* /* /* /* 售價 */}
       <RN.View style={styles.inputContainer}>
         <RN.Text style={styles.inputText}>售價</RN.Text>
         <RN.TextInput
@@ -141,11 +156,12 @@ const InputGroup = (value: exchangeValue) => {
           keyboardType="numeric"
         />
         <RN.Text style={styles.exchangeValueText}>台幣</RN.Text>
-        <RN.View style={styles.inputTextDescription} />
       </RN.View>
       <RN.View style={styles.inputContainer}>
         <RN.Text style={styles.costPriceTransform}> 建議售價 = {numeral(suggestedPrice).format('0.00')} TWD</RN.Text>
       </RN.View>
+
+      {/* /* /* /* 平台費用 */}
       <RN.View style={styles.inputContainer}>
         <RN.Text style={styles.inputText}>平台費用</RN.Text>
         <RN.View style={{ flexDirection: 'row', height: 40, flex: 7 }}>
@@ -155,14 +171,31 @@ const InputGroup = (value: exchangeValue) => {
             placeholder="平台費用"
             keyboardType="numeric"
             editable={false}
-            style={{ borderWidth: 1, flex: 3, paddingLeft: 10 }}
+            style={{ borderWidth: 1.5, flex: 3, paddingLeft: 10, borderRadius: 5, height: 45, }}
           />
           <RN.View style={{ flex: 7, justifyContent: 'center', alignItems: 'center', flexDirection: 'row' }}>
             <RN.Text style={styles.inputText}>平台匯率:  {value.platformValue.value * 100} %</RN.Text>
           </RN.View>
         </RN.View>
-        <RN.View style={styles.inputTextDescription} />
       </RN.View>
+
+      {/* /* /* /* 金流費用 */}
+      <RN.View style={styles.inputContainer}>
+        <RN.Text style={{ textAlign: 'center', flex: 3 }}>金流費用</RN.Text>
+        <RN.View style={{ flex: 3, justifyContent: 'center' }}>
+          <RN.TextInput
+            onChangeText={(e) => Number(e) !== 0 ? setCashFeeCost(Number(e)) : setCashFeeCost(e)}
+            value={String(cashFeeCost)}
+            placeholder="金流費用"
+            keyboardType="numeric"
+            style={{ borderWidth: 1.5, paddingLeft: 10, borderRadius: 5, height: 45, }}
+          />
+        </RN.View>
+        <RN.Text style={styles.inputTextDescription}>%</RN.Text>
+        <RN.Text style={{ flex: 4.5 }}></RN.Text>
+      </RN.View>
+
+      {/* /* /* /* 平台運費 */}
       <RN.View style={styles.inputContainer}>
         <RN.Text style={styles.inputText}>平台運費</RN.Text>
         <RN.View style={{ flexDirection: 'row', height: 40, flex: 7 }}>
@@ -171,29 +204,29 @@ const InputGroup = (value: exchangeValue) => {
             value={String(platformLogistics)}
             placeholder="平台運費"
             keyboardType="numeric"
-            style={{ borderWidth: 1, flex: 3, paddingLeft: 10 }}
+            style={{ borderWidth: 1.5, flex: 3, paddingLeft: 10, height: 45, borderRadius: 5 }}
           />
           <RN.View style={{ flex: 7, justifyContent: 'center', alignItems: 'center', flexDirection: 'row' }}>
             <RN.Text style={styles.inputText}>負擔平台運費</RN.Text>
             <UI.Switch value={isPlatformLogistics} onValueChange={() => setIsPlatformLogistics(!isPlatformLogistics)} />
           </RN.View>
         </RN.View>
-        <RN.View style={styles.inputTextDescription} />
       </RN.View>
+
+      {/* /* /* /* 收益佔比 */}
       <RN.View style={styles.inputContainer}>
         <RN.Text style={{ textAlign: 'center', flex: 2.25 }}>收益佔比</RN.Text>
-        <RN.View style={{ height: 40, flex: 4, justifyContent: 'center' }}>
+        <RN.View style={{ flex: 3.25, justifyContent: 'center' }}>
           {isbenefitStyle ?
-            <RN.View style={{ flexDirection: 'row' }}>
+            <RN.View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <RN.TextInput
                 onChangeText={(e) => Number(e) !== 0 ? setProportion(Number(e)) : setProportion(e)}
                 value={String(proportion)}
                 placeholder="收益佔比"
                 keyboardType="numeric"
-                style={{ borderWidth: 1, paddingLeft: 10 }}
+                style={{ borderWidth: 1.5, paddingLeft: 10, flex: 3, height: 45, borderRadius: 5 }}
               />
               <RN.Text style={styles.inputTextDescription}>%</RN.Text>
-              <RN.View style={styles.inputTextDescription} />
             </RN.View>
             :
             <UI.View style={{ flexDirection: 'row' }}>
@@ -214,8 +247,10 @@ const InputGroup = (value: exchangeValue) => {
           <UI.Switch value={isbenefitStyle} onValueChange={() => setIsBenefitStyle(!isbenefitStyle)} />
         </RN.View>
       </RN.View>
+
+      {/* /* /* /* 收益 */}
       <RN.View style={styles.inputContainer}>
-        <RN.Text style={styles.inputText}>收益</RN.Text>
+        <RN.Text style={styles.inputText}>預計收益</RN.Text>
         <RN.TextInput
           style={styles.input}
           onChangeText={(e) => Number(e) !== 0 ? setBenefit(Number(e)) : setBenefit(e)}
@@ -224,7 +259,6 @@ const InputGroup = (value: exchangeValue) => {
           editable={false}
         />
         <RN.Text style={styles.exchangeValueText}>台幣</RN.Text>
-        <RN.View style={styles.inputTextDescription} />
       </RN.View>
       <RN.TouchableOpacity style={styles.clearContent} onPress={() => cleaner()}>
         <RN.Text style={[styles.clearText, { backgroundColor: appCtx.Colors.inputContainer }]}>清空</RN.Text>
@@ -232,25 +266,25 @@ const InputGroup = (value: exchangeValue) => {
     </RN.View>
   );
 };
-const windowHeight = RN.Dimensions.get('window').height;
+
 const styles = RN.StyleSheet.create({
   container: {
     flex: 1,
-    height: windowHeight + 20,
   },
   input: {
-    height: 40,
-    borderWidth: 1,
+    height: 45,
+    borderWidth: 1.5,
     flex: 5,
     paddingLeft: 10,
+    borderRadius: 5
   },
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 25,
-    marginLeft: 5,
-    marginRight: 5,
+    marginBottom: 17.5,
+    marginLeft: 7.5,
+    marginRight: 7.5,
   },
   inputText: {
     textAlign: 'center',
@@ -262,10 +296,10 @@ const styles = RN.StyleSheet.create({
     textAlignVertical: 'center'
   },
   exchangeValueText: {
-    height: 40,
+    height: 45,
     flex: 1.5,
     textAlign: 'center',
-    paddingTop: 12.5
+    paddingTop: 12
   },
   pickerContainer: {
     justifyContent: 'center',
@@ -275,17 +309,37 @@ const styles = RN.StyleSheet.create({
   },
   costPriceTransform: {
     flex: 1,
-    marginLeft: '25%'
+    marginLeft: '24%'
   },
   clearContent: {
     justifyContent: 'center',
     alignItems: 'center',
+    marginTop: 10,
+    marginBottom: 20
   },
   clearText: {
-    borderWidth: 1,
-    textAlign: 'center',
-    padding: 10,
     width: 100,
+    height: 45,
+    borderWidth: 1.5,
+    borderRadius: 5,
+    textAlign: 'center',
+    paddingTop: 12
+  },
+  listContainer: {
+    alignItems: 'flex-start',
+    justifyContent: 'center',
+    marginLeft: 15,
+    marginRight: 15,
+    marginBottom: 25,
+    flexWrap: 'wrap',
+    borderWidth: 1.5,
+    borderRadius: 5,
+    padding: 10
+  },
+  listText: {
+    textAlign: 'center',
+    margin: 2,
+    fontSize: 12.5,
   }
 });
 

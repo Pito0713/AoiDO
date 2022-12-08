@@ -32,7 +32,7 @@ interface CategoryItem {
   value?: string,
 }
 
-const ProductItem = ({ route }: { route: any }) => {
+const Content = ({ route }: { route: any }) => {
   const appCtx = React.useContext(AppContext);
   const [photo, setPhoto] = React.useState(route.params?.item.imageUrl ? route.params.item.imageUrl : '');
   const [orgialPhoto, setOrgialPhoto] = React.useState(route.params?.item.imageUrl ? route.params.item.imageUrl : '');
@@ -75,17 +75,18 @@ const ProductItem = ({ route }: { route: any }) => {
     validate: (values) => {
       const reg = /^\d+(\.\d{1,2})?$/
       const errors: PhotoItem = {};
+      console.log(values, 4654654654)
 
-      if (values.describe.length > 12) errors.describe = '*' + "字數必須少於12";
+      if (!values.describe) errors.describe = '*' + "字數必須少於12";
       if (values.price == 0) errors.price = '*' + "必須大於0";
       if (!reg.test(values.price)) errors.price = '*' + "必須數字且最多小數點後第2位";
 
       return errors;
     },
-    onSubmit: async (values, {resetForm}) => {
+    onSubmit: async (values, { resetForm }) => {
       await save(values)
       resetForm()
-      setCategory({ label: '',value: ''})
+      setCategory({ label: '', value: '' })
       setPhoto({})
     },
   });
@@ -172,115 +173,123 @@ const ProductItem = ({ route }: { route: any }) => {
     })();
   }, [isFocused]);
 
-
   return (
-    <RN.ScrollView style={styles.container}>
-      <RN.SafeAreaView>
+    <RN.ScrollView style={{ height: windowHeight - 100 }}>
+      <UI.View style={styles.itemContainer}>
+        <RN.TouchableOpacity onPress={handleChoosePhoto} style={{ borderWidth: 2, borderRadius: 10, overflow: 'hidden' }}>
+          {photo ?
+            <RN.View style={{ justifyContent: 'center', alignItems: 'center' }}>
+              <RN.Image
+                source={{ uri: orgialPhoto !== photo ? photo?.uri : orgialPhoto }}
+                style={{ width: windowWidth * 3 / 4, height: windowHeight / 3 }}
+              />
+            </RN.View>
+            :
+            <RN.View style={{ width: windowWidth * 3 / 4, height: windowHeight / 3, justifyContent: 'center', alignItems: 'center', backgroundColor: appCtx.Colors.inputContainer }}>
+              <UI.Text style={{ fontSize: 20 }}>點擊新增圖片</UI.Text>
+            </RN.View>
+          }
+        </RN.TouchableOpacity>
+        <UI.View>
+          <UI.Text style={styles.itemContainerText}>商品描述</UI.Text>
+          <RN.TextInput
+            style={[styles.input, { backgroundColor: appCtx.Colors.inputContainer, }]}
+            value={formik.values.describe}
+            onChangeText={formik.handleChange("describe")}
+            placeholder="描述"
+          />
+          {
+            formik.errors.describe ? <UI.View>
+              <UI.Text style={[, { color: appCtx.Colors.errorText, fontSize: 12 }]}>
+                {formik.errors.describe}
+              </UI.Text>
+            </UI.View>
+              : <UI.View />
+          }
+        </UI.View>
+        <UI.View>
+          <UI.Text style={styles.itemContainerText}>商品分類</UI.Text>
+          <UI.Picker
+            placeholder="選擇分類"
+            value={!category.label && !category.value ? '' : category}
+            enableModalBlur={false}
+            onChange={(e: any) => { setCategory(e) }}
+            topBarProps={{ title: '分類選項' }}
+            style={[styles.picker, { backgroundColor: appCtx.Colors.inputContainer }]}
+            showSearch
+            searchPlaceholder={'搜尋'}
+            migrateTextField
+          >
+            {categoryList.map((item: any, index) => (
+              <UI.Picker.Item key={index} value={item?.category} label={item?.category} />
+            ))}
+          </UI.Picker>
+        </UI.View>
+        <UI.View>
+          <UI.Text style={styles.itemContainerText}>商品價格</UI.Text>
+          <RN.TextInput
+            style={[styles.input, { backgroundColor: appCtx.Colors.inputContainer, }]}
+            value={formik.values.price}
+            onChangeText={formik.handleChange("price")}
+            placeholder="商品價格"
+            keyboardType="phone-pad"
+          />
+          {
+            formik.errors.price && <UI.View >
+              <UI.Text style={[, { color: appCtx.Colors.errorText, fontSize: 12 }]}>
+                {formik.errors.price}
+              </UI.Text>
+            </UI.View>
+          }
+        </UI.View>
+        <UI.View>
+          <UI.Text style={styles.itemContainerText}>備註</UI.Text>
+          <RN.TextInput
+            style={[styles.input, { backgroundColor: appCtx.Colors.inputContainer, }]}
+            value={formik.values.remark}
+            onChangeText={formik.handleChange("remark")}
+            placeholder="備註"
+          />
+          {
+            formik.errors.remark && <UI.View >
+              <UI.Text style={[{ color: appCtx.Colors.errorText, fontSize: 12 }]}>
+                {formik.errors.remark}
+              </UI.Text>
+            </UI.View>
+          }
+        </UI.View>
+        <UI.View style={styles.buttomGroup}>
+          <UI.TouchableOpacity style={[styles.saveContainer, { backgroundColor: appCtx.Colors.primary }]} onPress={() => formik.submitForm()}>
+            <UI.Text style={[styles.saveContainerText]}>保存</UI.Text>
+          </UI.TouchableOpacity>
+          <UI.TouchableOpacity style={[styles.saveContainer]} onPress={() => deleteItem(route.params.item._id)}>
+            <UI.Text style={styles.saveContainerText}>刪除</UI.Text>
+          </UI.TouchableOpacity>
+        </UI.View>
+      </UI.View>
+    </RN.ScrollView>
+  )
+};
+
+const ProductItem = ({ route }: { route: any }) => {
+  return (
+    <RN.SafeAreaView style={styles.container}>
+      {RN.Platform.OS !== "ios" ?
         <RN.KeyboardAvoidingView keyboardVerticalOffset={windowHeight}>
           <RN.TouchableOpacity activeOpacity={1} onPress={RN.Keyboard.dismiss}>
             <Goback />
-            <UI.View style={styles.itemContainer}>
-              <RN.TouchableOpacity onPress={handleChoosePhoto} style={{borderWidth:2,borderRadius:10,overflow:'hidden' }}>
-                {photo ?
-                  <RN.View style={{ justifyContent: 'center', alignItems: 'center' }}>
-                    <RN.Image
-                      source={{ uri: orgialPhoto !== photo ? photo?.uri : orgialPhoto }}
-                      style={{ width: windowWidth * 3 / 4, height: windowHeight / 3 }}
-                    />
-                  </RN.View>
-                  :
-                  <RN.View style={{ width: windowWidth * 3 / 4, height: windowHeight / 3, justifyContent: 'center', alignItems: 'center', backgroundColor: appCtx.Colors.inputContainer }}>
-                    <UI.Text style={{ fontSize: 20 }}>點擊新增圖片</UI.Text>
-                  </RN.View>
-                }
-              </RN.TouchableOpacity>
-              <UI.View>
-                <UI.Text style={styles.itemContainerText}>商品描述</UI.Text>
-                <RN.TextInput
-                  style={[styles.input, { backgroundColor: appCtx.Colors.inputContainer, }]}
-                  value={formik.values.describe}
-                  onChangeText={formik.handleChange("describe")}
-                  placeholder="描述"
-                />
-                {
-                  formik.errors.describe && <UI.View>
-                    <UI.Text style={[, { color: appCtx.Colors.errorText, fontSize: 12 }]}>
-                      {formik.errors.describe}
-                    </UI.Text>
-                  </UI.View>
-                }
-              </UI.View>
-              <UI.View>
-                <UI.Text style={styles.itemContainerText}>商品分類</UI.Text>
-                <UI.Picker
-                  placeholder="選擇分類"
-                  value={!category.label && !category.value ? '' : category}
-                  enableModalBlur={false}
-                  onChange={(e: any) => { setCategory(e) }}
-                  topBarProps={{ title: '分類選項' }}
-                  style={[styles.picker, { backgroundColor: appCtx.Colors.inputContainer }]}
-                  showSearch
-                  searchPlaceholder={'搜尋'}
-                  migrateTextField
-                >
-                  {categoryList.map((item: any, index) => (
-                    <UI.Picker.Item key={index} value={item?.category} label={item?.category} />
-                  ))}
-                </UI.Picker>
-                {/* {
-                formik.errors.describe && <UI.View>
-                  <UI.Text style={[, { color: appCtx.Colors.errorText, fontSize: 12 }]}>
-                    {formik.errors.describe}
-                  </UI.Text>
-                </UI.View>
-              } */}
-              </UI.View>
-              <UI.View>
-                <UI.Text style={styles.itemContainerText}>商品價格</UI.Text>
-                <RN.TextInput
-                  style={[styles.input, { backgroundColor: appCtx.Colors.inputContainer, }]}
-                  value={formik.values.price}
-                  onChangeText={formik.handleChange("price")}
-                  placeholder="商品價格"
-                  keyboardType="phone-pad"
-                />
-                {
-                  formik.errors.price && <UI.View >
-                    <UI.Text style={[, { color: appCtx.Colors.errorText, fontSize: 12 }]}>
-                      {formik.errors.price}
-                    </UI.Text>
-                  </UI.View>
-                }
-              </UI.View>
-              <UI.View>
-                <UI.Text style={styles.itemContainerText}>備註</UI.Text>
-                <RN.TextInput
-                  style={[styles.input, { backgroundColor: appCtx.Colors.inputContainer, }]}
-                  value={formik.values.remark}
-                  onChangeText={formik.handleChange("remark")}
-                  placeholder="備註"
-                />
-                {
-                  formik.errors.remark && <UI.View >
-                    <UI.Text style={[{ color: appCtx.Colors.errorText, fontSize: 12 }]}>
-                      {formik.errors.remark}
-                    </UI.Text>
-                  </UI.View>
-                }
-              </UI.View>
-              <UI.View style={styles.buttomGroup}>
-                <UI.TouchableOpacity style={[styles.saveContainer, { backgroundColor: appCtx.Colors.primary }]} onPress={() => formik.submitForm()}>
-                  <UI.Text style={[styles.saveContainerText]}>保存</UI.Text>
-                </UI.TouchableOpacity>
-                <UI.TouchableOpacity style={[styles.saveContainer]} onPress={() => deleteItem(route.params.item._id)}>
-                  <UI.Text style={styles.saveContainerText}>刪除</UI.Text>
-                </UI.TouchableOpacity>
-              </UI.View>
-            </UI.View>
+            <Content route={route} />
           </RN.TouchableOpacity>
         </RN.KeyboardAvoidingView>
-      </RN.SafeAreaView>
-    </RN.ScrollView>
+        :
+        <RN.KeyboardAvoidingView behavior={"position"}>
+          <RN.TouchableOpacity activeOpacity={1} onPress={RN.Keyboard.dismiss} >
+            <Goback />
+            <Content route={route} />
+          </RN.TouchableOpacity>
+        </RN.KeyboardAvoidingView>
+      }
+    </RN.SafeAreaView>
   );
 };
 const styles = RN.StyleSheet.create({
@@ -296,8 +305,8 @@ const styles = RN.StyleSheet.create({
     width: '100%',
     paddingLeft: 15,
     height: 45,
-    borderWidth:1.5,
-    borderRadius:5,
+    borderWidth: 1.5,
+    borderRadius: 5,
   },
   itemContainerText: {
     justifyContent: 'center',
@@ -311,8 +320,8 @@ const styles = RN.StyleSheet.create({
     padding: 15,
     marginTop: 20,
     margin: 10,
-    borderWidth:1.5,
-    borderRadius:5,
+    borderWidth: 1.5,
+    borderRadius: 5,
   },
   saveContainerText: {
     textAlign: 'center',
@@ -321,8 +330,8 @@ const styles = RN.StyleSheet.create({
     paddingLeft: 15,
     height: 45,
     marginBottom: -20,
-    borderWidth:1.5,
-    borderRadius:5,
+    borderWidth: 1.5,
+    borderRadius: 5,
   },
   buttomGroup: {
     flexDirection: 'row',

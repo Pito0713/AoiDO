@@ -29,15 +29,6 @@ const Logistics = () => {
     await setRefreshing(false);
   }, [refreshing]);
 
-  const delay = (time) => {
-    return new Promise(function (resolve, reject) {
-      setTimeout(() => {
-        setRefreshing(false);
-      }, time);
-    });
-  }
-
-
   const postSearchProduct = async () => {
     let target = []
     Object.entries(categoryValue).forEach(([key, value]) => {
@@ -49,9 +40,7 @@ const Logistics = () => {
       token: reduxToken,
       category: target
     }
-    await appCtx.setLoading(true)
     const response = await service.postAllProduct(submitData);
-    await appCtx.setLoading(false)
 
     if (response?.status === 'success') setProduct(response.data)
   }
@@ -84,10 +73,8 @@ const Logistics = () => {
 
   React.useEffect(() => {
     (async () => {
-      
       if (isFocused) await postSearchProduct()
       if (!isFocused) await onChangeText('')
-      await appCtx.setLoading(false)
     })();
   }, [isFocused]);
 
