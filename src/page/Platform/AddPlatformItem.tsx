@@ -55,51 +55,51 @@ const Content = () => {
 
 
   return (
-          <UI.View style={styles.itemContainer}>
-            <UI.View style={styles.inputContainer}>
-              <UI.View style={styles.inputText}>
-                <UI.Text>新增平台名稱</UI.Text>
-              </UI.View>
-              <RN.TextInput
-                placeholder={'請輸入新增平台名稱'}
-                textAlign='left'
-                placeholderTextColor="gray"
-                value={formik.values.label}
-                onChangeText={formik.handleChange("label")}
-                style={[styles.input, { backgroundColor: appCtx.Colors.inputContainer }]}
-              />
-              <UI.View style={styles.inputText}>
-                <UI.Text style={[, { color: appCtx.Colors.errorText }]}>
-                  {formik.errors.label}
-                </UI.Text>
-              </UI.View>
-            </UI.View>
-            <UI.View style={styles.inputContainer}>
-              <UI.View style={styles.inputText}>
-                <UI.Text>新增平台費用匯率</UI.Text>
-              </UI.View>
-              <RN.TextInput
-                placeholder={'請輸入新增平台費用匯率'}
-                placeholderTextColor="gray"
-                textAlign='left'
-                value={formik.values.rate}
-                onChangeText={formik.handleChange("rate")}
-                style={[styles.input, { backgroundColor: appCtx.Colors.inputContainer }]}
-              />
-              <UI.View style={styles.inputText}>
-                <UI.Text style={[, { color: appCtx.Colors.errorText }]}>
-                  {formik.errors.rate}
-                </UI.Text>
-              </UI.View>
-            </UI.View>
+    <UI.View style={styles.itemContainer}>
+      <UI.View style={styles.inputContainer}>
+        <UI.View style={styles.inputText}>
+          <UI.Text>新增平台名稱</UI.Text>
+        </UI.View>
+        <RN.TextInput
+          placeholder={'請輸入新增平台名稱'}
+          textAlign='left'
+          placeholderTextColor="gray"
+          value={formik.values.label}
+          onChangeText={formik.handleChange("label")}
+          style={[styles.input, { backgroundColor: appCtx.Colors.inputContainer }]}
+        />
+        <UI.View style={styles.inputText}>
+          <UI.Text style={[, { color: appCtx.Colors.errorText }]}>
+            {formik.errors.label}
+          </UI.Text>
+        </UI.View>
+      </UI.View>
+      <UI.View style={styles.inputContainer}>
+        <UI.View style={styles.inputText}>
+          <UI.Text>新增平台費用匯率</UI.Text>
+        </UI.View>
+        <RN.TextInput
+          placeholder={'請輸入新增平台費用匯率'}
+          placeholderTextColor="gray"
+          textAlign='left'
+          value={formik.values.rate}
+          onChangeText={formik.handleChange("rate")}
+          style={[styles.input, { backgroundColor: appCtx.Colors.inputContainer }]}
+        />
+        <UI.View style={styles.inputText}>
+          <UI.Text style={[, { color: appCtx.Colors.errorText }]}>
+            {formik.errors.rate}
+          </UI.Text>
+        </UI.View>
+      </UI.View>
 
-            <UI.TouchableOpacity style={styles.registerContainer} onPress={() => formik.submitForm()}>
-              <UI.View style={[styles.registerText,{backgroundColor:appCtx.Colors.primary}]}>
-                <UI.Text style={[{textAlign: 'center', }]}>新增平台資料</UI.Text>
-              </UI.View>
-            </UI.TouchableOpacity>
+      <UI.TouchableOpacity style={styles.registerContainer} onPress={() => formik.submitForm()}>
+        <UI.View style={[styles.registerText,{backgroundColor:appCtx.Colors.primary}]}>
+          <UI.Text style={[{textAlign: 'center', }]}>新增平台資料</UI.Text>
+        </UI.View>
+      </UI.TouchableOpacity>
 
-          </UI.View>
+    </UI.View>
   );
 };
 

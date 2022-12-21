@@ -47,8 +47,8 @@ const Content = () => {
 
       return errors;
     },
-    onSubmit: async (values, { resetForm }) => {
-      await save(values)
+    onSubmit: (values, { resetForm }) => {
+      save(values)
       resetForm()
     },
   });

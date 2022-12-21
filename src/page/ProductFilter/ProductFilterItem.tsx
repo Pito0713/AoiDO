@@ -58,14 +58,12 @@ const ProductFilterItem = ({ route }: { route: any }) => {
       "id": item,
     }
     const response = await service.deleteProductOne(submitData);
-    if (response?.status === 'success') await postAllProduct()
+    if (response?.status === 'success') postAllProduct()
     await appCtx.setLoading(false)
   }
 
   React.useEffect(() => {
-    (async () => {
-      if (isFocused) await postAllProduct()
-    })();
+      if (isFocused) postAllProduct()
   }, [isFocused]);
 
   return (

@@ -1,81 +1,77 @@
 const unAuthedPages = [
   {
-    name: "sign",
+    name: 'sign',
     component: require('../page/Sign/index').default,
   },
   {
-    name: "register",
+    name: 'register',
     component: require('../page/Register/index').default,
   },
 ];
 
 const authedPages = [
   {
-    name: "main",
+    name: 'main',
     component: require('../page/Main/index').default,
   },
   {
-    name: "transfer",
+    name: 'transfer',
     component: require('../page/Transfer').default,
   },
   {
-    name: "setting",
+    name: 'setting',
     component: require('../page/Setting/index').default,
   },
   {
-    name: "logistics",
+    name: 'logistics',
     component: require('../page/Logistics/index').default,
   },
   {
-    name: "platform",
+    name: 'platform',
     component: require('../page/Platform/index').default,
   },
   {
-    name: "product",
+    name: 'product',
     component: require('../page/Product/index').default,
   },
   {
-    name: "AddProductItem",
+    name: 'AddProductItem',
     component: require('../page/Product/AddProductItem').default,
   },
   {
-    name: "ProductItem",
+    name: 'ProductItem',
     component: require('../page/Product/ProductItem').default,
   },
   {
-    name: "handPassWord",
+    name: 'handPassWord',
     component: require('../page/HandPassWord/index').default,
   },
   {
-    name: "AddPlatformItem",
+    name: 'AddPlatformItem',
     component: require('../page/Platform/AddPlatformItem').default,
   },
   {
-    name: "productFilter",
+    name: 'productFilter',
     component: require('../page/ProductFilter/index').default,
   },
   {
-    name: "addProductFilterItem",
+    name: 'addProductFilterItem',
     component: require('../page/ProductFilter/AddProductFilterItem').default,
   },
   {
-    name: "productFilterItem",
+    name: 'productFilterItem',
     component: require('../page/ProductFilter/ProductFilterItem').default,
   },
-  //////////////////////// 
+  ////////////////////////
   {
-    name: "LogisticsItem",
+    name: 'LogisticsItem',
     component: require('../page/Logistics/LogisticsItem').default,
   },
 
   {
-    name: "AddLogisticsItem",
+    name: 'AddLogisticsItem',
     component: require('../page/Logistics/AddLogisticsItem').default,
   },
-
 ];
 
-export {
-  unAuthedPages,
-  authedPages,
-};
+export {unAuthedPages, authedPages};

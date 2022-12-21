@@ -49,7 +49,7 @@ const Content = (route: { params: any }) => {
   const save = async (values: PhotoItem) => {
     if (values?.describe && values?.price) {
       await appCtx.setLoading(true);
-      let target = orgialPhoto !== photo ? await handleUploadPhoto() : orgialPhoto
+      let target = orgialPhoto !== photo ? handleUploadPhoto() : orgialPhoto
 
       let submitData = {
         "id": route.params.item._id,
@@ -84,7 +84,7 @@ const Content = (route: { params: any }) => {
       return errors;
     },
     onSubmit: async (values, { resetForm }) => {
-      await save(values)
+      save(values)
       resetForm()
       setCategory({ label: '', value: '' })
       setPhoto({})
@@ -162,15 +162,13 @@ const Content = (route: { params: any }) => {
   }
 
   React.useEffect(() => {
-    (async () => {
-      if (isFocused) {
-        await postProductFilter()
-        setCategory({
-          label: route.params?.item.category ? route.params?.item.category : '',
-          value: route.params?.item.category ? route.params?.item.category : '',
-        })
-      }
-    })();
+    if (isFocused) {
+      postProductFilter()
+      setCategory({
+        label: route.params?.item.category ? route.params?.item.category : '',
+        value: route.params?.item.category ? route.params?.item.category : '',
+      })
+    }
   }, [isFocused]);
 
   return (

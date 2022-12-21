@@ -10,8 +10,6 @@ import moment from 'moment'
 import { useFormik } from "formik";
 import ScrollViewComponent from "../../component/ScrollViewComponent";
 
-const windowHeight = RN.Dimensions.get('window').height;
-
 interface Item {
   describe?: string,
   singNumber?: string,
@@ -69,13 +67,13 @@ const Content = (route : { params: any }) => {
 
       return errors;
     },
-    onSubmit: async (values, { resetForm }) => {
-      await save(values)
+    onSubmit: (values, { resetForm }) => {
+      save(values)
       resetForm()
     },
   });
 
-  const deleteItem = async () => {
+  const deleteItem = () => {
     RN.Alert.alert(
       '是否刪除',
       "",

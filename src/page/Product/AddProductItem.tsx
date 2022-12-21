@@ -89,7 +89,7 @@ const Content = () => {
       return errors;
     },
     onSubmit: async (values, { resetForm }) => {
-      await save(values)
+      save(values)
       resetForm()
       setCategory({ label: '', value: '' })
       setPhoto({})
@@ -140,9 +140,7 @@ const Content = () => {
   }
 
   React.useEffect(() => {
-    (async () => {
-      if (isFocused) await postProductFilter()
-    })();
+    if (isFocused) postProductFilter()
   }, [isFocused]);
 
   return (

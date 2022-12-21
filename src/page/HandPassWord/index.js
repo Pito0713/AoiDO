@@ -1,51 +1,89 @@
-import React from "react";
+import React from 'react';
 import * as RN from 'react-native';
-import { AppContext } from '../../redux/AppContent';
-import { useFormik } from "formik";
+import {AppContext} from '../../redux/AppContent';
+import {useFormik} from 'formik';
 import * as UI from 'react-native-ui-lib';
-import service from "../Service/Service";
-import Goback from '../../component/Goback'
-import { useNavigation } from '@react-navigation/native';
-import { useAppSelector } from '../../redux/store';
+import service from '../Service/Service';
+import Goback from '../../component/Goback';
+import {useNavigation} from '@react-navigation/native';
+import CryptoJS from 'react-native-crypto-js';
+import {APP_SECRCT_KEY} from '../../env/config';
+import {
+  registerActions,
+  useAppSelector,
+  useAppDispatch,
+} from '../../redux/store';
+
+const windowHeight = RN.Dimensions.get('window').height;
 
 const HandPassWord = () => {
   const appCtx = React.useContext(AppContext);
   const navigation = useNavigation();
-  const reduxToken = useAppSelector(state => state.token)
+  const dispatch = useAppDispatch();
+  const reduxToken = useAppSelector(state => state.token);
+  const reduxPassword = useAppSelector(state => state.password);
 
   const formik = useFormik({
     validateOnChange: false,
     initialValues: {
-      oldPassWord: "",
-      newPassWord: "",
-      newPassWordAgain: "",
+      oldPassWord: '',
+      newPassWord: '',
+      newPassWordAgain: '',
     },
-    validate: (values) => {
+    validate: values => {
       const errors = {};
+      let decryptValue = CryptoJS.AES.decrypt(reduxPassword, APP_SECRCT_KEY);
+      let originalValue = decryptValue.toString(CryptoJS.enc.Utf8);
+
+      if (!values.oldPassWord) errors.oldPassWord = '*' + '舊密碼必填';
+      if (values.oldPassWord && originalValue !== values.oldPassWord) {
+        errors.oldPassWord = '*' + '舊密碼不相同';
+      }
+      if (!values.newPassWord) errors.newPassWord = '*' + '新密碼必填';
+      if (values.newPassWord && originalValue === values.newPassWord) {
+        errors.newPassWord = '*' + '不可與舊密碼相同';
+      }
+      if (
+        values.newPassWordAgain !== values.newPassWord ||
+        !values.newPassWordAgain
+      ) {
+        errors.newPassWordAgain = '*' + '與新密碼必須相同';
+      }
+
       return errors;
     },
-    onSubmit: async (values) => {
-      postHandPassWord(values)
+    onSubmit: async values => {
+      postHandPassWord(values);
     },
   });
 
-  const postHandPassWord = async (values) => {
-    appCtx.setLoading(true)
+  const postHandPassWord = async values => {
+    appCtx.setLoading(true);
 
     let submitData = {
-      "oldPassWord": values.oldPassWord,
-      "newPassWord": values.newPassWord,
-      "newPassWordAgain": values.newPassWordAgain,
-      "token": reduxToken,
-    }
+      oldPassWord: values.oldPassWord,
+      newPassWord: values.newPassWord,
+      newPassWordAgain: values.newPassWordAgain,
+      token: reduxToken,
+    };
+
     const response = await service.postHandPassWord(submitData);
-    if (response?.status === 'success') navigation.goBack()
+    if (response?.status === 'success') {
+      let encryptValue = CryptoJS.AES.encrypt(
+        values.newPassWord,
+        APP_SECRCT_KEY,
+      ).toString();
+      await dispatch(registerActions.SET_PASSWORD(encryptValue));
+
+      navigation.goBack();
+    }
     appCtx.setLoading(false);
-  }
+  };
 
   return (
     <UI.View useSafeArea={true} style={styles.container}>
-      <RN.KeyboardAvoidingView behavior={RN.Platform.OS === "ios" ? "padding" : "height"}>
+      <RN.KeyboardAvoidingView
+        behavior={RN.Platform.OS === 'ios' ? 'padding' : 'height'}>
         <RN.TouchableOpacity activeOpacity={1} onPress={RN.Keyboard.dismiss}>
           <Goback />
           <UI.View style={styles.itemContainer}>
@@ -55,14 +93,17 @@ const HandPassWord = () => {
               </UI.View>
               <RN.TextInput
                 placeholder={'舊密碼'}
-                textAlign='left'
+                textAlign="left"
                 placeholderTextColor="gray"
                 value={formik.values.oldPassWord}
-                onChangeText={formik.handleChange("oldPassWord")}
-                style={[styles.input, { backgroundColor: appCtx.Colors.inputContainer }]}
+                onChangeText={formik.handleChange('oldPassWord')}
+                style={[
+                  styles.input,
+                  {backgroundColor: appCtx.Colors.inputContainer},
+                ]}
               />
               <UI.View style={styles.inputText}>
-                <UI.Text style={[, { color: appCtx.Colors.errorText }]}>
+                <UI.Text style={[, {color: appCtx.Colors.errorText}]}>
                   {formik.errors.oldPassWord}
                 </UI.Text>
               </UI.View>
@@ -74,13 +115,16 @@ const HandPassWord = () => {
               <RN.TextInput
                 placeholder={'新的密碼'}
                 placeholderTextColor="gray"
-                textAlign='left'
+                textAlign="left"
                 value={formik.values.newPassWord}
-                onChangeText={formik.handleChange("newPassWord")}
-                style={[styles.input, { backgroundColor: appCtx.Colors.inputContainer }]}
+                onChangeText={formik.handleChange('newPassWord')}
+                style={[
+                  styles.input,
+                  {backgroundColor: appCtx.Colors.inputContainer},
+                ]}
               />
               <UI.View style={styles.inputText}>
-                <UI.Text style={[, { color: appCtx.Colors.errorText }]}>
+                <UI.Text style={[, {color: appCtx.Colors.errorText}]}>
                   {formik.errors.newPassWord}
                 </UI.Text>
               </UI.View>
@@ -92,31 +136,44 @@ const HandPassWord = () => {
               <RN.TextInput
                 placeholder={'重新確認新的密碼'}
                 placeholderTextColor="gray"
-                textAlign='left'
+                textAlign="left"
                 value={formik.values.newPassWordAgain}
-                onChangeText={formik.handleChange("newPassWordAgain")}
-                style={[styles.input, { backgroundColor: appCtx.Colors.inputContainer }]}
+                onChangeText={formik.handleChange('newPassWordAgain')}
+                style={[
+                  styles.input,
+                  {backgroundColor: appCtx.Colors.inputContainer},
+                ]}
               />
               <UI.View style={styles.inputText}>
-                <UI.Text style={[, { color: appCtx.Colors.errorText }]}>
+                <UI.Text style={[, {color: appCtx.Colors.errorText}]}>
                   {formik.errors.newPassWordAgain}
                 </UI.Text>
               </UI.View>
             </UI.View>
 
-            <UI.TouchableOpacity style={styles.registerContainer} onPress={() => formik.submitForm()}>
-              <UI.View style={[styles.registerText,{backgroundColor: appCtx.Colors.primary}]}>
-                <UI.Text style={[{ color: appCtx.Colors.registerText, textAlign: 'center', }]}>修改資料</UI.Text>
+            <UI.TouchableOpacity
+              style={styles.registerContainer}
+              onPress={() => formik.submitForm()}>
+              <UI.View
+                style={[
+                  styles.registerText,
+                  {backgroundColor: appCtx.Colors.primary},
+                ]}>
+                <UI.Text
+                  style={[
+                    {color: appCtx.Colors.registerText, textAlign: 'center'},
+                  ]}>
+                  修改資料
+                </UI.Text>
               </UI.View>
             </UI.TouchableOpacity>
-
           </UI.View>
         </RN.TouchableOpacity>
       </RN.KeyboardAvoidingView>
     </UI.View>
   );
 };
-const windowHeight = RN.Dimensions.get('window').height;
+
 const styles = RN.StyleSheet.create({
   container: {
     flex: 1,
@@ -134,7 +191,7 @@ const styles = RN.StyleSheet.create({
     height: 45,
     paddingLeft: 15,
     borderWidth: 1.5,
-    borderRadius:5
+    borderRadius: 5,
   },
   inputText: {
     width: '60%',
@@ -150,7 +207,7 @@ const styles = RN.StyleSheet.create({
     width: '40%',
     padding: 15,
     borderWidth: 1.5,
-    borderRadius:5
+    borderRadius: 5,
   },
 });
 

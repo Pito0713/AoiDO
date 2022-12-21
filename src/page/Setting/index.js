@@ -1,9 +1,9 @@
-import React from "react";
+import React from 'react';
 import * as RN from 'react-native';
 import * as UI from 'react-native-ui-lib';
-import { registerActions, useAppDispatch } from '../../redux/store';
-import { useNavigation } from '@react-navigation/native';
-import { AppContext } from '../../redux/AppContent';
+import {registerActions, useAppDispatch} from '../../redux/store';
+import {useNavigation} from '@react-navigation/native';
+import {AppContext} from '../../redux/AppContent';
 
 const Setting = () => {
   const appCtx = React.useContext(AppContext);
@@ -12,21 +12,31 @@ const Setting = () => {
 
   const logOut = () => {
     dispatch(registerActions.SET_TOKEN(''));
-  }
+  };
 
-  const List =[
-    {title: '自訂平台費用', action: ()=>navigation.navigate('platform')},
-    {title: '自訂商品分類', action: ()=>navigation.navigate('productFilter')},
-    {title: '修改密碼', action: ()=>navigation.navigate('handPassWord')},
-    {title: '登出', action: ()=> logOut()},
-  ]
+  const List = [
+    {title: '自訂平台費用', action: () => navigation.navigate('platform')},
+    {title: '自訂商品分類', action: () => navigation.navigate('productFilter')},
+    {title: '修改密碼', action: () => navigation.navigate('handPassWord')},
+    {title: '登出', action: () => logOut()},
+  ];
 
   return (
     <RN.SafeAreaView style={styles.container}>
-      {List.map((item, index)=>{
-        return (<UI.TouchableOpacity style={[styles.itemContainer,{backgroundColor: appCtx.Colors.Setting.cardTitle}]} onPress={item.action}>
-          <UI.Text style={[styles.text,{color: appCtx.Colors.Setting.cardText}]}>{item.title}</UI.Text>
-        </UI.TouchableOpacity>)
+      {List.map((item, index) => {
+        return (
+          <UI.TouchableOpacity
+            style={[
+              styles.itemContainer,
+              {backgroundColor: appCtx.Colors.Setting.cardTitle},
+            ]}
+            onPress={item.action}>
+            <UI.Text
+              style={[styles.text, {color: appCtx.Colors.Setting.cardText}]}>
+              {item.title}
+            </UI.Text>
+          </UI.TouchableOpacity>
+        );
       })}
     </RN.SafeAreaView>
   );
@@ -49,7 +59,7 @@ const styles = RN.StyleSheet.create({
   text: {
     fontSize: 17.5,
     borderWidth: 0,
-  }
+  },
 });
 
 export default Setting;

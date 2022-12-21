@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import * as RN from 'react-native';
 
 const AppContext = React.createContext();
@@ -11,41 +11,41 @@ const Colors = {
   errorText: '#bf0000',
   textPrimary: '#FFFFFF',
   // proudcut
-  proudcut:{
+  proudcut: {
     cardContianer: '#ffc852',
     cardTitle: '#d44b2c',
     cardTitleText: '#FFFFFF',
     cardText: '#4d4537',
   },
 
-  proudcutFilter:{
+  proudcutFilter: {
     borderPrimary: '#4d4537',
     Text: '#4d4537',
   },
-  
+
   // Logistics
-  Logistics:{
+  Logistics: {
     cardContianer: '#FFFFFF',
     cardTitle: '#d6572d',
     cardTitleText: '#FFFFFF',
     cardText: '#4d4537',
-    borderColor: '#4d402d'
+    borderColor: '#4d402d',
   },
 
   // Logistics
-  Transfer:{
+  Transfer: {
     cardTitle: '#f2c274',
     cardTitleText: '#453f36',
   },
 
   // Setting
-  Setting:{
+  Setting: {
     cardTitle: '#f2c274',
     cardText: '#4d4537',
   },
 
   // Platform
-  Platform:{
+  Platform: {
     cardTitle: '#f2c274',
     cardTitleText: '#453f36',
   },
@@ -63,27 +63,28 @@ const Colors = {
 
 /////////////////////////////////////////////////////
 
-const LoadingView = ({ visible }) => {
+const LoadingView = ({visible}) => {
   return (
     <RN.Modal
       animationType="fade"
       transparent
       visible={visible}
-      onRequestClose={() => { }}
-    >
-      <RN.View style={{
-        ...RN.StyleSheet.absoluteFillObject,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
-      }}>
-        <RN.View style={{
+      onRequestClose={() => {}}>
+      <RN.View
+        style={{
+          ...RN.StyleSheet.absoluteFillObject,
           justifyContent: 'center',
           alignItems: 'center',
-          backgroundColor: 'white',
-          padding: 30,
-          borderRadius: 15,
+          backgroundColor: 'rgba(0, 0, 0, 0.5)',
         }}>
+        <RN.View
+          style={{
+            justifyContent: 'center',
+            alignItems: 'center',
+            backgroundColor: 'white',
+            padding: 30,
+            borderRadius: 15,
+          }}>
           <RN.ActivityIndicator color={Colors.primary} />
         </RN.View>
       </RN.View>
@@ -93,7 +94,7 @@ const LoadingView = ({ visible }) => {
 
 /////////////////////////////////////////////////////
 
-const AppProvider = ({ children }) => {
+const AppProvider = ({children}) => {
   const [loading, setLoading] = React.useState(false);
   const [initialized, setInitialized] = React.useState(false);
 
@@ -102,13 +103,12 @@ const AppProvider = ({ children }) => {
     setInitialized(true);
     RN.AppState.addEventListener('change', handleAppStateChange);
     return () => {
-      RN.AppState.addEventListener('change', handleAppStateChange).remove()
+      RN.AppState.addEventListener('change', handleAppStateChange).remove();
     };
   }, []);
 
-
-  const handleAppStateChange = async (nextAppState) => {
-    console.log(nextAppState)
+  const handleAppStateChange = async nextAppState => {
+    console.log(nextAppState);
   };
 
   const value = {
@@ -129,4 +129,4 @@ const AppProvider = ({ children }) => {
   );
 };
 
-export { AppContext, AppProvider };
+export {AppContext, AppProvider};

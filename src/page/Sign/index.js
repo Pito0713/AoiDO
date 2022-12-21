@@ -1,11 +1,17 @@
-import React from "react";
+import React from 'react';
 import * as RN from 'react-native';
-import { AppContext } from '../../redux/AppContent';
-import { useFormik } from "formik";
+import {AppContext} from '../../redux/AppContent';
+import {useFormik} from 'formik';
 import * as UI from 'react-native-ui-lib';
-import service from "../Service/Service";
-import { useNavigation } from '@react-navigation/native';
-import { registerActions, useAppSelector, useAppDispatch } from '../../redux/store';
+import service from '../Service/Service';
+import {useNavigation} from '@react-navigation/native';
+import {
+  registerActions,
+  useAppSelector,
+  useAppDispatch,
+} from '../../redux/store';
+import CryptoJS from 'react-native-crypto-js';
+import {APP_SECRCT_KEY} from '../../env/config';
 const windowHeight = RN.Dimensions.get('window').height;
 
 const SignInPage = () => {
@@ -13,54 +19,66 @@ const SignInPage = () => {
   const appCtx = React.useContext(AppContext);
   const dispatch = useAppDispatch();
 
-
-
   // redux
-  const reduxAccount = useAppSelector(state => state.account)
-  const reduxRememberInfo = useAppSelector(state => state.rememberInfo)
+  const reduxAccount = useAppSelector(state => state.account);
+  const reduxRememberInfo = useAppSelector(state => state.rememberInfo);
 
   // data
-  const [rememberInfo, setRememberInfo] = React.useState(reduxRememberInfo)
+  const [rememberInfo, setRememberInfo] = React.useState(reduxRememberInfo);
 
   const formik = useFormik({
     validateOnChange: false,
     initialValues: {
-      account: reduxRememberInfo ? reduxAccount : "",
-      password: "",
+      account: reduxRememberInfo ? reduxAccount : '',
+      password: '',
     },
-    validate: (values) => {
+    validate: values => {
       const errors = {};
       if (!values.account) {
-        errors.account = '*' + "帳號必填";
+        errors.account = '*' + '帳號必填';
       }
       if (!values.password) {
-        errors.password = '*' + "密碼必填";
+        errors.password = '*' + '密碼必填';
       }
       return errors;
     },
-    onSubmit: async (values) => {
-      logIn(values)
+    onSubmit: async values => {
+      logIn(values);
     },
   });
 
-  const logIn = async (values) => {
+  const logIn = async values => {
     appCtx.setLoading(true);
     let submitData = {
-      "account": formik.values.account,
-      "password": formik.values.password,
-    }
+      account: formik.values.account,
+      password: formik.values.password,
+    };
     const response = await service.postLogin(submitData);
-    if (!['', null, undefined].includes(response?.data)) dispatchHandler(response.data)
+    if (!['', null, undefined].includes(response?.data)) {
+      dispatchHandler(response.data);
+      // 加密
+      let ciphertext = CryptoJS.AES.encrypt(
+        formik.values.password,
+        APP_SECRCT_KEY,
+      ).toString();
+      dispatch(registerActions.SET_PASSWORD(ciphertext));
+      // let bytes = CryptoJS.AES.decrypt(ciphertext, APP_SECRCT_KEY);
+      // let originalText = bytes.toString(CryptoJS.enc.Utf8);
+      // console.log(originalText);
+    }
     appCtx.setLoading(false);
-  }
-
-  const dispatchHandler = (values) => {
-    if (!['', null, undefined].includes(values?.user?.account)) dispatch(registerActions.SET_ACCOUNT(values.user.account));
-    if (!['', null, undefined].includes(values?.user?.token)) dispatch(registerActions.SET_TOKEN(values.user.token));
-    dispatch(registerActions.SET_REMEMBERINFO(rememberInfo))
   };
 
-
+  const dispatchHandler = values => {
+    console.log(values);
+    if (!['', null, undefined].includes(values?.user?.account)) {
+      dispatch(registerActions.SET_ACCOUNT(values.user.account));
+    }
+    if (!['', null, undefined].includes(values?.user?.token)) {
+      dispatch(registerActions.SET_TOKEN(values.user.token));
+    }
+    dispatch(registerActions.SET_REMEMBERINFO(rememberInfo));
+  };
 
   return (
     <RN.SafeAreaView style={styles.container}>
@@ -71,15 +89,14 @@ const SignInPage = () => {
               <UI.View
                 style={[
                   styles.InputContainer,
-                  { backgroundColor: appCtx.Colors.inputContainer }
-                ]}
-              >
+                  {backgroundColor: appCtx.Colors.inputContainer},
+                ]}>
                 <RN.TextInput
                   placeholder={'請輸入帳號'}
-                  textAlign='left'
+                  textAlign="left"
                   placeholderTextColor="gray"
                   value={formik.values.account}
-                  onChangeText={formik.handleChange("account")}
+                  onChangeText={formik.handleChange('account')}
                   style={styles.input}
                 />
               </UI.View>
@@ -88,15 +105,14 @@ const SignInPage = () => {
               <UI.View
                 style={[
                   styles.InputContainer,
-                  { backgroundColor: appCtx.Colors.inputContainer }
-                ]}
-              >
+                  {backgroundColor: appCtx.Colors.inputContainer},
+                ]}>
                 <RN.TextInput
                   placeholder={'請輸入密碼'}
                   placeholderTextColor="gray"
-                  textAlign='left'
+                  textAlign="left"
                   value={formik.values.password}
-                  onChangeText={formik.handleChange("password")}
+                  onChangeText={formik.handleChange('password')}
                   secureTextEntry={true}
                   style={styles.input}
                 />
@@ -104,21 +120,49 @@ const SignInPage = () => {
             </UI.View>
           </UI.View>
           <UI.View style={[styles.errorText]}>
-            {['', null, undefined].includes(formik.values.account) && <UI.Text style={[{ color: appCtx.Colors.errorText, fontSize: 12, }]}> {formik.errors.account}</UI.Text>}
-            {['', null, undefined].includes(formik.values.password) && <UI.Text style={[{ color: appCtx.Colors.errorText, fontSize: 12, }]}> {formik.errors.password}</UI.Text>}
+            {['', null, undefined].includes(formik.values.account) && (
+              <UI.Text style={[{color: appCtx.Colors.errorText, fontSize: 12}]}>
+                {' '}
+                {formik.errors.account}
+              </UI.Text>
+            )}
+            {['', null, undefined].includes(formik.values.password) && (
+              <UI.Text style={[{color: appCtx.Colors.errorText, fontSize: 12}]}>
+                {' '}
+                {formik.errors.password}
+              </UI.Text>
+            )}
           </UI.View>
           <UI.View style={styles.buttomGround}>
-            <UI.TouchableOpacity style={styles.registerContainer} onPress={() => formik.submitForm()}>
-              <UI.Text style={[styles.registerText, { textAlign: 'center' ,backgroundColor: appCtx.Colors.primary}]}>{'登入'}</UI.Text>
+            <UI.TouchableOpacity
+              style={styles.registerContainer}
+              onPress={() => formik.submitForm()}>
+              <UI.Text
+                style={[
+                  styles.registerText,
+                  {textAlign: 'center', backgroundColor: appCtx.Colors.primary},
+                ]}>
+                {'登入'}
+              </UI.Text>
             </UI.TouchableOpacity>
           </UI.View>
           <UI.View style={styles.rememberInfoContainer}>
-            <UI.TouchableOpacity onPress={() => setRememberInfo(!rememberInfo)} style={{ flexDirection: 'row' }} >
-              <UI.Checkbox value={rememberInfo} size={15} onValueChange={() => setRememberInfo(!rememberInfo)} />
-              <UI.Text style={{ marginLeft: 8 }}>{'記住帳號'}</UI.Text>
+            <UI.TouchableOpacity
+              onPress={() => setRememberInfo(!rememberInfo)}
+              style={{flexDirection: 'row'}}>
+              <UI.Checkbox
+                value={rememberInfo}
+                size={15}
+                onValueChange={() => setRememberInfo(!rememberInfo)}
+              />
+              <UI.Text style={{marginLeft: 8}}>{'記住帳號'}</UI.Text>
             </UI.TouchableOpacity>
             <UI.TouchableOpacity>
-              <UI.Text style={{ marginLeft: 20 }} onPress={() => navigation.navigate('register')} >{'創立帳號'}</UI.Text>
+              <UI.Text
+                style={{marginLeft: 20}}
+                onPress={() => navigation.navigate('register')}>
+                {'創立帳號'}
+              </UI.Text>
             </UI.TouchableOpacity>
           </UI.View>
         </RN.TouchableOpacity>
@@ -146,13 +190,13 @@ const styles = RN.StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    height: 50
+    height: 50,
   },
   input: {
     width: '100%',
     paddingLeft: 15,
     height: 45,
-    margin: 5
+    margin: 5,
   },
   rememberInfoContainer: {
     paddingTop: 30,
@@ -183,7 +227,7 @@ const styles = RN.StyleSheet.create({
     width: '100%',
     padding: 15,
     borderWidth: 1,
-    borderRadius: 5
+    borderRadius: 5,
   },
 });
 
