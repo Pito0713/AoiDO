@@ -1,13 +1,13 @@
 import React from "react";
 import * as RN from 'react-native';
 import * as UI from 'react-native-ui-lib';
-import { AppContext } from '../../redux/AppContent';
-import Goback from '../../component/Goback'
 import { useNavigation, useIsFocused } from '@react-navigation/native';
-import service from "../Service/Service";
-import { useAppSelector } from '../../redux/store';
 import { launchImageLibrary } from 'react-native-image-picker';
 import { useFormik } from "formik";
+import { AppContext } from '../../redux/AppContent';
+import Goback from '../../component/Goback'
+import service from "../Service/service";
+import { useAppSelector } from '../../redux/store';
 import ScrollViewComponent from "../../component/ScrollViewComponent";
 
 const windowWidth = RN.Dimensions.get('window').width;
@@ -172,7 +172,7 @@ const Content = (route: { params: any }) => {
   }, [isFocused]);
 
   return (
-    <UI.View style={styles.itemContainer}>
+    <RN.View style={styles.itemContainer}>
       <RN.TouchableOpacity onPress={handleChoosePhoto} style={{ borderWidth: 2, borderRadius: 10, overflow: 'hidden' }}>
         {photo ?
           <RN.View style={{ justifyContent: 'center', alignItems: 'center' }}>
@@ -183,29 +183,26 @@ const Content = (route: { params: any }) => {
           </RN.View>
           :
           <RN.View style={{ width: windowWidth * 3 / 4, height: windowHeight / 3, justifyContent: 'center', alignItems: 'center', backgroundColor: appCtx.Colors.inputContainer }}>
-            <UI.Text style={{ fontSize: 20 }}>點擊新增圖片</UI.Text>
+            <RN.Text style={{ fontSize: 20 }}>點擊新增圖片</RN.Text>
           </RN.View>
         }
       </RN.TouchableOpacity>
-      <UI.View>
-        <UI.Text style={styles.itemContainerText}>商品描述</UI.Text>
+      <RN.View>
+        <RN.Text style={styles.itemContainerText}>商品描述</RN.Text>
         <RN.TextInput
           style={[styles.input, { backgroundColor: appCtx.Colors.inputContainer, }]}
           value={formik.values.describe}
           onChangeText={formik.handleChange("describe")}
           placeholder="描述"
         />
-        {
-          formik.errors.describe ? <UI.View>
-            <UI.Text style={[, { color: appCtx.Colors.errorText, fontSize: 12 }]}>
-              {formik.errors.describe}
-            </UI.Text>
-          </UI.View>
-            : <UI.View />
-        }
-      </UI.View>
-      <UI.View>
-        <UI.Text style={styles.itemContainerText}>商品分類</UI.Text>
+        <RN.View>
+          <RN.Text style={[{ color: appCtx.Colors.errorText, fontSize: 12 }]}>
+            {formik.errors.describe as String}
+          </RN.Text>
+        </RN.View>
+      </RN.View>
+      <RN.View>
+        <RN.Text style={styles.itemContainerText}>商品分類</RN.Text>
         <UI.Picker
           placeholder="選擇分類"
           value={!category.label && !category.value ? '' : category}
@@ -221,9 +218,9 @@ const Content = (route: { params: any }) => {
             <UI.Picker.Item key={index} value={item?.category} label={item?.category} />
           ))}
         </UI.Picker>
-      </UI.View>
-      <UI.View>
-        <UI.Text style={styles.itemContainerText}>商品價格</UI.Text>
+      </RN.View>
+      <RN.View>
+        <RN.Text style={styles.itemContainerText}>商品價格</RN.Text>
         <RN.TextInput
           style={[styles.input, { backgroundColor: appCtx.Colors.inputContainer, }]}
           value={formik.values.price}
@@ -231,39 +228,35 @@ const Content = (route: { params: any }) => {
           placeholder="商品價格"
           keyboardType="phone-pad"
         />
-        {
-          formik.errors.price && <UI.View >
-            <UI.Text style={[, { color: appCtx.Colors.errorText, fontSize: 12 }]}>
-              {formik.errors.price}
-            </UI.Text>
-          </UI.View>
-        }
-      </UI.View>
-      <UI.View>
-        <UI.Text style={styles.itemContainerText}>備註</UI.Text>
+        <RN.View >
+          <RN.Text style={[{ color: appCtx.Colors.errorText, fontSize: 12 }]}>
+            {formik.errors.price as String}
+          </RN.Text>
+        </RN.View>
+      </RN.View>
+      <RN.View>
+        <RN.Text style={styles.itemContainerText}>備註</RN.Text>
         <RN.TextInput
           style={[styles.input, { backgroundColor: appCtx.Colors.inputContainer, }]}
           value={formik.values.remark}
           onChangeText={formik.handleChange("remark")}
           placeholder="備註"
         />
-        {
-          formik.errors.remark && <UI.View >
-            <UI.Text style={[{ color: appCtx.Colors.errorText, fontSize: 12 }]}>
-              {formik.errors.remark}
-            </UI.Text>
-          </UI.View>
-        }
-      </UI.View>
-      <UI.View style={styles.buttomGroup}>
-        <UI.TouchableOpacity style={[styles.saveContainer, { backgroundColor: appCtx.Colors.primary }]} onPress={() => formik.submitForm()}>
-          <UI.Text style={[styles.saveContainerText]}>保存</UI.Text>
-        </UI.TouchableOpacity>
-        <UI.TouchableOpacity style={[styles.saveContainer]} onPress={() => deleteItem(route.params.item._id)}>
-          <UI.Text style={styles.saveContainerText}>刪除</UI.Text>
-        </UI.TouchableOpacity>
-      </UI.View>
-    </UI.View>
+        <RN.View >
+          <RN.Text style={[{ color: appCtx.Colors.errorText, fontSize: 12 }]}>
+            {formik.errors.remark as String}
+          </RN.Text>
+        </RN.View>
+      </RN.View>
+      <RN.View style={styles.buttomGroup}>
+        <RN.TouchableOpacity style={[styles.saveContainer, { backgroundColor: appCtx.Colors.primary }]} onPress={() => formik.submitForm()}>
+          <RN.Text style={[styles.saveContainerText]}>保存</RN.Text>
+        </RN.TouchableOpacity>
+        <RN.TouchableOpacity style={[styles.saveContainer]} onPress={() => deleteItem(route.params.item._id)}>
+          <RN.Text style={styles.saveContainerText}>刪除</RN.Text>
+        </RN.TouchableOpacity>
+      </RN.View>
+    </RN.View>
   )
 };
 

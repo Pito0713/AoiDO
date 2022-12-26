@@ -2,10 +2,11 @@ import React from 'react';
 import * as RN from 'react-native';
 import * as UI from 'react-native-ui-lib';
 import {useNavigation, useIsFocused} from '@react-navigation/native';
-import service from '../Service/Service';
+import service from '../Service/service';
 import {AppContext} from '../../redux/AppContent';
 import {useAppSelector} from '../../redux/store';
 import Goback from '../../component/Goback';
+import ReminderText from '../../component/ReminderText';
 
 const PlatformPage = () => {
   const appCtx = React.useContext(AppContext);
@@ -21,8 +22,9 @@ const PlatformPage = () => {
       token: reduxToken,
     };
     const response = await service.postPlatformRate(submitData);
-    if (!['', null, undefined].includes(response?.data))
+    if (!['', null, undefined].includes(response?.data)) {
       setPlatform(response.data);
+    }
   };
 
   const deleteModifyRate = async item => {
@@ -64,18 +66,12 @@ const PlatformPage = () => {
           styles.listContainer,
           {borderColor: appCtx.Colors.Platform.borderPrimary},
         ]}>
-        <RN.Text
-          style={[styles.listText, {borderColor: appCtx.Colors.Platform.text}]}>
-          * 預設費用無法調整
-        </RN.Text>
-        <RN.Text
-          style={[styles.listText, {borderColor: appCtx.Colors.Platform.text}]}>
-          * 長按可刪除分類別
-        </RN.Text>
+        <ReminderText text={'* 預設費用無法調整'} />
+        <ReminderText text={'* 長按可刪除分類別'} />
       </RN.View>
 
       <RN.ScrollView>
-        <UI.View style={styles.container}>
+        <RN.View style={styles.container}>
           {platform.length > 0 ? (
             platform.map((item, index) => {
               return item.token !== '1' ? (
@@ -83,54 +79,54 @@ const PlatformPage = () => {
                   style={styles.itemContainer}
                   onLongPress={() => deleteItem(item._id)}
                   key={index}>
-                  <UI.View style={styles.itemContent}>
-                    <UI.Text style={styles.itemContentText}>
+                  <RN.View style={styles.itemContent}>
+                    <RN.Text style={styles.itemContentText}>
                       {item.label}
-                    </UI.Text>
-                    <UI.Text style={styles.itemContentText}>
+                    </RN.Text>
+                    <RN.Text style={styles.itemContentText}>
                       {item.rate} %
-                    </UI.Text>
-                  </UI.View>
+                    </RN.Text>
+                  </RN.View>
                 </UI.Card>
               ) : (
                 <UI.Card style={styles.itemContainer} key={index}>
-                  <UI.View style={styles.itemContent}>
-                    <UI.Text
+                  <RN.View style={styles.itemContent}>
+                    <RN.Text
                       style={[
                         styles.itemContentText,
                         {color: appCtx.Colors.platformDefault},
                       ]}>
                       {item.label}
-                    </UI.Text>
-                    <UI.Text
+                    </RN.Text>
+                    <RN.Text
                       style={[
                         styles.itemContentText,
                         {color: appCtx.Colors.platformDefault},
                       ]}>
                       {item.rate} %
-                    </UI.Text>
-                  </UI.View>
+                    </RN.Text>
+                  </RN.View>
                 </UI.Card>
               );
             })
           ) : (
             <UI.Card style={styles.itemContainer}>
-              <UI.View style={styles.itemContent}>
-                <UI.Text style={{fontSize: 20}}>尚無資料</UI.Text>
-              </UI.View>
+              <RN.View style={styles.itemContent}>
+                <RN.Text style={{fontSize: 20}}>尚無資料</RN.Text>
+              </RN.View>
             </UI.Card>
           )}
           <UI.Card
             style={styles.itemContainer}
             onPress={() => navigation.navigate('AddPlatformItem')}>
-            <UI.View style={styles.itemContent}>
+            <RN.View style={styles.itemContent}>
               <RN.Image
                 source={require('../../assets/plus.png')}
                 style={{width: 25, height: 25}}
               />
-            </UI.View>
+            </RN.View>
           </UI.Card>
-        </UI.View>
+        </RN.View>
       </RN.ScrollView>
     </RN.SafeAreaView>
   );

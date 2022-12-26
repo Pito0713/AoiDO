@@ -1,17 +1,18 @@
 import React from 'react';
 import * as RN from 'react-native';
-import {AppContext} from '../../redux/AppContent';
 import {useFormik} from 'formik';
 import * as UI from 'react-native-ui-lib';
-import service from '../Service/Service';
 import {useNavigation} from '@react-navigation/native';
+import service from '../Service/service';
 import {
   registerActions,
   useAppSelector,
   useAppDispatch,
 } from '../../redux/store';
+import {AppContext} from '../../redux/AppContent';
 import CryptoJS from 'react-native-crypto-js';
 import {APP_SECRCT_KEY} from '../../env/config';
+
 const windowHeight = RN.Dimensions.get('window').height;
 
 const SignInPage = () => {
@@ -62,15 +63,11 @@ const SignInPage = () => {
         APP_SECRCT_KEY,
       ).toString();
       dispatch(registerActions.SET_PASSWORD(ciphertext));
-      // let bytes = CryptoJS.AES.decrypt(ciphertext, APP_SECRCT_KEY);
-      // let originalText = bytes.toString(CryptoJS.enc.Utf8);
-      // console.log(originalText);
     }
     appCtx.setLoading(false);
   };
 
   const dispatchHandler = values => {
-    console.log(values);
     if (!['', null, undefined].includes(values?.user?.account)) {
       dispatch(registerActions.SET_ACCOUNT(values.user.account));
     }
@@ -84,9 +81,9 @@ const SignInPage = () => {
     <RN.SafeAreaView style={styles.container}>
       <RN.KeyboardAvoidingView keyboardVerticalOffset={windowHeight}>
         <RN.TouchableOpacity activeOpacity={1} onPress={RN.Keyboard.dismiss}>
-          <UI.View style={styles.logInContainer}>
-            <UI.View style={styles.border}>
-              <UI.View
+          <RN.View style={styles.logInContainer}>
+            <RN.View style={styles.border}>
+              <RN.View
                 style={[
                   styles.InputContainer,
                   {backgroundColor: appCtx.Colors.inputContainer},
@@ -99,10 +96,10 @@ const SignInPage = () => {
                   onChangeText={formik.handleChange('account')}
                   style={styles.input}
                 />
-              </UI.View>
-            </UI.View>
-            <UI.View style={styles.border}>
-              <UI.View
+              </RN.View>
+            </RN.View>
+            <RN.View style={styles.border}>
+              <RN.View
                 style={[
                   styles.InputContainer,
                   {backgroundColor: appCtx.Colors.inputContainer},
@@ -116,38 +113,38 @@ const SignInPage = () => {
                   secureTextEntry={true}
                   style={styles.input}
                 />
-              </UI.View>
-            </UI.View>
-          </UI.View>
-          <UI.View style={[styles.errorText]}>
+              </RN.View>
+            </RN.View>
+          </RN.View>
+          <RN.View style={[styles.errorText]}>
             {['', null, undefined].includes(formik.values.account) && (
-              <UI.Text style={[{color: appCtx.Colors.errorText, fontSize: 12}]}>
+              <RN.Text style={[{color: appCtx.Colors.errorText, fontSize: 12}]}>
                 {' '}
                 {formik.errors.account}
-              </UI.Text>
+              </RN.Text>
             )}
             {['', null, undefined].includes(formik.values.password) && (
-              <UI.Text style={[{color: appCtx.Colors.errorText, fontSize: 12}]}>
+              <RN.Text style={[{color: appCtx.Colors.errorText, fontSize: 12}]}>
                 {' '}
                 {formik.errors.password}
-              </UI.Text>
+              </RN.Text>
             )}
-          </UI.View>
-          <UI.View style={styles.buttomGround}>
-            <UI.TouchableOpacity
+          </RN.View>
+          <RN.View style={styles.buttomGround}>
+            <RN.TouchableOpacity
               style={styles.registerContainer}
               onPress={() => formik.submitForm()}>
-              <UI.Text
+              <RN.Text
                 style={[
                   styles.registerText,
                   {textAlign: 'center', backgroundColor: appCtx.Colors.primary},
                 ]}>
                 {'登入'}
-              </UI.Text>
-            </UI.TouchableOpacity>
-          </UI.View>
-          <UI.View style={styles.rememberInfoContainer}>
-            <UI.TouchableOpacity
+              </RN.Text>
+            </RN.TouchableOpacity>
+          </RN.View>
+          <RN.View style={styles.rememberInfoContainer}>
+            <RN.TouchableOpacity
               onPress={() => setRememberInfo(!rememberInfo)}
               style={{flexDirection: 'row'}}>
               <UI.Checkbox
@@ -155,16 +152,16 @@ const SignInPage = () => {
                 size={15}
                 onValueChange={() => setRememberInfo(!rememberInfo)}
               />
-              <UI.Text style={{marginLeft: 8}}>{'記住帳號'}</UI.Text>
-            </UI.TouchableOpacity>
-            <UI.TouchableOpacity>
-              <UI.Text
+              <RN.Text style={{marginLeft: 8}}>{'記住帳號'}</RN.Text>
+            </RN.TouchableOpacity>
+            <RN.TouchableOpacity>
+              <RN.Text
                 style={{marginLeft: 20}}
                 onPress={() => navigation.navigate('register')}>
                 {'創立帳號'}
-              </UI.Text>
-            </UI.TouchableOpacity>
-          </UI.View>
+              </RN.Text>
+            </RN.TouchableOpacity>
+          </RN.View>
         </RN.TouchableOpacity>
       </RN.KeyboardAvoidingView>
     </RN.SafeAreaView>

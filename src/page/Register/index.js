@@ -2,12 +2,12 @@ import React from 'react';
 import * as RN from 'react-native';
 import {AppContext} from '../../redux/AppContent';
 import {useFormik} from 'formik';
-import * as UI from 'react-native-ui-lib';
-import service from '../Service/Service';
+import service from '../Service/service';
 import Goback from '../../component/Goback';
 import {useNavigation} from '@react-navigation/native';
+import ScrollViewComponent from '../../component/ScrollViewComponent';
 
-const RegisterPage = () => {
+const Content = () => {
   const appCtx = React.useContext(AppContext);
   const navigation = useNavigation();
 
@@ -59,101 +59,100 @@ const RegisterPage = () => {
   };
 
   return (
-    <UI.View useSafeArea={true} style={styles.container}>
-      <RN.KeyboardAvoidingView
-        behavior={RN.Platform.OS === 'ios' ? 'padding' : 'height'}>
-        <RN.TouchableOpacity activeOpacity={1} onPress={RN.Keyboard.dismiss}>
-          <Goback />
-          <UI.View style={styles.itemContainer}>
-            <UI.View style={styles.inputContainer}>
-              <UI.View style={styles.inputText}>
-                <UI.Text>新增帳號</UI.Text>
-              </UI.View>
-              <RN.TextInput
-                placeholder={'請輸入新增帳號'}
-                textAlign="left"
-                placeholderTextColor="gray"
-                value={formik.values.account}
-                onChangeText={formik.handleChange('account')}
-                style={[
-                  styles.input,
-                  {backgroundColor: appCtx.Colors.inputContainer},
-                ]}
-              />
-              <UI.View style={styles.inputText}>
-                <UI.Text style={[, {color: appCtx.Colors.errorText}]}>
-                  {formik.errors.account}
-                </UI.Text>
-              </UI.View>
-            </UI.View>
-            <UI.View>
-              <UI.View style={styles.inputContainer}>
-                <UI.View style={styles.inputText}>
-                  <UI.Text>密碼</UI.Text>
-                </UI.View>
-                <RN.TextInput
-                  placeholder={'請輸入密碼'}
-                  placeholderTextColor="gray"
-                  textAlign="left"
-                  value={formik.values.password}
-                  onChangeText={formik.handleChange('password')}
-                  secureTextEntry={true}
-                  style={[
-                    styles.input,
-                    {backgroundColor: appCtx.Colors.inputContainer},
-                  ]}
-                />
-                <UI.View style={styles.inputText}>
-                  <UI.Text style={[, {color: appCtx.Colors.errorText}]}>
-                    {formik.errors.password}
-                  </UI.Text>
-                </UI.View>
-              </UI.View>
-            </UI.View>
-            <UI.View>
-              <UI.View style={styles.inputContainer}>
-                <UI.View style={styles.inputText}>
-                  <UI.Text>重新輸入密碼</UI.Text>
-                </UI.View>
-                <RN.TextInput
-                  placeholder={'請重新輸入密碼'}
-                  placeholderTextColor="gray"
-                  textAlign="left"
-                  value={formik.values.confirmPassword}
-                  onChangeText={formik.handleChange('confirmPassword')}
-                  secureTextEntry={true}
-                  style={[
-                    styles.input,
-                    {backgroundColor: appCtx.Colors.inputContainer},
-                  ]}
-                />
-                <UI.View style={styles.inputText}>
-                  <UI.Text style={[, {color: appCtx.Colors.errorText}]}>
-                    {formik.errors.confirmPassword}
-                  </UI.Text>
-                </UI.View>
-              </UI.View>
-            </UI.View>
-            <UI.TouchableOpacity
-              style={styles.registerContainer}
-              onPress={() => formik.submitForm()}>
-              <UI.View
-                style={[
-                  styles.registerText,
-                  {backgroundColor: appCtx.Colors.primary},
-                ]}>
-                <UI.Text
-                  style={[
-                    {color: appCtx.Colors.registerText, textAlign: 'center'},
-                  ]}>
-                  註冊
-                </UI.Text>
-              </UI.View>
-            </UI.TouchableOpacity>
-          </UI.View>
-        </RN.TouchableOpacity>
-      </RN.KeyboardAvoidingView>
-    </UI.View>
+    <RN.View style={styles.itemContainer}>
+      <RN.View style={styles.inputContainer}>
+        <RN.View style={styles.inputText}>
+          <RN.Text>新增帳號</RN.Text>
+        </RN.View>
+        <RN.TextInput
+          placeholder={'請輸入新增帳號'}
+          textAlign="left"
+          placeholderTextColor="gray"
+          value={formik.values.account}
+          onChangeText={formik.handleChange('account')}
+          style={[
+            styles.input,
+            {backgroundColor: appCtx.Colors.inputContainer},
+          ]}
+        />
+        <RN.View style={styles.inputText}>
+          <RN.Text style={[{color: appCtx.Colors.errorText}]}>
+            {formik.errors.account}
+          </RN.Text>
+        </RN.View>
+      </RN.View>
+      <RN.View>
+        <RN.View style={styles.inputContainer}>
+          <RN.View style={styles.inputText}>
+            <RN.Text>密碼</RN.Text>
+          </RN.View>
+          <RN.TextInput
+            placeholder={'請輸入密碼'}
+            placeholderTextColor="gray"
+            textAlign="left"
+            value={formik.values.password}
+            onChangeText={formik.handleChange('password')}
+            secureTextEntry={true}
+            style={[
+              styles.input,
+              {backgroundColor: appCtx.Colors.inputContainer},
+            ]}
+          />
+          <RN.View style={styles.inputText}>
+            <RN.Text style={[, {color: appCtx.Colors.errorText}]}>
+              {formik.errors.password}
+            </RN.Text>
+          </RN.View>
+        </RN.View>
+      </RN.View>
+      <RN.View>
+        <RN.View style={styles.inputContainer}>
+          <RN.View style={styles.inputText}>
+            <RN.Text>重新輸入密碼</RN.Text>
+          </RN.View>
+          <RN.TextInput
+            placeholder={'請重新輸入密碼'}
+            placeholderTextColor="gray"
+            textAlign="left"
+            value={formik.values.confirmPassword}
+            onChangeText={formik.handleChange('confirmPassword')}
+            secureTextEntry={true}
+            style={[
+              styles.input,
+              {backgroundColor: appCtx.Colors.inputContainer},
+            ]}
+          />
+          <RN.View style={styles.inputText}>
+            <RN.Text style={[, {color: appCtx.Colors.errorText}]}>
+              {formik.errors.confirmPassword}
+            </RN.Text>
+          </RN.View>
+        </RN.View>
+      </RN.View>
+      <RN.TouchableOpacity
+        style={styles.registerContainer}
+        onPress={() => formik.submitForm()}>
+        <RN.View
+          style={[
+            styles.registerText,
+            {backgroundColor: appCtx.Colors.primary},
+          ]}>
+          <RN.Text
+            style={[{color: appCtx.Colors.registerText, textAlign: 'center'}]}>
+            註冊
+          </RN.Text>
+        </RN.View>
+      </RN.TouchableOpacity>
+    </RN.View>
+  );
+};
+
+const RegisterPage = () => {
+  return (
+    <RN.SafeAreaView style={styles.container}>
+      <Goback />
+      <ScrollViewComponent item={Content} />
+    </RN.SafeAreaView>
   );
 };
 const windowHeight = RN.Dimensions.get('window').height;
@@ -164,6 +163,7 @@ const styles = RN.StyleSheet.create({
   itemContainer: {
     justifyContent: 'center',
     marginTop: windowHeight / 10,
+    marginBottom: 20,
   },
   inputContainer: {
     justifyContent: 'center',

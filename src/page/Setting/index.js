@@ -1,6 +1,5 @@
 import React from 'react';
 import * as RN from 'react-native';
-import * as UI from 'react-native-ui-lib';
 import {registerActions, useAppDispatch} from '../../redux/store';
 import {useNavigation} from '@react-navigation/native';
 import {AppContext} from '../../redux/AppContent';
@@ -25,17 +24,18 @@ const Setting = () => {
     <RN.SafeAreaView style={styles.container}>
       {List.map((item, index) => {
         return (
-          <UI.TouchableOpacity
+          <RN.TouchableOpacity
             style={[
               styles.itemContainer,
               {backgroundColor: appCtx.Colors.Setting.cardTitle},
             ]}
-            onPress={item.action}>
-            <UI.Text
+            onPress={item.action}
+            key={index}>
+            <RN.Text
               style={[styles.text, {color: appCtx.Colors.Setting.cardText}]}>
               {item.title}
-            </UI.Text>
-          </UI.TouchableOpacity>
+            </RN.Text>
+          </RN.TouchableOpacity>
         );
       })}
     </RN.SafeAreaView>

@@ -1,14 +1,12 @@
 import React from 'react';
 import * as RN from 'react-native';
 import * as UI from 'react-native-ui-lib';
-
-import service from '../Service/Service';
 import numeral from 'numeral';
 import {useIsFocused} from '@react-navigation/native';
-import {useAppSelector} from '../../redux/store';
 
+import service from '../Service/service';
+import {useAppSelector} from '../../redux/store';
 import {AppContext} from '../../redux/AppContent';
-// import LottieIcon from './LottieIcon'
 import Goback from '../../component/Goback';
 import InputGroup from './InputGroup';
 import ScrollViewComponent from '../../component/ScrollViewComponent';

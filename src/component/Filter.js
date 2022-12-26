@@ -4,7 +4,7 @@ import * as UI from 'react-native-ui-lib';
 
 import {useAppSelector} from '../redux/store';
 import {AppContext} from '../redux/AppContent';
-import service from '../page/Service/Service';
+import service from '../page/Service/service';
 import {useIsFocused} from '@react-navigation/native';
 
 const Fillter = e => {
@@ -42,13 +42,13 @@ const Fillter = e => {
 
   return (
     <>
-      <UI.View style={styles.container}>
-        <UI.TouchableOpacity onPress={() => show()}>
+      <RN.View style={styles.container}>
+        <RN.TouchableOpacity onPress={() => show()}>
           <RN.Image
             source={require('../assets/filter.png')}
             style={{width: 20, height: 20}}
           />
-        </UI.TouchableOpacity>
+        </RN.TouchableOpacity>
         <UI.Dialog
           useSafeArea
           top={true}
@@ -57,18 +57,18 @@ const Fillter = e => {
           containerStyle={styles.dialog}
           ignoreBackgroundPress={false}
           onDismiss={() => show()}>
-          <UI.TouchableOpacity
+          <RN.TouchableOpacity
             style={styles.cleanFillter}
             onPress={() => {
               setDisabledValue('');
             }}>
-            <UI.Text>清除</UI.Text>
-          </UI.TouchableOpacity>
+            <RN.Text>清除</RN.Text>
+          </RN.TouchableOpacity>
 
           {categoryList.length > 0 &&
             categoryList.map((item, index) => {
               return (
-                <UI.View style={styles.dialogContent} key={index}>
+                <RN.View style={styles.dialogContent} key={index}>
                   <UI.RadioButton
                     selected={disabledValue?.[item.category]}
                     onPress={() =>
@@ -81,10 +81,10 @@ const Fillter = e => {
                     contentOnLeft
                     containerStyle={styles.contentOnLeft}
                   />
-                </UI.View>
+                </RN.View>
               );
             })}
-          <UI.TouchableOpacity
+          <RN.TouchableOpacity
             style={[
               styles.confirmButton,
               {backgroundColor: appCtx.Colors.primary},
@@ -93,10 +93,10 @@ const Fillter = e => {
               setShowDialog(false);
               e.ShowDialog(false);
             }}>
-            <UI.Text style={[{color: appCtx.Colors.textPrimary}]}>確認</UI.Text>
-          </UI.TouchableOpacity>
+            <RN.Text style={[{color: appCtx.Colors.textPrimary}]}>確認</RN.Text>
+          </RN.TouchableOpacity>
         </UI.Dialog>
-      </UI.View>
+      </RN.View>
     </>
   );
 };

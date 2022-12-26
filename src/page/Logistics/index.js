@@ -2,9 +2,10 @@ import React from 'react';
 import * as RN from 'react-native';
 import * as UI from 'react-native-ui-lib';
 import {useNavigation, useIsFocused} from '@react-navigation/native';
-import service from '../Service/Service';
+import service from '../Service/service';
 import {AppContext} from '../../redux/AppContent';
 import {useAppSelector} from '../../redux/store';
+import Pagination from '../../component/Pagination';
 
 const Logistics = () => {
   const appCtx = React.useContext(AppContext);
@@ -15,13 +16,20 @@ const Logistics = () => {
   const [searchText, setSearchText] = React.useState('');
   const reduxToken = useAppSelector(state => state.token);
   const [refreshing, setRefreshing] = React.useState(false);
+  const [pagination, setPagination] = React.useState(10);
+  const [page, setPage] = React.useState(1);
+  const [total, setTotal] = React.useState(0);
 
-  const onRefresh = React.useCallback(() => {
+  const onRefresh = () => {
     setRefreshing(true);
     postSearchCargo();
     /// 預防請求失敗
     setRefreshing(false);
-  }, [refreshing]);
+  };
+
+  const onPageChange = page => {
+    setPage(page);
+  };
 
   const deleteItem = async item => {
     RN.Alert.alert(
@@ -49,7 +57,7 @@ const Logistics = () => {
       id: item,
     };
     const response = await service.deleteCargo(submitData);
-    if (response?.status === 'success') await postSearchCargo();
+    if (response?.status === 'success') postSearchCargo();
     await appCtx.setLoading(false);
   };
 
@@ -59,22 +67,34 @@ const Logistics = () => {
     let submitData = {
       searchText: text,
       token: reduxToken,
+      page: page,
+      pagination: pagination,
     };
     const response = await service.postSearchCargo(submitData);
-    setSearchText(text);
-    setCargos(response.data);
+    if (response.status == 'success') {
+      setCargos(response.data);
+      setTotal(response.total);
+    }
     await appCtx.setLoading(false);
   };
 
   React.useEffect(() => {
     if (isFocused) postSearchCargo();
-    if (!isFocused) setCargos([]);
+    if (!isFocused) {
+      setCargos([]);
+      onChangeText('');
+      onPageChange(1);
+    }
   }, [isFocused]);
+
+  React.useEffect(() => {
+    postSearchCargo();
+  }, [page]);
 
   return (
     <RN.SafeAreaView style={styles.container}>
-      <UI.View style={styles.searchContainer}>
-        <UI.View
+      <RN.View style={styles.searchContainer}>
+        <RN.View
           style={[
             styles.searchContent,
             {backgroundColor: appCtx.Colors.inputContainer},
@@ -94,14 +114,14 @@ const Logistics = () => {
             textAlign="left"
             placeholderTextColor="gray"
           />
-        </UI.View>
+        </RN.View>
         <RN.TouchableOpacity
           style={[
             styles.searchContentText,
             {backgroundColor: appCtx.Colors.primary},
           ]}
           onPress={() => postSearchCargo()}>
-          <UI.Text
+          <RN.Text
             style={{
               fontSize: 20,
               textAlign: 'center',
@@ -109,9 +129,25 @@ const Logistics = () => {
               color: appCtx.Colors.textPrimary,
             }}>
             搜尋
-          </UI.Text>
+          </RN.Text>
         </RN.TouchableOpacity>
-      </UI.View>
+        <RN.TouchableOpacity
+          style={[styles.addContainer]}
+          onPress={() => {
+            navigation.navigate('AddLogisticsItem'), onChangeText('');
+          }}>
+          <RN.View
+            style={[
+              styles.itemContent,
+              {alignItems: 'center', justifyContent: 'center'},
+            ]}>
+            <RN.Image
+              source={require('../../assets/plus.png')}
+              style={{width: 25, height: 25}}
+            />
+          </RN.View>
+        </RN.TouchableOpacity>
+      </RN.View>
       <RN.ScrollView
         refreshControl={
           <RN.RefreshControl
@@ -136,7 +172,7 @@ const Logistics = () => {
                 onPress={() => navigation.navigate('LogisticsItem', {item})}
                 onLongPress={() => deleteItem(item._id)}
                 key={index}>
-                <UI.View
+                <RN.View
                   style={[
                     styles.itemContent,
                     {
@@ -144,37 +180,37 @@ const Logistics = () => {
                       flex: 3,
                     },
                   ]}>
-                  <UI.Text
+                  <RN.Text
                     style={[
                       styles.itemContentTextTitle,
                       {color: appCtx.Colors.textPrimary},
                     ]}>
                     描述
-                  </UI.Text>
-                  <UI.View
+                  </RN.Text>
+                  <RN.View
                     style={{alignItems: 'center', justifyContent: 'center'}}>
-                    <UI.Text
+                    <RN.Text
                       style={[{color: appCtx.Colors.textPrimary, fontSize: 20}]}
                       numberOfLines={1}
                       ellipsizeMode={'tail'}>
                       {item.describe}
-                    </UI.Text>
-                  </UI.View>
-                </UI.View>
-                <UI.View style={[styles.itemContent, {flex: 7}]}>
-                  <UI.Text style={styles.itemContentTextTitle}>
+                    </RN.Text>
+                  </RN.View>
+                </RN.View>
+                <RN.View style={[styles.itemContent, {flex: 7}]}>
+                  <RN.Text style={styles.itemContentTextTitle}>
                     貨運單號
-                  </UI.Text>
-                  <UI.View
+                  </RN.Text>
+                  <RN.View
                     style={{alignItems: 'center', justifyContent: 'center'}}>
-                    <UI.Text
+                    <RN.Text
                       style={[{fontSize: 20}]}
                       numberOfLines={1}
                       ellipsizeMode={'tail'}>
                       {item.singNumber}
-                    </UI.Text>
-                  </UI.View>
-                </UI.View>
+                    </RN.Text>
+                  </RN.View>
+                </RN.View>
               </UI.Card>
             );
           })
@@ -187,40 +223,24 @@ const Logistics = () => {
                 borderColor: appCtx.Colors.Logistics.borderColor,
               },
             ]}>
-            <UI.View
+            <RN.View
               style={[
                 styles.itemContent,
                 {alignItems: 'center', justifyContent: 'center'},
               ]}>
-              <UI.Text style={{fontSize: 20}}>
+              <RN.Text style={{fontSize: 20}}>
                 {searchText ? `搜尋 "${searchText}"  查無資料` : `尚無資料`}
-              </UI.Text>
-            </UI.View>
+              </RN.Text>
+            </RN.View>
           </UI.Card>
         )}
-        <UI.Card
-          style={[
-            styles.itemContainer,
-            {
-              backgroundColor: appCtx.Colors.Logistics.cardContianer,
-              borderColor: appCtx.Colors.Logistics.borderColor,
-            },
-          ]}
-          onPress={() => {
-            navigation.navigate('AddLogisticsItem'), onChangeText('');
-          }}>
-          <UI.View
-            style={[
-              styles.itemContent,
-              {alignItems: 'center', justifyContent: 'center'},
-            ]}>
-            <RN.Image
-              source={require('../../assets/plus.png')}
-              style={{width: 25, height: 25}}
-            />
-          </UI.View>
-        </UI.Card>
       </RN.ScrollView>
+      <Pagination
+        page={page}
+        pagination={pagination}
+        total={total}
+        onPageChange={onPageChange}
+      />
     </RN.SafeAreaView>
   );
 };
@@ -281,6 +301,10 @@ const styles = RN.StyleSheet.create({
     marginLeft: 5,
     width: '100%',
     fontSize: 15,
+  },
+  addContainer: {
+    width: '7.5%',
+    margin: 10,
   },
 });
 

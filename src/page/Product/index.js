@@ -2,10 +2,12 @@ import React from 'react';
 import * as RN from 'react-native';
 import * as UI from 'react-native-ui-lib';
 import {useNavigation, useIsFocused} from '@react-navigation/native';
-import service from '../Service/Service';
+
+import service from '../Service/service';
 import {AppContext} from '../../redux/AppContent';
 import {useAppSelector} from '../../redux/store';
 import Fillter from '../../component/Filter';
+import Pagination from '../../component/Pagination';
 
 const windowWidth = RN.Dimensions.get('window').width;
 const windowHeight = RN.Dimensions.get('window').height;
@@ -22,15 +24,23 @@ const Logistics = () => {
   const [showDialog, setShowDialog] = React.useState(false);
   const [refreshing, setRefreshing] = React.useState(false);
 
-  const onRefresh = React.useCallback(async () => {
+  const [pagination, setPagination] = React.useState(10);
+  const [page, setPage] = React.useState(1);
+  const [total, setTotal] = React.useState(0);
+
+  const onRefresh = () => {
     setRefreshing(true);
     postSearchProduct();
-
     /// 預防請求失敗
     setRefreshing(false);
-  }, [refreshing]);
+  };
+
+  const onPageChange = page => {
+    setPage(page);
+  };
 
   const postSearchProduct = async () => {
+    await appCtx.setLoading(true);
     let target = [];
     Object.entries(categoryValue).forEach(([key, value]) => {
       if (value) target.push(key);
@@ -40,10 +50,16 @@ const Logistics = () => {
       searchText: text,
       token: reduxToken,
       category: target,
+      page: page,
+      pagination: pagination,
     };
     const response = await service.postAllProduct(submitData);
 
-    if (response?.status === 'success') setProduct(response.data);
+    if (response?.status === 'success') {
+      setProduct(response.data);
+      setTotal(response.total);
+    }
+    await appCtx.setLoading(false);
   };
 
   const deleteItem = item => {
@@ -70,22 +86,29 @@ const Logistics = () => {
       id: item,
     };
     const response = await service.deleteProductOne(submitData);
-    if (response?.status === 'success') await postSearchProduct();
+    if (response?.status === 'success') postSearchProduct();
   };
 
   React.useEffect(() => {
     if (isFocused) postSearchProduct();
-    if (!isFocused) onChangeText('');
+    if (!isFocused) {
+      onChangeText('');
+      onPageChange(1);
+    }
   }, [isFocused]);
 
   React.useEffect(() => {
     if (!showDialog) postSearchProduct();
   }, [showDialog]);
 
+  React.useEffect(() => {
+    postSearchProduct();
+  }, [page]);
+
   return (
     <RN.SafeAreaView style={styles.container}>
-      <UI.View style={styles.searchContainer}>
-        <UI.View
+      <RN.View style={styles.searchContainer}>
+        <RN.View
           style={[
             styles.searchContent,
             {backgroundColor: appCtx.Colors.inputContainer},
@@ -102,20 +125,36 @@ const Logistics = () => {
             textAlign="left"
             placeholderTextColor="gray"
           />
-        </UI.View>
+        </RN.View>
         <RN.TouchableOpacity
           style={[
             styles.searchContentText,
             {backgroundColor: appCtx.Colors.primary},
           ]}
           onPress={() => postSearchProduct()}>
-          <UI.Text
+          <RN.Text
             style={[styles.searchText, {color: appCtx.Colors.textPrimary}]}>
             搜尋
-          </UI.Text>
+          </RN.Text>
         </RN.TouchableOpacity>
         <Fillter categoryValue={setCategoryValue} ShowDialog={setShowDialog} />
-      </UI.View>
+        <RN.TouchableOpacity
+          style={[styles.addContainer]}
+          onPress={() => {
+            navigation.navigate('AddProductItem');
+          }}>
+          <RN.View
+            style={[
+              styles.itemContent,
+              {alignItems: 'center', justifyContent: 'center'},
+            ]}>
+            <RN.Image
+              source={require('../../assets/plus.png')}
+              style={{width: 25, height: 25}}
+            />
+          </RN.View>
+        </RN.TouchableOpacity>
+      </RN.View>
       <RN.ScrollView
         refreshControl={
           <RN.RefreshControl
@@ -126,7 +165,7 @@ const Logistics = () => {
             progressViewOffset={-5}
           />
         }>
-        <UI.View style={styles.productContainer}>
+        <RN.View style={styles.productContainer}>
           {product.length > 0 ? (
             product.map((item, index) => {
               return (
@@ -142,13 +181,13 @@ const Logistics = () => {
                     source={{uri: `${item.imageUrl}`}}
                     style={{width: '100%', height: '100%'}}
                     resizeMode="cover">
-                    <UI.View style={[styles.itemContentTextContainer]}>
-                      <UI.View
+                    <RN.View style={[styles.itemContentTextContainer]}>
+                      <RN.View
                         style={[
                           styles.itemContentText,
                           {alignItems: 'flex-end'},
                         ]}>
-                        <UI.Text
+                        <RN.Text
                           style={{
                             paddingLeft: 5,
                             borderTopRightRadius: 10,
@@ -157,9 +196,9 @@ const Logistics = () => {
                             backgroundColor: appCtx.Colors.proudcut.cardTitle,
                           }}>
                           {item.category}
-                        </UI.Text>
-                      </UI.View>
-                      <UI.View
+                        </RN.Text>
+                      </RN.View>
+                      <RN.View
                         style={[
                           styles.itemContentText,
                           {
@@ -168,7 +207,7 @@ const Logistics = () => {
                             alignItems: 'center',
                           },
                         ]}>
-                        <UI.Text
+                        <RN.Text
                           style={[
                             {
                               color: appCtx.Colors.proudcut.cardText,
@@ -179,8 +218,8 @@ const Logistics = () => {
                           numberOfLines={1}
                           ellipsizeMode={'tail'}>
                           {item.describe}
-                        </UI.Text>
-                        <UI.Text
+                        </RN.Text>
+                        <RN.Text
                           style={[
                             {color: appCtx.Colors.proudcut.cardText, flex: 4},
                           ]}
@@ -188,16 +227,16 @@ const Logistics = () => {
                           ellipsizeMode={'tail'}>
                           {' '}
                           $ {Number(item.price)}
-                        </UI.Text>
-                      </UI.View>
-                    </UI.View>
+                        </RN.Text>
+                      </RN.View>
+                    </RN.View>
                   </RN.ImageBackground>
                 </UI.Card>
               );
             })
           ) : (
             <UI.Card style={styles.itemContainer}>
-              <UI.View
+              <RN.View
                 style={[
                   {
                     justifyContent: 'space-around',
@@ -205,24 +244,18 @@ const Logistics = () => {
                     height: '100%',
                   },
                 ]}>
-                <UI.Text style={{fontSize: 20}}>暫無資料</UI.Text>
-              </UI.View>
+                <RN.Text style={{fontSize: 20}}>暫無資料</RN.Text>
+              </RN.View>
             </UI.Card>
           )}
-          <UI.Card
-            style={styles.itemContainer}
-            onPress={() => {
-              navigation.navigate('AddProductItem');
-            }}>
-            <UI.View style={[styles.itemContent]}>
-              <RN.Image
-                source={require('../../assets/plus.png')}
-                style={{width: 25, height: 25}}
-              />
-            </UI.View>
-          </UI.Card>
-        </UI.View>
+        </RN.View>
       </RN.ScrollView>
+      <Pagination
+        page={page}
+        pagination={pagination}
+        total={total}
+        onPageChange={onPageChange}
+      />
     </RN.SafeAreaView>
   );
 };
@@ -314,6 +347,10 @@ const styles = RN.StyleSheet.create({
     width: '100%',
     fontSize: 15,
     height: '99%',
+  },
+  addContainer: {
+    width: '5%',
+    margin: 10,
   },
 });
 

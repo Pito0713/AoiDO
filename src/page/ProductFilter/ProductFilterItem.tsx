@@ -1,35 +1,46 @@
 import React from "react";
 import * as RN from 'react-native';
 import { AppContext } from '../../redux/AppContent';
-import { useFormik } from "formik";
 import * as UI from 'react-native-ui-lib';
-import service from "../Service/Service";
+import service from "../Service/service";
 import Goback from '../../component/Goback'
-import { useNavigation, useIsFocused } from '@react-navigation/native';
+import { useIsFocused } from '@react-navigation/native';
 import { useAppSelector } from '../../redux/store';
+import Pagination from '../../component/Pagination';
+
 interface ProductFilterItem {
-  // label?: string
-  category?: string
-  token?: string
+  imageUrl?: string
+  describe?: string
+  price?: string 
+  _id: string
 }
 
 const ProductFilterItem = ({ route }: { route: any }) => {
   const target = route?.params?.item
   const appCtx = React.useContext(AppContext);
   const reduxToken = useAppSelector(state => state.token)
-  const [productFilter, setProductFilter] = React.useState([]);
   const isFocused = useIsFocused();
+  const [productFilter, setProductFilter] = React.useState([]);
+  const [pagination, setPagination] = React.useState(10);
+  const [page, setPage] = React.useState(1);
+  const [total, setTotal] = React.useState(0);
 
   const postAllProduct = async () => {
     await appCtx.setLoading(true)
     let submitData = {
       searchText: '',
       token: reduxToken,
-      category: [target.category]
+      category: [target.category],
+      page: page,
+      pagination: pagination,
     }
 
     const response = await service.postAllProduct(submitData);
-    if (response?.data) setProductFilter(response.data)
+
+    if (response?.data) {
+      setProductFilter(response.data)
+      setTotal(response.total);
+    }
     await appCtx.setLoading(false)
   }
 
@@ -51,6 +62,10 @@ const ProductFilterItem = ({ route }: { route: any }) => {
     );
   }
 
+  const onPageChange = async (page:any) => {
+    setPage(page);
+  };
+
   const deleteCargo = async (item: string) => {
     // call api
     await appCtx.setLoading(true)
@@ -63,39 +78,49 @@ const ProductFilterItem = ({ route }: { route: any }) => {
   }
 
   React.useEffect(() => {
-      if (isFocused) postAllProduct()
+    if (isFocused) postAllProduct()
   }, [isFocused]);
 
+  React.useEffect(() => {
+    postAllProduct();
+  }, [page]);
+
   return (
-    <UI.View useSafeArea={true} style={styles.container}>
+    <RN.SafeAreaView style={styles.container}>
       <Goback />
-      <UI.View>
-        {productFilter.length > 0 ? productFilter.map((item, index) => {
+      <RN.ScrollView style={styles.container}>
+        {productFilter.length > 0 ? productFilter.map((item : ProductFilterItem, index) => {
           return (
             <UI.Card style={styles.itemContainer} key={index}>
-              <UI.View style={styles.itemContent} >
-                <UI.View style={{ flex: 2 }}>
+              <RN.View style={styles.itemContent} >
+                <RN.View style={{ flex: 2 }}>
                   <UI.Card.Image
-                    source={{ uri: `${item.imageUrl}` }}
+                    source={{ uri: `${item.imageUrl }` }}
                     style={{ width: '105%', height:'105%', }}
                   />
-                </UI.View>
-                <UI.View style={{ flex: 4 }}><UI.Text style={styles.itemContentText} numberOfLines={1} ellipsizeMode={'tail'}>{item.describe}</UI.Text></UI.View>
-                <UI.View style={{ flex: 2.5 }}><UI.Text style={styles.itemContentText} numberOfLines={1} ellipsizeMode={'tail'}>$ {item.price}</UI.Text></UI.View>
-                <UI.TouchableOpacity style={{ flex: 1.5, alignItems: 'center' ,height:'100%',justifyContent: 'center',backgroundColor: appCtx.Colors.primary}} onPress={() => deleteItem(item._id)}>
-                  <UI.Text>刪除</UI.Text>
-                </UI.TouchableOpacity>
-              </UI.View>
+                </RN.View>
+                <RN.View style={{ flex: 4 }}><RN.Text style={styles.itemContentText} numberOfLines={1} ellipsizeMode={'tail'}>{item.describe}</RN.Text></RN.View>
+                <RN.View style={{ flex: 2.5 }}><RN.Text style={styles.itemContentText} numberOfLines={1} ellipsizeMode={'tail'}>$ {item.price}</RN.Text></RN.View>
+                <RN.TouchableOpacity style={{ flex: 1.5, alignItems: 'center' ,height:'100%',justifyContent: 'center',backgroundColor: appCtx.Colors.primary}} onPress={() => deleteItem(item._id)}>
+                  <RN.Text>刪除</RN.Text>
+                </RN.TouchableOpacity>
+              </RN.View>
             </UI.Card>
           )
         }) :
           <UI.Card style={styles.itemContainer}>
-            <UI.View style={styles.itemContent}>
-              <UI.Text style={{ fontSize: 20 }}>尚無資料</UI.Text>
-            </UI.View>
+            <RN.View style={styles.itemContent}>
+              <RN.Text style={{ fontSize: 20 }}>尚無資料</RN.Text>
+            </RN.View>
           </UI.Card>}
-      </UI.View>
-    </UI.View>
+      </RN.ScrollView>
+      <Pagination
+        page={page}
+        pagination={pagination}
+        total={total}
+        onPageChange={onPageChange}
+      />
+    </RN.SafeAreaView>
   );
 };
 const styles = RN.StyleSheet.create({
@@ -121,8 +146,6 @@ const styles = RN.StyleSheet.create({
     paddingLeft: 20,
     fontSize: 15
   },
-
-
 });
 
 export default ProductFilterItem;

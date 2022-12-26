@@ -1,13 +1,13 @@
 import React from "react";
 import * as RN from 'react-native';
-import { AppContext } from '../../redux/AppContent';
 import { useFormik } from "formik";
-import * as UI from 'react-native-ui-lib';
-import service from "../Service/Service";
-import Goback from '../../component/Goback'
 import { useNavigation } from '@react-navigation/native';
+
+import service from "../Service/service";
+import Goback from '../../component/Goback'
 import { useAppSelector } from '../../redux/store';
 import ScrollViewComponent from "../../component/ScrollViewComponent";
+import { AppContext } from '../../redux/AppContent';
 
 interface PlatformItem {
   label?: string
@@ -41,7 +41,7 @@ const Content = () => {
   });
 
   const postCreateModifyRate = async (values: PlatformItem) => {
-    appCtx.setLoading(true)
+    await appCtx.setLoading(true)
 
     let submitData = {
       "label": values.label,
@@ -50,16 +50,16 @@ const Content = () => {
     }
     const response = await service.postCreateModifyRate(submitData);
     if (response?.status === 'success') navigation.goBack()
-    appCtx.setLoading(false);
+    await appCtx.setLoading(false);
   }
 
 
   return (
-    <UI.View style={styles.itemContainer}>
-      <UI.View style={styles.inputContainer}>
-        <UI.View style={styles.inputText}>
-          <UI.Text>新增平台名稱</UI.Text>
-        </UI.View>
+    <RN.View style={styles.itemContainer}>
+      <RN.View style={styles.inputContainer}>
+        <RN.View style={styles.inputText}>
+          <RN.Text>新增平台名稱</RN.Text>
+        </RN.View>
         <RN.TextInput
           placeholder={'請輸入新增平台名稱'}
           textAlign='left'
@@ -68,16 +68,16 @@ const Content = () => {
           onChangeText={formik.handleChange("label")}
           style={[styles.input, { backgroundColor: appCtx.Colors.inputContainer }]}
         />
-        <UI.View style={styles.inputText}>
-          <UI.Text style={[, { color: appCtx.Colors.errorText }]}>
+        <RN.View style={styles.inputText}>
+          <RN.Text style={[, { color: appCtx.Colors.errorText }]}>
             {formik.errors.label}
-          </UI.Text>
-        </UI.View>
-      </UI.View>
-      <UI.View style={styles.inputContainer}>
-        <UI.View style={styles.inputText}>
-          <UI.Text>新增平台費用匯率</UI.Text>
-        </UI.View>
+          </RN.Text>
+        </RN.View>
+      </RN.View>
+      <RN.View style={styles.inputContainer}>
+        <RN.View style={styles.inputText}>
+          <RN.Text>新增平台費用匯率</RN.Text>
+        </RN.View>
         <RN.TextInput
           placeholder={'請輸入新增平台費用匯率'}
           placeholderTextColor="gray"
@@ -86,29 +86,29 @@ const Content = () => {
           onChangeText={formik.handleChange("rate")}
           style={[styles.input, { backgroundColor: appCtx.Colors.inputContainer }]}
         />
-        <UI.View style={styles.inputText}>
-          <UI.Text style={[, { color: appCtx.Colors.errorText }]}>
+        <RN.View style={styles.inputText}>
+          <RN.Text style={[, { color: appCtx.Colors.errorText }]}>
             {formik.errors.rate}
-          </UI.Text>
-        </UI.View>
-      </UI.View>
+          </RN.Text>
+        </RN.View>
+      </RN.View>
 
-      <UI.TouchableOpacity style={styles.registerContainer} onPress={() => formik.submitForm()}>
-        <UI.View style={[styles.registerText,{backgroundColor:appCtx.Colors.primary}]}>
-          <UI.Text style={[{textAlign: 'center', }]}>新增平台資料</UI.Text>
-        </UI.View>
-      </UI.TouchableOpacity>
+      <RN.TouchableOpacity style={styles.registerContainer} onPress={() => formik.submitForm()}>
+        <RN.View style={[styles.registerText,{backgroundColor:appCtx.Colors.primary}]}>
+          <RN.Text style={[{textAlign: 'center', }]}>新增平台資料</RN.Text>
+        </RN.View>
+      </RN.TouchableOpacity>
 
-    </UI.View>
+    </RN.View>
   );
 };
 
 const AddPlatformItem = () => {
   return (
-    <UI.View useSafeArea={true} style={styles.container}>
+    <RN.SafeAreaView style={styles.container}>
       <Goback />
       <ScrollViewComponent item={Content}/>
-    </UI.View>
+    </RN.SafeAreaView>
   );
 };
 const windowHeight = RN.Dimensions.get('window').height;

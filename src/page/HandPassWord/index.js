@@ -1,22 +1,23 @@
 import React from 'react';
 import * as RN from 'react-native';
-import {AppContext} from '../../redux/AppContent';
 import {useFormik} from 'formik';
-import * as UI from 'react-native-ui-lib';
-import service from '../Service/Service';
-import Goback from '../../component/Goback';
 import {useNavigation} from '@react-navigation/native';
 import CryptoJS from 'react-native-crypto-js';
+
+import {AppContext} from '../../redux/AppContent';
+import service from '../Service/service';
+import Goback from '../../component/Goback';
 import {APP_SECRCT_KEY} from '../../env/config';
 import {
   registerActions,
   useAppSelector,
   useAppDispatch,
 } from '../../redux/store';
+import ScrollViewComponent from '../../component/ScrollViewComponent';
 
 const windowHeight = RN.Dimensions.get('window').height;
 
-const HandPassWord = () => {
+const Content = () => {
   const appCtx = React.useContext(AppContext);
   const navigation = useNavigation();
   const dispatch = useAppDispatch();
@@ -32,6 +33,7 @@ const HandPassWord = () => {
     },
     validate: values => {
       const errors = {};
+      // 解密
       let decryptValue = CryptoJS.AES.decrypt(reduxPassword, APP_SECRCT_KEY);
       let originalValue = decryptValue.toString(CryptoJS.enc.Utf8);
 
@@ -69,6 +71,7 @@ const HandPassWord = () => {
 
     const response = await service.postHandPassWord(submitData);
     if (response?.status === 'success') {
+      // 加密
       let encryptValue = CryptoJS.AES.encrypt(
         values.newPassWord,
         APP_SECRCT_KEY,
@@ -81,96 +84,95 @@ const HandPassWord = () => {
   };
 
   return (
-    <UI.View useSafeArea={true} style={styles.container}>
-      <RN.KeyboardAvoidingView
-        behavior={RN.Platform.OS === 'ios' ? 'padding' : 'height'}>
-        <RN.TouchableOpacity activeOpacity={1} onPress={RN.Keyboard.dismiss}>
-          <Goback />
-          <UI.View style={styles.itemContainer}>
-            <UI.View style={styles.inputContainer}>
-              <UI.View style={styles.inputText}>
-                <UI.Text>舊密碼</UI.Text>
-              </UI.View>
-              <RN.TextInput
-                placeholder={'舊密碼'}
-                textAlign="left"
-                placeholderTextColor="gray"
-                value={formik.values.oldPassWord}
-                onChangeText={formik.handleChange('oldPassWord')}
-                style={[
-                  styles.input,
-                  {backgroundColor: appCtx.Colors.inputContainer},
-                ]}
-              />
-              <UI.View style={styles.inputText}>
-                <UI.Text style={[, {color: appCtx.Colors.errorText}]}>
-                  {formik.errors.oldPassWord}
-                </UI.Text>
-              </UI.View>
-            </UI.View>
-            <UI.View style={styles.inputContainer}>
-              <UI.View style={styles.inputText}>
-                <UI.Text>新的密碼</UI.Text>
-              </UI.View>
-              <RN.TextInput
-                placeholder={'新的密碼'}
-                placeholderTextColor="gray"
-                textAlign="left"
-                value={formik.values.newPassWord}
-                onChangeText={formik.handleChange('newPassWord')}
-                style={[
-                  styles.input,
-                  {backgroundColor: appCtx.Colors.inputContainer},
-                ]}
-              />
-              <UI.View style={styles.inputText}>
-                <UI.Text style={[, {color: appCtx.Colors.errorText}]}>
-                  {formik.errors.newPassWord}
-                </UI.Text>
-              </UI.View>
-            </UI.View>
-            <UI.View style={styles.inputContainer}>
-              <UI.View style={styles.inputText}>
-                <UI.Text>重新確認新的密碼</UI.Text>
-              </UI.View>
-              <RN.TextInput
-                placeholder={'重新確認新的密碼'}
-                placeholderTextColor="gray"
-                textAlign="left"
-                value={formik.values.newPassWordAgain}
-                onChangeText={formik.handleChange('newPassWordAgain')}
-                style={[
-                  styles.input,
-                  {backgroundColor: appCtx.Colors.inputContainer},
-                ]}
-              />
-              <UI.View style={styles.inputText}>
-                <UI.Text style={[, {color: appCtx.Colors.errorText}]}>
-                  {formik.errors.newPassWordAgain}
-                </UI.Text>
-              </UI.View>
-            </UI.View>
+    <RN.View style={styles.itemContainer}>
+      <RN.View style={styles.inputContainer}>
+        <RN.View style={styles.inputText}>
+          <RN.Text>舊密碼</RN.Text>
+        </RN.View>
+        <RN.TextInput
+          placeholder={'舊密碼'}
+          textAlign="left"
+          placeholderTextColor="gray"
+          value={formik.values.oldPassWord}
+          onChangeText={formik.handleChange('oldPassWord')}
+          style={[
+            styles.input,
+            {backgroundColor: appCtx.Colors.inputContainer},
+          ]}
+        />
+        <RN.View style={styles.inputText}>
+          <RN.Text style={[, {color: appCtx.Colors.errorText}]}>
+            {formik.errors.oldPassWord}
+          </RN.Text>
+        </RN.View>
+      </RN.View>
+      <RN.View style={styles.inputContainer}>
+        <RN.View style={styles.inputText}>
+          <RN.Text>新的密碼</RN.Text>
+        </RN.View>
+        <RN.TextInput
+          placeholder={'新的密碼'}
+          placeholderTextColor="gray"
+          textAlign="left"
+          value={formik.values.newPassWord}
+          onChangeText={formik.handleChange('newPassWord')}
+          style={[
+            styles.input,
+            {backgroundColor: appCtx.Colors.inputContainer},
+          ]}
+        />
+        <RN.View style={styles.inputText}>
+          <RN.Text style={[{color: appCtx.Colors.errorText}]}>
+            {formik.errors.newPassWord}
+          </RN.Text>
+        </RN.View>
+      </RN.View>
+      <RN.View style={styles.inputContainer}>
+        <RN.View style={styles.inputText}>
+          <RN.Text>重新確認新的密碼</RN.Text>
+        </RN.View>
+        <RN.TextInput
+          placeholder={'重新確認新的密碼'}
+          placeholderTextColor="gray"
+          textAlign="left"
+          value={formik.values.newPassWordAgain}
+          onChangeText={formik.handleChange('newPassWordAgain')}
+          style={[
+            styles.input,
+            {backgroundColor: appCtx.Colors.inputContainer},
+          ]}
+        />
+        <RN.View style={styles.inputText}>
+          <RN.Text style={[{color: appCtx.Colors.errorText}]}>
+            {formik.errors.newPassWordAgain}
+          </RN.Text>
+        </RN.View>
+      </RN.View>
 
-            <UI.TouchableOpacity
-              style={styles.registerContainer}
-              onPress={() => formik.submitForm()}>
-              <UI.View
-                style={[
-                  styles.registerText,
-                  {backgroundColor: appCtx.Colors.primary},
-                ]}>
-                <UI.Text
-                  style={[
-                    {color: appCtx.Colors.registerText, textAlign: 'center'},
-                  ]}>
-                  修改資料
-                </UI.Text>
-              </UI.View>
-            </UI.TouchableOpacity>
-          </UI.View>
-        </RN.TouchableOpacity>
-      </RN.KeyboardAvoidingView>
-    </UI.View>
+      <RN.TouchableOpacity
+        style={styles.registerContainer}
+        onPress={() => formik.submitForm()}>
+        <RN.View
+          style={[
+            styles.registerText,
+            {backgroundColor: appCtx.Colors.primary},
+          ]}>
+          <RN.Text
+            style={[{color: appCtx.Colors.registerText, textAlign: 'center'}]}>
+            修改資料
+          </RN.Text>
+        </RN.View>
+      </RN.TouchableOpacity>
+    </RN.View>
+  );
+};
+
+const HandPassWordPage = () => {
+  return (
+    <RN.SafeAreaView style={styles.container}>
+      <Goback />
+      <ScrollViewComponent item={Content}></ScrollViewComponent>
+    </RN.SafeAreaView>
   );
 };
 
@@ -181,6 +183,7 @@ const styles = RN.StyleSheet.create({
   itemContainer: {
     justifyContent: 'center',
     marginTop: windowHeight / 10,
+    marginBottom: 30,
   },
   inputContainer: {
     justifyContent: 'center',
@@ -211,4 +214,4 @@ const styles = RN.StyleSheet.create({
   },
 });
 
-export default HandPassWord;
+export default HandPassWordPage;

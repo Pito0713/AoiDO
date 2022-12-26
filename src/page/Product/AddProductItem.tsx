@@ -1,14 +1,15 @@
 import React from "react";
 import * as RN from 'react-native';
 import * as UI from 'react-native-ui-lib';
-import { AppContext } from '../../redux/AppContent';
-import Goback from '../../component/Goback'
-import { useNavigation } from '@react-navigation/native';
-import service from "../Service/Service";
-import { useAppSelector } from '../../redux/store';
-import { launchImageLibrary } from 'react-native-image-picker';
 import { useFormik } from "formik";
 import { useIsFocused } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
+import { launchImageLibrary } from 'react-native-image-picker';
+
+import { AppContext } from '../../redux/AppContent';
+import Goback from '../../component/Goback'
+import service from "../Service/service";
+import { useAppSelector } from '../../redux/store';
 import ScrollViewComponent from "../../component/ScrollViewComponent";
 
 const windowWidth = RN.Dimensions.get('window').width;
@@ -36,7 +37,7 @@ interface CategoryItem {
 }
 const Content = () => {
   type Nav = {
-    navigate: (value: string | undefined) => void,
+    navigate: (route: string | undefined ,params:{isGo:boolean}) => void,
     goBack: () => void,
   }
   const appCtx = React.useContext(AppContext);
@@ -145,7 +146,7 @@ const Content = () => {
 
   return (
     <RN.ScrollView style={{ height: windowHeight - 100 }}>
-      <UI.View style={styles.itemContainer}>
+      <RN.View style={styles.itemContainer}>
         <RN.TouchableOpacity onPress={handleChoosePhoto} style={{ borderWidth: 2, borderRadius: 10, overflow: 'hidden' }}>
           {photo?.uri ?
             <UI.View>
@@ -160,25 +161,22 @@ const Content = () => {
             </UI.View>
           }
         </RN.TouchableOpacity>
-        <UI.View>
-          <UI.Text style={styles.itemContainerText}>商品描述</UI.Text>
+        <RN.View>
+          <RN.Text style={styles.itemContainerText}>商品描述</RN.Text>
           <RN.TextInput
             style={[styles.input, { backgroundColor: appCtx.Colors.inputContainer, }]}
             value={formik.values.describe}
             onChangeText={formik.handleChange("describe")}
             placeholder="描述"
           />
-          {
-            formik.errors.describe ? <UI.View>
-              <UI.Text style={[, { color: appCtx.Colors.errorText, fontSize: 12 }]}>
-                {formik.errors.describe}
-              </UI.Text>
-            </UI.View>
-              : <UI.View />
-          }
-        </UI.View>
-        <UI.View>
-          <UI.Text style={styles.itemContainerText}>商品分類</UI.Text>
+          <RN.View>
+            <RN.Text style={[, { color: appCtx.Colors.errorText, fontSize: 12 }]}>
+              {formik.errors.describe}
+            </RN.Text>
+          </RN.View>
+        </RN.View>
+        <RN.View>
+          <RN.Text style={styles.itemContainerText}>商品分類</RN.Text>
           <UI.Picker
             placeholder="選擇分類"
             value={!category.label && !category.value ? '' : category}
@@ -194,18 +192,18 @@ const Content = () => {
               <UI.Picker.Item key={index} value={item?.category} label={item?.category} />
             ))}
           </UI.Picker>
-          {isCategory ? <UI.View>
-            <UI.Text style={[, { color: appCtx.Colors.errorText, fontSize: 12 }]}>
+          {isCategory ? <RN.View>
+            <RN.Text style={[, { color: appCtx.Colors.errorText, fontSize: 12 }]}>
               {`* 必填`}
-            </UI.Text>
-          </UI.View>
-            : <UI.View />
+            </RN.Text>
+          </RN.View>
+            : <RN.View><RN.Text /></RN.View>
           }
 
-        </UI.View>
-        <UI.View >
-          <UI.Text style={styles.itemContainerText}>商品價格</UI.Text>
-          <UI.View style={{ borderWidth: 1.5, borderRadius: 5, overflow: 'hidden', flexDirection: 'row' }}>
+        </RN.View>
+        <RN.View >
+          <RN.Text style={styles.itemContainerText}>商品價格</RN.Text>
+          <RN.View style={{ borderWidth: 1.5, borderRadius: 5, overflow: 'hidden', flexDirection: 'row' }}>
             <RN.TextInput
               style={[{ backgroundColor: appCtx.Colors.inputContainer, flex: 7, paddingLeft: 15, height: 45, }]}
               value={formik.values.price}
@@ -213,40 +211,39 @@ const Content = () => {
               placeholder="商品價格"
               keyboardType="phone-pad"
             />
-            <UI.TouchableOpacity style={[styles.transferContainer, { backgroundColor: appCtx.Colors.primary, flex: 3 }]} onPress={() => navigation.navigate('transfer', { isGo: true })}>
-              <UI.Text style={[{ color: appCtx.Colors.textPrimary }]}>換算</UI.Text>
-            </UI.TouchableOpacity>
-          </UI.View>
-          {
-            formik.errors.price && <UI.View >
-              <UI.Text style={[, { color: appCtx.Colors.errorText, fontSize: 12 }]}>
-                {formik.errors.price}
-              </UI.Text>
-            </UI.View>
-          }
-        </UI.View>
-        <UI.View>
-          <UI.Text style={styles.itemContainerText}>備註</UI.Text>
+            <RN.TouchableOpacity 
+              style={[styles.transferContainer, { backgroundColor: appCtx.Colors.primary, flex: 3 }]} 
+              onPress={() => navigation.navigate('transfer', { isGo: true } )}
+            >
+              <RN.Text style={[{ color: appCtx.Colors.textPrimary }]}>換算</RN.Text>
+            </RN.TouchableOpacity>
+          </RN.View>
+          <RN.View >
+            <RN.Text style={[, { color: appCtx.Colors.errorText, fontSize: 12 }]}>
+              {formik.errors.price}
+            </RN.Text>
+          </RN.View>
+        </RN.View>
+        <RN.View>
+          <RN.Text style={styles.itemContainerText}>備註</RN.Text>
           <RN.TextInput
             style={[styles.input, { backgroundColor: appCtx.Colors.inputContainer, }]}
             value={formik.values.remark}
             onChangeText={formik.handleChange("remark")}
             placeholder="備註"
           />
-          {
-            formik.errors.remark && <UI.View >
-              <UI.Text style={[{ color: appCtx.Colors.errorText, fontSize: 12 }]}>
-                {formik.errors.remark}
-              </UI.Text>
-            </UI.View>
-          }
-        </UI.View>
-        <UI.View>
-          <UI.TouchableOpacity style={[styles.saveContainer, { backgroundColor: appCtx.Colors.primary }]} onPress={() => formik.submitForm()}>
-            <UI.Text style={styles.saveContainerText}>保存</UI.Text>
-          </UI.TouchableOpacity>
-        </UI.View>
-      </UI.View>
+          <RN.View >
+            <RN.Text style={[{ color: appCtx.Colors.errorText, fontSize: 12 }]}>
+              {formik.errors.remark}
+            </RN.Text>
+          </RN.View>
+        </RN.View>
+        <RN.View>
+          <RN.TouchableOpacity style={[styles.saveContainer, { backgroundColor: appCtx.Colors.primary }]} onPress={() => formik.submitForm()}>
+            <RN.Text style={styles.saveContainerText}>保存</RN.Text>
+          </RN.TouchableOpacity>
+        </RN.View>
+      </RN.View>
     </RN.ScrollView>
   );
 };
@@ -255,7 +252,7 @@ const LogisticsItem = () => {
   return (
     <RN.SafeAreaView style={styles.container}>
       <Goback />
-      <ScrollViewComponent item={Content}></ScrollViewComponent>
+      <ScrollViewComponent item={Content} />
     </RN.SafeAreaView>
   );
 };

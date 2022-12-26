@@ -26,8 +26,8 @@ const DateTimePickerScreen = (dateValue: dateValue) => {
 
   return (
     <RN.ScrollView >
-      <UI.View style={[styles.container]}>
-        <UI.View style={[styles.content, { backgroundColor: appCtx.Colors.inputContainer }]}>
+      <RN.View style={[styles.container]}>
+        <RN.View style={[styles.content, { backgroundColor: appCtx.Colors.inputContainer }]}>
           <RN.Text style={{ paddingLeft: 15 }}>{moment(date).format('YYYY / MM / DD')}</RN.Text>
           {show && (
             <DateTimePicker
@@ -36,11 +36,11 @@ const DateTimePickerScreen = (dateValue: dateValue) => {
               onChange={onChange}
             />
           )}
-        </UI.View>
+        </RN.View>
         <RN.TouchableOpacity style={styles.pickerText}>
-          <UI.Text onPress={showTimepicker}>選擇日期</UI.Text>
+          <RN.Text onPress={showTimepicker}>選擇日期</RN.Text>
         </RN.TouchableOpacity>
-      </UI.View>
+      </RN.View>
     </RN.ScrollView>
   );
 }

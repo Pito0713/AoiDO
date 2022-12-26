@@ -5,6 +5,7 @@ import * as UI from 'react-native-ui-lib';
 import numeral from 'numeral';
 import { useIsFocused } from '@react-navigation/native';
 import { AppContext } from '../../redux/AppContent';
+import ReminderText from "../../component/ReminderText"
 
 interface exchangeValue {
   exchangeValue: {
@@ -98,10 +99,10 @@ const InputGroup = (value: exchangeValue) => {
   return (
     <RN.View style={styles.container}>
       <RN.View style={styles.listContainer}>
-        <RN.Text style={styles.listText}>* 基本成本 = 成本 + 商品運費 + 包裝費 + 平台運費</RN.Text>
-        <RN.Text style={styles.listText}>* 總手續費 = 售價 * 金流費用% + 售價 * 平台費用%</RN.Text>
-        <RN.Text style={styles.listText}>* 預計收益 = 售價 - 基本成本 - 總手續費 </RN.Text>
-        <RN.Text style={styles.listText}>* 建議售價 = 基本成本 + 總手續費 + 收益佔比</RN.Text>
+        <ReminderText text={'* 基本成本 = 成本 + 商品運費 + 包裝費 + 平台運費'} />
+        <ReminderText text={'* 總手續費 = 售價 * 金流費用% + 售價 * 平台費用%'} />
+        <ReminderText text={'* 預計收益 = 售價 - 基本成本 - 總手續費'} />
+        <ReminderText text={'* 建議售價 = 基本成本 + 總手續費 + 收益佔比'} />
       </RN.View>
       {/* /* /* /* 成本價 */}
       <RN.View style={styles.inputContainer}>
@@ -229,7 +230,7 @@ const InputGroup = (value: exchangeValue) => {
               <RN.Text style={styles.inputTextDescription}>%</RN.Text>
             </RN.View>
             :
-            <UI.View style={{ flexDirection: 'row' }}>
+            <RN.View style={{ flexDirection: 'row' }}>
               <UI.Slider
                 value={20}
                 minimumValue={0}
@@ -240,7 +241,7 @@ const InputGroup = (value: exchangeValue) => {
                 accessible={true}
               />
               <RN.Text style={{ paddingLeft: 15 }}>{proportion} %</RN.Text>
-            </UI.View>
+            </RN.View>
           }
         </RN.View>
         <RN.View style={{ justifyContent: 'center', flex: 3, alignItems: 'center' }}>
