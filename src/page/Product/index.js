@@ -91,14 +91,11 @@ const Logistics = () => {
 
   React.useEffect(() => {
     if (isFocused) postSearchProduct();
-    if (!isFocused) {
-      onChangeText('');
-      onPageChange(1);
-    }
   }, [isFocused]);
 
   React.useEffect(() => {
-    if (!showDialog) postSearchProduct();
+    if (!showDialog && page > 1) onPageChange(1);
+    if (!showDialog && page == 1) postSearchProduct();
   }, [showDialog]);
 
   React.useEffect(() => {

@@ -80,11 +80,6 @@ const Logistics = () => {
 
   React.useEffect(() => {
     if (isFocused) postSearchCargo();
-    if (!isFocused) {
-      setCargos([]);
-      onChangeText('');
-      onPageChange(1);
-    }
   }, [isFocused]);
 
   React.useEffect(() => {

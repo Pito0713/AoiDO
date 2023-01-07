@@ -1,6 +1,5 @@
 import React from "react";
 import * as RN from 'react-native';
-import { cos } from "react-native-reanimated";
 
 interface props {
   page: number
@@ -12,6 +11,9 @@ interface props {
 const Pagination = (props:props) => {
   return (
     <RN.View style={styles.container}>
+      <RN.View>
+        <RN.Text style={[styles.textContainer]}> {`${(props.pagination*(props.page-1)+1)} - ${(props.pagination*(props.page))} of  ${props.total}`}</RN.Text>
+      </RN.View> 
       { props.page > 1 ? 
         <RN.TouchableOpacity style={styles.iconContainer}  onPress={()=>props.onPageChange(props.page -1)}>
           <RN.Image
@@ -28,7 +30,7 @@ const Pagination = (props:props) => {
         </RN.View>
       }
       <RN.Text style={styles.textContainer}> {props.page}</RN.Text>
-      {props.total > 10 ? 
+      {(props.total > 10 && props.page * props.pagination < props.total) ? 
         <RN.TouchableOpacity style={styles.iconContainer} onPress={()=>props.onPageChange(props.page +1)}>
           <RN.Image
             source={require('../assets/rightArrow.png')}
@@ -43,32 +45,27 @@ const Pagination = (props:props) => {
           />
         </RN.View> 
       }
-      <RN.View >
-        <RN.Text style={[styles.textContainer,{marginRight:20}]}> {`${(props.pagination*(props.page-1)+1)} - ${(props.pagination*(props.page))} of  ${props.total}`}</RN.Text>
-      </RN.View> 
     </RN.View>
   )
 }
-
-const windowHeight = RN.Dimensions.get('window').height;
 
 const styles = RN.StyleSheet.create({
   container: {
     flexDirection:'row',
     justifyContent: 'flex-end',
     alignItems: 'center',
-    width: '100%',
-    margin: 2.5,
+    margin: 2,
+
   },
   iconContainer: {
-    padding:12.5,
+    padding:10,
     justifyContent: 'center',
     alignItems: 'center',
   },
   textContainer: {
-    padding: 5,
     justifyContent: 'center',
     alignItems: 'center',
+    marginRight: 3
   },
 })
 
