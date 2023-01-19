@@ -218,6 +218,9 @@ const Content = (route: { params: any }) => {
             <UI.Picker.Item key={index} value={item?.category} label={item?.category} />
           ))}
         </UI.Picker>
+        <RN.View>
+          <RN.Text />
+        </RN.View>
       </RN.View>
       <RN.View>
         <RN.Text style={styles.itemContainerText}>商品價格</RN.Text>

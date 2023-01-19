@@ -42,10 +42,10 @@ const Content = (route : { params: any }) => {
       "endDate": new Date(endDate),
       "remark": values.remark,
     }
-      await appCtx.setLoading(true)
-      const response = await service.patchUpdateCargo(submitData);
-      await appCtx.setLoading(false)
-      if (response?.status === 'success') navigation.goBack()
+    await appCtx.setLoading(true)
+    const response = await service.patchUpdateCargo(submitData);
+    await appCtx.setLoading(false)
+    if (response?.status === 'success') navigation.goBack()
   }
 
   const formik = useFormik({

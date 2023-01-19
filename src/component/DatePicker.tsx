@@ -1,5 +1,4 @@
 import React from 'react';
-import * as UI from 'react-native-ui-lib';
 import * as RN from 'react-native';
 import { AppContext } from '../redux/AppContent';
 import DateTimePicker from '@react-native-community/datetimepicker';
