@@ -30,14 +30,14 @@ const InputGroup = (value: exchangeValue) => {
   const [fare, setFare] = React.useState<string | number>(0);
   // 包裝費
   const [Packaging, setPackaging] = React.useState<string | number>(0);
-  // 平台費用
+  // 手續費用
   const [platformCost, setPlatformCost] = React.useState<string | number>(0);
   // 金流費用
   const [cashFeeCost, setCashFeeCost] = React.useState<string | number>(0);
-  // 平台運費
-  const [platformLogistics, setPlatformLogistics] = React.useState<string | number>(0);
-  // 負擔平台運費
-  const [isPlatformLogistics, setIsPlatformLogistics] = React.useState<boolean>(false);
+  // 手續運費
+  const [platformCoupon, setPlatformCoupon] = React.useState<string | number>(0);
+  // 負擔手續運費
+  const [isPlatformCoupon, setIsPlatformCoupon] = React.useState<boolean>(false);
   // 售價
   const [price, setPrice] = React.useState<string | number>(0);
   // 收益
@@ -49,9 +49,9 @@ const InputGroup = (value: exchangeValue) => {
   // 收益佔比
   const [proportion, setProportion] = React.useState<string | number>(20);
 
-  // 平台費用轉換
+  // 手續費用轉換
   React.useEffect(() => {
-    if (value?.platformValue?.value) setPlatformCost(numeral((Number(price) * platformValue)).format('0.00'))
+    if (value?.platformValue?.value) setPlatformCost(numeral((Number(price) * platformValue)/100).format('0.00'))
   }, [price])
 
   React.useEffect(() => {
@@ -60,23 +60,23 @@ const InputGroup = (value: exchangeValue) => {
     ) {
       // 成本
       let transformCost = (Number(costPrice) / exchangeValue)
-      // 商品運費 + 包裝費 + 平台費用 + 手續費
+      // 商品運費 + 包裝費 + 手續費用 + 手續費
       let costTotal = Number(fare) + Number(Packaging) + Number(platformCost) + (Number(price) * Number(cashFeeCost) / 100)
 
       let benefitPricetarget = 0
       let suggestedPricetarget = 0
-      isPlatformLogistics ?
-        // 成本 + 商品運費 + 包裝費 + 平台費用 + 手續費 + 預計收益佔比 + 平台運費
-        suggestedPricetarget = Number(transformCost) + Number(costTotal) + (Number(transformCost) * Number(proportion) / 100) + Number(platformLogistics) :
+      isPlatformCoupon ?
+        // 成本 + 商品國際運費 + 包裝費 + 手續費用 + 手續費 + 預計收益佔比 + 運費
+        suggestedPricetarget = Number(transformCost) + Number(costTotal) + (Number(transformCost) * Number(proportion) / 100) + Number(platformCoupon) :
         suggestedPricetarget = Number(transformCost) + Number(costTotal) + (Number(transformCost) * Number(proportion) / 100)
-      isPlatformLogistics ?
-        // 售價 - 商品運費 - 包裝費 - 平台費用 - 手續費 - 成本 - 平台運費
-        benefitPricetarget = Number(price) - Number(costTotal) - Number(transformCost) - Number(platformLogistics) :
+      isPlatformCoupon ?
+        // 售價 - 商品國際運費 - 包裝費 - 手續費用 - 手續費 - 成本 - 運費
+        benefitPricetarget = Number(price) - Number(costTotal) - Number(transformCost) - Number(platformCoupon) :
         benefitPricetarget = Number(price) - Number(costTotal) - Number(transformCost)
       setBenefit(numeral(benefitPricetarget).format('0.00'))
       setSuggestedPrice(numeral(suggestedPricetarget).format('0.00'))
     }
-  }, [costPrice, fare, Packaging, platformCost, price, proportion, isPlatformLogistics, platformLogistics, cashFeeCost])
+  }, [costPrice, fare, Packaging, platformCost, price, proportion, isPlatformCoupon, platformCoupon, cashFeeCost])
 
 
   const cleaner = () => {
@@ -84,8 +84,8 @@ const InputGroup = (value: exchangeValue) => {
     setFare(0)
     setPackaging(0)
     setPlatformCost(0)
-    setPlatformLogistics(0)
-    setIsPlatformLogistics(false)
+    setPlatformCoupon(0)
+    setIsPlatformCoupon(false)
     setPrice(0)
     setBenefit(0)
     setSuggestedPrice(0)
@@ -99,8 +99,8 @@ const InputGroup = (value: exchangeValue) => {
   return (
     <RN.View style={styles.container}>
       <RN.View style={styles.listContainer}>
-        <ReminderText text={'* 基本成本 = 成本 + 商品運費 + 包裝費 + 平台運費'} />
-        <ReminderText text={'* 總手續費 = 售價 * 金流費用% + 售價 * 平台費用%'} />
+        <ReminderText text={'* 基本成本 = 成本 + 商品國際運費 + 包裝費 + 手續運費'} />
+        <ReminderText text={'* 總手續費 = 售價 * 金流費用% + 售價 * 手續費用%'} />
         <ReminderText text={'* 預計收益 = 售價 - 基本成本 - 總手續費'} />
         <ReminderText text={'* 建議售價 = 基本成本 + 總手續費 + 收益佔比'} />
       </RN.View>
@@ -122,12 +122,12 @@ const InputGroup = (value: exchangeValue) => {
 
       {/* /* /* /* 商品運費 */}
       <RN.View style={styles.inputContainer}>
-        <RN.Text style={styles.inputText}>商品運費</RN.Text>
+        <RN.Text style={styles.inputText}>商品國際運費</RN.Text>
         <RN.TextInput
           style={styles.input}
           onChangeText={(e) => Number(e) !== 0 ? setFare(Number(e)) : setFare(e)}
           value={String(fare)}
-          placeholder="運費"
+          placeholder="國際運費"
           keyboardType="numeric"
         />
         <RN.Text style={styles.exchangeValueText}>台幣</RN.Text>
@@ -162,20 +162,20 @@ const InputGroup = (value: exchangeValue) => {
         <RN.Text style={styles.costPriceTransform}> 建議售價 = {numeral(suggestedPrice).format('0.00')} TWD</RN.Text>
       </RN.View>
 
-      {/* /* /* /* 平台費用 */}
+      {/* /* /* /* 手續費用 */}
       <RN.View style={styles.inputContainer}>
-        <RN.Text style={styles.inputText}>平台費用</RN.Text>
+        <RN.Text style={styles.inputText}>手續費用</RN.Text>
         <RN.View style={{ flexDirection: 'row', height: 40, flex: 7 }}>
           <RN.TextInput
             onChangeText={(e) => Number(e) !== 0 ? setPlatformCost(Number(e)) : setPlatformCost(e)}
             value={String(platformCost)}
-            placeholder="平台費用"
+            placeholder="手續費用"
             keyboardType="numeric"
             editable={false}
             style={{ borderWidth: 1.5, flex: 3, paddingLeft: 10, borderRadius: 5, height: 45, }}
           />
           <RN.View style={{ flex: 7, justifyContent: 'center', alignItems: 'center', flexDirection: 'row' }}>
-            <RN.Text style={styles.inputText}>平台匯率:  {value.platformValue.value * 100} %</RN.Text>
+            <RN.Text style={styles.inputText}>手續匯率:  {value.platformValue.value} %</RN.Text>
           </RN.View>
         </RN.View>
       </RN.View>
@@ -196,20 +196,20 @@ const InputGroup = (value: exchangeValue) => {
         <RN.Text style={{ flex: 4.5 }}></RN.Text>
       </RN.View>
 
-      {/* /* /* /* 平台運費 */}
+      {/* /* /* /* 手續運費 */}
       <RN.View style={styles.inputContainer}>
-        <RN.Text style={styles.inputText}>平台運費</RN.Text>
+        <RN.Text style={styles.inputText}>手續運費</RN.Text>
         <RN.View style={{ flexDirection: 'row', height: 40, flex: 7 }}>
           <RN.TextInput
-            onChangeText={(e) => Number(e) !== 0 ? setPlatformLogistics(Number(e)) : setPlatformLogistics(e)}
-            value={String(platformLogistics)}
-            placeholder="平台運費"
+            onChangeText={(e) => Number(e) !== 0 ? setPlatformCoupon(Number(e)) : setPlatformCoupon(e)}
+            value={String(platformCoupon)}
+            placeholder="手續運費"
             keyboardType="numeric"
             style={{ borderWidth: 1.5, flex: 3, paddingLeft: 10, height: 45, borderRadius: 5 }}
           />
           <RN.View style={{ flex: 7, justifyContent: 'center', alignItems: 'center', flexDirection: 'row' }}>
-            <RN.Text style={styles.inputText}>負擔平台運費</RN.Text>
-            <UI.Switch value={isPlatformLogistics} onValueChange={() => setIsPlatformLogistics(!isPlatformLogistics)} />
+            <RN.Text style={styles.inputText}>負擔手續運費</RN.Text>
+            <UI.Switch value={isPlatformCoupon} onValueChange={() => setIsPlatformCoupon(!isPlatformCoupon)} />
           </RN.View>
         </RN.View>
       </RN.View>

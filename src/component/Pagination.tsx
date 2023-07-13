@@ -1,5 +1,6 @@
 import React from "react";
 import * as RN from 'react-native';
+import SvgUri from 'react-native-svg-uri';
 
 interface props {
   page: number
@@ -14,37 +15,13 @@ const Pagination = (props:props) => {
       <RN.View>
         <RN.Text style={[styles.textContainer]}> {`${(props.pagination*(props.page-1)+1)} - ${(props.pagination*(props.page))} of  ${props.total}`}</RN.Text>
       </RN.View> 
-      { props.page > 1 ? 
-        <RN.TouchableOpacity style={styles.iconContainer}  onPress={()=>props.onPageChange(props.page -1)}>
-          <RN.Image
-            source={require('../assets/leftArrow.png')}
-            style={{ width: 20, height: 20 }}
-          />
+        <RN.TouchableOpacity style={styles.iconContainer}  onPress={ props.page > 1 ? ()=>props.onPageChange(props.page -1) : ()=>{}}>
+          <SvgUri width="40" height="40" source={require('../assets/ArrowLeft.svg')} />
         </RN.TouchableOpacity>
-        :
-        <RN.View style={styles.iconContainer}>
-          <RN.Image
-            source={require('../assets/leftArrow.png')}
-            style={{ width: 20, height: 20 }}
-          />
-        </RN.View>
-      }
       <RN.Text style={styles.textContainer}> {props.page}</RN.Text>
-      {(props.total > 10 && props.page * props.pagination < props.total) ? 
-        <RN.TouchableOpacity style={styles.iconContainer} onPress={()=>props.onPageChange(props.page +1)}>
-          <RN.Image
-            source={require('../assets/rightArrow.png')}
-            style={{ width: 20, height: 20 }}
-          />
+        <RN.TouchableOpacity style={styles.iconContainer} onPress={(props.total > 10 && props.page * props.pagination < props.total) ? ()=>props.onPageChange(props.page +1) : ()=>{}}>
+          <SvgUri width="40" height="40" source={require('../assets/ArrowRight.svg')} />
         </RN.TouchableOpacity>
-        :
-        <RN.View  style={styles.iconContainer}>
-          <RN.Image
-            source={require('../assets/rightArrow.png')}
-            style={{ width: 20, height: 20 }}
-          />
-        </RN.View> 
-      }
     </RN.View>
   )
 }

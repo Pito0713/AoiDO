@@ -29,7 +29,7 @@ const Content = () => {
       const reg = /^\d+(\.\d{1,4})?$/
       const errors: PlatformItem = {};
 
-      if (!values.label) errors.label = '*' + "平台名稱必填";
+      if (!values.label) errors.label = '*' + "名稱必填";
       if (!values.rate) errors.rate = '*' + "平台費用匯率必填";
       if (!reg.test(values.rate)) errors.rate = '*' + "必須數字且最多小數點後第4位";
 
@@ -47,6 +47,7 @@ const Content = () => {
       "label": values.label,
       "rate": values.rate,
       "token": reduxToken,
+      "isActive": false,
     }
     const response = await service.postCreateModifyRate(submitData);
     if (response?.status === 'success') navigation.goBack()
@@ -58,10 +59,10 @@ const Content = () => {
     <RN.View style={styles.itemContainer}>
       <RN.View style={styles.inputContainer}>
         <RN.View style={styles.inputText}>
-          <RN.Text>新增平台名稱</RN.Text>
+          <RN.Text>新增名稱</RN.Text>
         </RN.View>
         <RN.TextInput
-          placeholder={'請輸入新增平台名稱'}
+          placeholder={'請輸入新增名稱'}
           textAlign='left'
           placeholderTextColor="gray"
           value={formik.values.label}
@@ -76,10 +77,10 @@ const Content = () => {
       </RN.View>
       <RN.View style={styles.inputContainer}>
         <RN.View style={styles.inputText}>
-          <RN.Text>新增平台費用匯率</RN.Text>
+          <RN.Text>新增費用匯率</RN.Text>
         </RN.View>
         <RN.TextInput
-          placeholder={'請輸入新增平台費用匯率'}
+          placeholder={'請輸入新增費用匯率'}
           placeholderTextColor="gray"
           textAlign='left'
           value={formik.values.rate}
@@ -95,7 +96,7 @@ const Content = () => {
 
       <RN.TouchableOpacity style={styles.registerContainer} onPress={() => formik.submitForm()}>
         <RN.View style={[styles.registerText,{backgroundColor:appCtx.Colors.primary}]}>
-          <RN.Text style={[{textAlign: 'center', }]}>新增平台資料</RN.Text>
+          <RN.Text style={[{textAlign: 'center', }]}>新增資料</RN.Text>
         </RN.View>
       </RN.TouchableOpacity>
 

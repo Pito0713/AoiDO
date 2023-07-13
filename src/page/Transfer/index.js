@@ -110,7 +110,7 @@ const Transfer = ({route}) => {
           ))}
         </UI.Picker>
         <UI.Picker
-          placeholder="選擇平台"
+          placeholder="選擇手續費"
           value={platformValue}
           enableModalBlur={false}
           onChange={e => setPlatformValue(e)}

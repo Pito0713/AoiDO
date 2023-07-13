@@ -3,8 +3,9 @@ import * as RN from 'react-native';
 import {registerActions, useAppDispatch} from '../../redux/store';
 import {useNavigation} from '@react-navigation/native';
 import {AppContext} from '../../redux/AppContent';
+import ScrollViewComponent from '../../component/ScrollViewComponent';
 
-const Setting = () => {
+const Content = () => {
   const appCtx = React.useContext(AppContext);
   const dispatch = useAppDispatch();
   const navigation = useNavigation();
@@ -14,6 +15,9 @@ const Setting = () => {
   };
 
   const List = [
+    {title: '自訂跑馬燈', action: () => navigation.navigate('CarouselImg')},
+    {title: '自訂商品大綱圖片', action: () => navigation.navigate('MainImg')},
+    {title: '自訂關於圖片', action: () => navigation.navigate('AboutImg')},
     {title: '自訂平台費用', action: () => navigation.navigate('platform')},
     {title: '自訂商品分類', action: () => navigation.navigate('productFilter')},
     {title: '修改密碼', action: () => navigation.navigate('handPassWord')},
@@ -21,7 +25,7 @@ const Setting = () => {
   ];
 
   return (
-    <RN.SafeAreaView style={styles.container}>
+    <RN.View style={styles.container}>
       {List.map((item, index) => {
         return (
           <RN.TouchableOpacity
@@ -38,12 +42,20 @@ const Setting = () => {
           </RN.TouchableOpacity>
         );
       })}
+    </RN.View>
+  );
+};
+
+const Setting = () => {
+  return (
+    <RN.SafeAreaView style={{flex: 1}}>
+      <ScrollViewComponent item={Content} />
     </RN.SafeAreaView>
   );
 };
 const styles = RN.StyleSheet.create({
   container: {
-    flex: 1,
+    marginTop: 20,
     alignItems: 'center',
     justifyContent: 'center',
   },

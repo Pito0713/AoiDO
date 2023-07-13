@@ -6,15 +6,19 @@ import service from '../Service/service';
 import {AppContext} from '../../redux/AppContent';
 import {useAppSelector} from '../../redux/store';
 import Pagination from '../../component/Pagination';
+import moment from 'moment';
+import ReminderText from '../../component/ReminderText';
+import SvgUri from 'react-native-svg-uri';
 
-const Logistics = () => {
+const Coupon = () => {
   const appCtx = React.useContext(AppContext);
   const navigation = useNavigation();
   const isFocused = useIsFocused();
+  const reduxToken = useAppSelector(state => state.token);
+
   const [cargos, setCargos] = React.useState([]);
   const [text, onChangeText] = React.useState('');
   const [searchText, setSearchText] = React.useState('');
-  const reduxToken = useAppSelector(state => state.token);
   const [refreshing, setRefreshing] = React.useState(false);
   const [pagination, setPagination] = React.useState(10);
   const [page, setPage] = React.useState(1);
@@ -22,7 +26,7 @@ const Logistics = () => {
 
   const onRefresh = () => {
     setRefreshing(true);
-    postSearchCargo();
+    postSearchCoupon();
     /// 預防請求失敗
     setRefreshing(false);
   };
@@ -42,7 +46,7 @@ const Logistics = () => {
         },
         {
           text: '確認',
-          onPress: () => deleteCargo(item),
+          onPress: () => deleteOneCoupon(item),
           style: 'OK',
         },
       ],
@@ -50,19 +54,17 @@ const Logistics = () => {
     );
   };
 
-  const deleteCargo = async item => {
-    // call api
+  const deleteOneCoupon = async item => {
     await appCtx.setLoading(true);
     let submitData = {
       id: item,
     };
-    const response = await service.deleteCargo(submitData);
-    if (response?.status === 'success') postSearchCargo();
+    const response = await service.deleteOneCoupon(submitData);
+    if (response?.status === 'success') postSearchCoupon();
     await appCtx.setLoading(false);
   };
 
-  const postSearchCargo = async () => {
-    // call api
+  const postSearchCoupon = async () => {
     await appCtx.setLoading(true);
     let submitData = {
       searchText: text,
@@ -70,8 +72,9 @@ const Logistics = () => {
       page: page,
       pagination: pagination,
     };
-    const response = await service.postSearchCargo(submitData);
+    const response = await service.postSearchCoupon(submitData);
     if (response.status == 'success') {
+      setSearchText(text);
       setCargos(response.data);
       setTotal(response.total);
     }
@@ -79,11 +82,11 @@ const Logistics = () => {
   };
 
   React.useEffect(() => {
-    if (isFocused) postSearchCargo();
+    if (isFocused) postSearchCoupon();
   }, [isFocused]);
 
   React.useEffect(() => {
-    postSearchCargo();
+    postSearchCoupon();
   }, [page]);
 
   return (
@@ -94,10 +97,13 @@ const Logistics = () => {
             styles.searchContent,
             {backgroundColor: appCtx.Colors.inputContainer},
           ]}>
-          <RN.Image
-            source={require('../../assets/search.png')}
-            style={{width: 20, height: 20, marginLeft: 15}}
-          />
+          <RN.View style={[{marginLeft: 10}]}>
+            <SvgUri
+              width="25"
+              height="25"
+              source={require('../../assets/search.svg')}
+            />
+          </RN.View>
           <RN.TextInput
             style={[
               styles.searchInput,
@@ -105,7 +111,7 @@ const Logistics = () => {
             ]}
             onChangeText={onChangeText}
             value={text}
-            placeholder={'搜尋貨運單號'}
+            placeholder={'搜尋優惠'}
             textAlign="left"
             placeholderTextColor="gray"
           />
@@ -115,7 +121,7 @@ const Logistics = () => {
             styles.searchContentText,
             {backgroundColor: appCtx.Colors.primary},
           ]}
-          onPress={() => postSearchCargo()}>
+          onPress={() => postSearchCoupon()}>
           <RN.Text
             style={{
               fontSize: 20,
@@ -129,19 +135,23 @@ const Logistics = () => {
         <RN.TouchableOpacity
           style={[styles.addContainer]}
           onPress={() => {
-            navigation.navigate('AddLogisticsItem'), onChangeText('');
+            navigation.navigate('AddCouponItem'), onChangeText('');
           }}>
           <RN.View
             style={[
               styles.itemContent,
               {alignItems: 'center', justifyContent: 'center'},
             ]}>
-            <RN.Image
-              source={require('../../assets/plus.png')}
-              style={{width: 25, height: 25}}
+            <SvgUri
+              width="30"
+              height="30"
+              source={require('../../assets/plus.svg')}
             />
           </RN.View>
         </RN.TouchableOpacity>
+      </RN.View>
+      <RN.View style={[styles.listContainer]}>
+        <ReminderText text={'* 長按可刪除'} />
       </RN.View>
       <RN.ScrollView
         refreshControl={
@@ -160,19 +170,19 @@ const Logistics = () => {
                 style={[
                   styles.itemContainer,
                   {
-                    backgroundColor: appCtx.Colors.Logistics.cardContianer,
-                    borderColor: appCtx.Colors.Logistics.borderColor,
+                    backgroundColor: appCtx.Colors.Coupon.cardContianer,
+                    borderColor: appCtx.Colors.Coupon.borderColor,
                   },
                 ]}
-                onPress={() => navigation.navigate('LogisticsItem', {item})}
+                onPress={() => navigation.navigate('CouponItem', {item})}
                 onLongPress={() => deleteItem(item._id)}
                 key={index}>
                 <RN.View
                   style={[
                     styles.itemContent,
                     {
-                      backgroundColor: appCtx.Colors.Logistics.cardTitle,
-                      flex: 3,
+                      backgroundColor: appCtx.Colors.Coupon.cardTitle,
+                      flex: 4,
                     },
                   ]}>
                   <RN.Text
@@ -185,24 +195,47 @@ const Logistics = () => {
                   <RN.View
                     style={{alignItems: 'center', justifyContent: 'center'}}>
                     <RN.Text
-                      style={[{color: appCtx.Colors.textPrimary, fontSize: 20}]}
+                      style={[
+                        {
+                          color: appCtx.Colors.textPrimary,
+                          fontSize: 20,
+                          marginTop: 10,
+                        },
+                      ]}
                       numberOfLines={1}
                       ellipsizeMode={'tail'}>
                       {item.describe}
                     </RN.Text>
                   </RN.View>
                 </RN.View>
-                <RN.View style={[styles.itemContent, {flex: 7}]}>
-                  <RN.Text style={styles.itemContentTextTitle}>
-                    貨運單號
-                  </RN.Text>
-                  <RN.View
-                    style={{alignItems: 'center', justifyContent: 'center'}}>
+                <RN.View
+                  style={[
+                    styles.itemContent,
+                    {
+                      flex: 6,
+                      alignItems: 'flex-start',
+                      justifyContent: 'center',
+                    },
+                  ]}>
+                  <RN.View style={{flexDirection: 'row'}}>
+                    <RN.Text style={styles.itemContentTextTitle}>
+                      折扣價格
+                    </RN.Text>
                     <RN.Text
-                      style={[{fontSize: 20}]}
+                      style={[styles.itemContentTextTitle]}
                       numberOfLines={1}
                       ellipsizeMode={'tail'}>
-                      {item.singNumber}
+                      {item.discount}
+                    </RN.Text>
+                  </RN.View>
+                  <RN.View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
+                    <RN.Text style={styles.itemContentTextTitle}>
+                      時間區間
+                    </RN.Text>
+                    <RN.Text
+                      style={[styles.itemContentTextTitle, {fontSize: 10}]}>
+                      {moment(item.startDate).format('YYYY/MM/DD HH:MM:SS')} ~
+                      {moment(item.endDate).format('YYYY/MM/DD HH:MM:SS')}
                     </RN.Text>
                   </RN.View>
                 </RN.View>
@@ -214,8 +247,8 @@ const Logistics = () => {
             style={[
               styles.itemContainer,
               {
-                backgroundColor: appCtx.Colors.Logistics.cardContianer,
-                borderColor: appCtx.Colors.Logistics.borderColor,
+                backgroundColor: appCtx.Colors.Coupon.cardContianer,
+                borderColor: appCtx.Colors.Coupon.borderColor,
               },
             ]}>
             <RN.View
@@ -245,6 +278,7 @@ const windowHeight = RN.Dimensions.get('window').height;
 const styles = RN.StyleSheet.create({
   container: {
     flex: 1,
+    // alignItems: 'flex-start',
   },
   itemContainer: {
     height: windowHeight / 10,
@@ -261,8 +295,8 @@ const styles = RN.StyleSheet.create({
     height: '100%',
   },
   itemContentTextTitle: {
-    margin: 5,
-    marginBottom: 10,
+    marginLeft: 5,
+    marginTop: 5,
     fontSize: 12,
   },
   searchContainer: {
@@ -301,6 +335,14 @@ const styles = RN.StyleSheet.create({
     width: '7.5%',
     margin: 10,
   },
+  listContainer: {
+    alignItems: 'flex-start',
+    justifyContent: 'center',
+    marginLeft: 10,
+    marginRight: 10,
+    flexWrap: 'wrap',
+    padding: 10,
+  },
 });
 
-export default Logistics;
+export default Coupon;

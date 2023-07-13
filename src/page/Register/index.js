@@ -53,7 +53,7 @@ const Content = () => {
       account: values.account,
       password: values.password,
     };
-    const response = await service.postRegister(submitData);
+    const response = await service.posUserBackRegister(submitData);
     if (response?.status === 'success') navigation.goBack();
     appCtx.setLoading(false);
   };

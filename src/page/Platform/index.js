@@ -7,6 +7,7 @@ import {AppContext} from '../../redux/AppContent';
 import {useAppSelector} from '../../redux/store';
 import Goback from '../../component/Goback';
 import ReminderText from '../../component/ReminderText';
+import SvgUri from 'react-native-svg-uri';
 
 const PlatformPage = () => {
   const appCtx = React.useContext(AppContext);
@@ -17,6 +18,7 @@ const PlatformPage = () => {
   const reduxToken = useAppSelector(state => state.token);
 
   const postPlatformRate = async () => {
+    await appCtx.setLoading(true);
     // call api
     let submitData = {
       token: reduxToken,
@@ -25,6 +27,15 @@ const PlatformPage = () => {
     if (!['', null, undefined].includes(response?.data)) {
       setPlatform(response.data);
     }
+    await appCtx.setLoading(false);
+  };
+
+  const updateModifyRate = async item => {
+    let submitData = {
+      token: item,
+    };
+    const response = await service.updateModifyRate(submitData);
+    if (response?.status === 'success') postPlatformRate();
   };
 
   const deleteModifyRate = async item => {
@@ -66,7 +77,7 @@ const PlatformPage = () => {
           styles.listContainer,
           {borderColor: appCtx.Colors.Platform.borderPrimary},
         ]}>
-        <ReminderText text={'* 預設費用無法調整'} />
+        <ReminderText text={'* 預設費用無法刪除'} />
         <ReminderText text={'* 長按可刪除分類別'} />
       </RN.View>
 
@@ -77,6 +88,7 @@ const PlatformPage = () => {
               return item.token !== '1' ? (
                 <UI.Card
                   style={styles.itemContainer}
+                  onPress={() => updateModifyRate(item.token)}
                   onLongPress={() => deleteItem(item._id)}
                   key={index}>
                   <RN.View style={styles.itemContent}>
@@ -87,9 +99,19 @@ const PlatformPage = () => {
                       {item.rate} %
                     </RN.Text>
                   </RN.View>
+                  <RN.View style={styles.itemContent}>
+                    {item.isActive ? (
+                      <RN.Text style={styles.itemContentText}>進行中</RN.Text>
+                    ) : (
+                      <RN.Text style={styles.itemContentText}>啟用</RN.Text>
+                    )}
+                  </RN.View>
                 </UI.Card>
               ) : (
-                <UI.Card style={styles.itemContainer} key={index}>
+                <UI.Card
+                  style={styles.itemContainer}
+                  key={index}
+                  onPress={() => updateModifyRate(item.token)}>
                   <RN.View style={styles.itemContent}>
                     <RN.Text
                       style={[
@@ -105,6 +127,13 @@ const PlatformPage = () => {
                       ]}>
                       {item.rate} %
                     </RN.Text>
+                  </RN.View>
+                  <RN.View style={styles.itemContent}>
+                    {item.isActive ? (
+                      <RN.Text style={styles.itemContentText}>進行中</RN.Text>
+                    ) : (
+                      <RN.Text style={styles.itemContentText}>啟用</RN.Text>
+                    )}
                   </RN.View>
                 </UI.Card>
               );
@@ -120,9 +149,10 @@ const PlatformPage = () => {
             style={styles.itemContainer}
             onPress={() => navigation.navigate('AddPlatformItem')}>
             <RN.View style={styles.itemContent}>
-              <RN.Image
-                source={require('../../assets/plus.png')}
-                style={{width: 25, height: 25}}
+              <SvgUri
+                width="25"
+                height="25"
+                source={require('../../assets/plus.svg')}
               />
             </RN.View>
           </UI.Card>
@@ -140,8 +170,11 @@ const styles = RN.StyleSheet.create({
     marginBottom: 10,
     marginRight: 10,
     marginLeft: 10,
-    alignItems: 'center',
     borderWidth: 1.5,
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
   itemContent: {
     flexDirection: 'row',

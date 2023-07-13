@@ -23,8 +23,8 @@ const Colors = {
     Text: '#4d4537',
   },
 
-  // Logistics
-  Logistics: {
+  // Coupon
+  Coupon: {
     cardContianer: '#FFFFFF',
     cardTitle: '#d6572d',
     cardTitleText: '#FFFFFF',
@@ -32,7 +32,7 @@ const Colors = {
     borderColor: '#4d402d',
   },
 
-  // Logistics
+  // Coupon
   Transfer: {
     cardTitle: '#f2c274',
     cardTitleText: '#453f36',
@@ -57,8 +57,15 @@ const Colors = {
   borderColor: '#1b1a1c',
   registerText: '#285724',
   platformDefault: '#959595',
+  productFilterDefault: '#959595',
   // search
   BottomBackgroud: '#6a3dd4',
+
+  // photo
+  photo: {
+    cardContianer: '#ffc852',
+    cardBottom: '#f2c274',
+  },
 };
 
 /////////////////////////////////////////////////////

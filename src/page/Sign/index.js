@@ -54,7 +54,8 @@ const SignInPage = () => {
       account: formik.values.account,
       password: formik.values.password,
     };
-    const response = await service.postLogin(submitData);
+    const response = await service.postUserBackLogin(submitData);
+
     if (!['', null, undefined].includes(response?.data)) {
       dispatchHandler(response.data);
       // 加密
@@ -68,11 +69,11 @@ const SignInPage = () => {
   };
 
   const dispatchHandler = values => {
-    if (!['', null, undefined].includes(values?.user?.account)) {
-      dispatch(registerActions.SET_ACCOUNT(values.user.account));
+    if (!['', null, undefined].includes(values?.userBack?.account)) {
+      dispatch(registerActions.SET_ACCOUNT(values.userBack.account));
     }
-    if (!['', null, undefined].includes(values?.user?.token)) {
-      dispatch(registerActions.SET_TOKEN(values.user.token));
+    if (!['', null, undefined].includes(values?.userBack?.token)) {
+      dispatch(registerActions.SET_TOKEN(values.userBack.token));
     }
     dispatch(registerActions.SET_REMEMBERINFO(rememberInfo));
   };
@@ -97,6 +98,15 @@ const SignInPage = () => {
                   style={styles.input}
                 />
               </RN.View>
+              <RN.View style={[styles.errorText]}>
+                {['', null, undefined].includes(formik.values.account) && (
+                  <RN.Text
+                    style={[{color: appCtx.Colors.errorText, fontSize: 12}]}>
+                    {' '}
+                    {formik.errors.account}
+                  </RN.Text>
+                )}
+              </RN.View>
             </RN.View>
             <RN.View style={styles.border}>
               <RN.View
@@ -114,33 +124,26 @@ const SignInPage = () => {
                   style={styles.input}
                 />
               </RN.View>
+              <RN.View style={[styles.errorText]}>
+                {['', null, undefined].includes(formik.values.password) && (
+                  <RN.Text
+                    style={[{color: appCtx.Colors.errorText, fontSize: 12}]}>
+                    {' '}
+                    {formik.errors.password}
+                  </RN.Text>
+                )}
+              </RN.View>
             </RN.View>
           </RN.View>
-          <RN.View style={[styles.errorText]}>
-            {['', null, undefined].includes(formik.values.account) && (
-              <RN.Text style={[{color: appCtx.Colors.errorText, fontSize: 12}]}>
-                {' '}
-                {formik.errors.account}
-              </RN.Text>
-            )}
-            {['', null, undefined].includes(formik.values.password) && (
-              <RN.Text style={[{color: appCtx.Colors.errorText, fontSize: 12}]}>
-                {' '}
-                {formik.errors.password}
-              </RN.Text>
-            )}
-          </RN.View>
+
           <RN.View style={styles.buttomGround}>
             <RN.TouchableOpacity
-              style={styles.registerContainer}
+              style={[
+                styles.registerContainer,
+                {textAlign: 'center', backgroundColor: appCtx.Colors.primary},
+              ]}
               onPress={() => formik.submitForm()}>
-              <RN.Text
-                style={[
-                  styles.registerText,
-                  {textAlign: 'center', backgroundColor: appCtx.Colors.primary},
-                ]}>
-                {'登入'}
-              </RN.Text>
+              <RN.Text style={[styles.registerText]}>{'登入'}</RN.Text>
             </RN.TouchableOpacity>
           </RN.View>
           <RN.View style={styles.rememberInfoContainer}>
@@ -178,16 +181,16 @@ const styles = RN.StyleSheet.create({
     alignItems: 'center',
   },
   border: {
-    width: '80%',
+    width: '50%',
     justifyContent: 'center',
   },
   InputContainer: {
-    borderBottomColor: 'black',
-    borderBottomWidth: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     height: 50,
+    borderWidth: 1.5,
+    borderRadius: 5,
   },
   input: {
     width: '100%',
@@ -211,20 +214,18 @@ const styles = RN.StyleSheet.create({
   },
   errorText: {
     padding: 10,
-    justifyContent: 'flex-end',
-    marginLeft: '10%',
+    justifyContent: 'center',
+    marginLeft: '25%',
   },
   registerContainer: {
-    marginTop: 15,
     justifyContent: 'center',
     alignItems: 'center',
-    width: '40%',
+    width: '30%',
+    borderWidth: 1.5,
+    borderRadius: 5,
   },
   registerText: {
-    width: '100%',
     padding: 15,
-    borderWidth: 1,
-    borderRadius: 5,
   },
 });
 

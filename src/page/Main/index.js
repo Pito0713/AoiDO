@@ -2,6 +2,7 @@ import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import * as RN from 'react-native';
 import {AppContext} from '../../redux/AppContent';
+import SvgUri from 'react-native-svg-uri';
 
 const Tab = createBottomTabNavigator();
 const bottomTab = [
@@ -10,8 +11,8 @@ const bottomTab = [
     component: require('../Product').default,
   },
   {
-    name: 'logistics',
-    component: require('../Logistics').default,
+    name: 'coupon',
+    component: require('../Coupon').default,
   },
   {
     name: 'transfer',
@@ -38,25 +39,19 @@ const MainPage = () => {
             let iconName;
 
             if (route.name === 'transfer') {
-              if (focused) iconName = require('../../assets/plus.png');
-              else iconName = require('../../assets/transfer.png');
+              iconName = require('../../assets/transfer.svg');
             }
-            if (route.name === 'logistics') {
-              if (focused) iconName = require('../../assets/plus.png');
-              else iconName = require('../../assets/logistics.png');
+            if (route.name === 'coupon') {
+              iconName = require('../../assets/ticket.svg');
             }
             if (route.name === 'product') {
-              if (focused) iconName = require('../../assets/plus.png');
-              else iconName = require('../../assets/box.png');
+              iconName = require('../../assets/product.svg');
             }
             if (route.name === 'setting') {
-              if (focused) iconName = require('../../assets/plus.png');
-              else iconName = require('../../assets/setting.png');
+              iconName = require('../../assets/setting.svg');
             }
 
-            return (
-              <RN.Image source={iconName} style={{width: 25, height: 25}} />
-            );
+            return <SvgUri source={iconName} width="25" height="25" />;
           },
         })}>
         {bottomTab.map(item => (

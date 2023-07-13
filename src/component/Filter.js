@@ -1,6 +1,7 @@
 import React from 'react';
 import * as RN from 'react-native';
 import * as UI from 'react-native-ui-lib';
+import SvgUri from 'react-native-svg-uri';
 
 import {useAppSelector} from '../redux/store';
 import {AppContext} from '../redux/AppContent';
@@ -8,7 +9,6 @@ import service from '../page/Service/service';
 import {useIsFocused} from '@react-navigation/native';
 
 const Fillter = e => {
-  const reduxToken = useAppSelector(state => state.token);
   const isFocused = useIsFocused();
   const appCtx = React.useContext(AppContext);
   const [showDialog, setShowDialog] = React.useState(false);
@@ -17,12 +17,13 @@ const Fillter = e => {
 
   const postProductFilter = async () => {
     // call api
-    let submitData = {
-      token: reduxToken,
-    };
-    const response = await service.postProductFilter(submitData);
-    if (!['', null, undefined].includes(response?.data))
-      setCategoryList(response.data);
+    const response = await service.postProductFilter();
+    if (!['', null, undefined].includes(response?.data)) {
+      let target = response?.data.filter(item => {
+        return item.token !== '1';
+      });
+      setCategoryList(target);
+    }
   };
 
   React.useEffect(() => {
@@ -44,9 +45,10 @@ const Fillter = e => {
     <>
       <RN.View style={styles.container}>
         <RN.TouchableOpacity onPress={() => show()}>
-          <RN.Image
-            source={require('../assets/filter.png')}
-            style={{width: 20, height: 20}}
+          <SvgUri
+            width="30"
+            height="30"
+            source={require('../assets/filter.svg')}
           />
         </RN.TouchableOpacity>
         <UI.Dialog
@@ -78,8 +80,6 @@ const Fillter = e => {
                       })
                     }
                     label={item.category}
-                    contentOnLeft
-                    containerStyle={styles.contentOnLeft}
                   />
                 </RN.View>
               );

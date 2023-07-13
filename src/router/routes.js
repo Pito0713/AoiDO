@@ -23,8 +23,8 @@ const authedPages = [
     component: require('../page/Setting/index').default,
   },
   {
-    name: 'logistics',
-    component: require('../page/Logistics/index').default,
+    name: 'coupon',
+    component: require('../page/Coupon/index').default,
   },
   {
     name: 'platform',
@@ -64,13 +64,26 @@ const authedPages = [
   },
   ////////////////////////
   {
-    name: 'LogisticsItem',
-    component: require('../page/Logistics/LogisticsItem').default,
+    name: 'CouponItem',
+    component: require('../page/Coupon/CouponItem').default,
   },
 
   {
-    name: 'AddLogisticsItem',
-    component: require('../page/Logistics/AddLogisticsItem').default,
+    name: 'AddCouponItem',
+    component: require('../page/Coupon/AddCouponItem').default,
+  },
+
+  {
+    name: 'CarouselImg',
+    component: require('../page/Image/carouselImg').default,
+  },
+  {
+    name: 'AboutImg',
+    component: require('../page/Image/aboutImg').default,
+  },
+  {
+    name: 'MainImg',
+    component: require('../page/Image/mainImg').default,
   },
 ];
 

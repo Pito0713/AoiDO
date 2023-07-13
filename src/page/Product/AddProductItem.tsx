@@ -24,11 +24,12 @@ interface Photo {
   width?: number
 }
 
-interface PhotoItem {
+interface Item {
   describe?: string,
   price?: string,
   category?: string,
   remark?: string,
+  quantity?: string,
 }
 
 interface CategoryItem {
@@ -41,7 +42,7 @@ const Content = () => {
     goBack: () => void,
   }
   const appCtx = React.useContext(AppContext);
-  const [photo, setPhoto] = React.useState<Photo>({});
+
   const navigation = useNavigation<Nav>();
   const reduxToken = useAppSelector(state => state.token)
   const isFocused = useIsFocused();
@@ -50,16 +51,19 @@ const Content = () => {
     label: '',
     value: '',
   });
+  const [photo, setPhoto] = React.useState<Photo>({});
   const [isCategory, setIsCategory] = React.useState(false);
   const [categoryList, setCategoryList] = React.useState([]);
 
-  const save = async (values: PhotoItem) => {
-    if (values?.describe && values?.price) {
+  const save = async (values: Item) => {
+    if (values?.describe && values?.price && values?.quantity) {
       await appCtx.setLoading(true);
       let target = await handleUploadPhoto()
+
       let submitData = {
         "describe": values.describe,
         "price": values.price,
+        "quantity": values.quantity,
         "remark": values.remark,
         "category": category.value,
         "token": reduxToken,
@@ -76,14 +80,16 @@ const Content = () => {
     initialValues: {
       describe: "",
       price: "",
-      remark: ""
+      remark: "",
+      quantity: "",
     },
     validate: (values) => {
-      const reg = /^\d+(\.\d{1,2})?$/
-      const errors: PhotoItem = {};
+      const regDecimalto2 = /^\d+(\.\d{1,2})?$/
+      const regNumber = /^\d+$/
+      const errors: Item = {};
 
-      if (!values.describe) errors.describe = '*' + "字數必須少於12";
-      if (!reg.test(values.price)) errors.price = '*' + "必須數字且最多小數點後第2位";
+      if (!regDecimalto2.test(values.price)) errors.price = '*' + "必須數字且最多小數點後第2位";
+      if (!regNumber.test(values.quantity)) errors.quantity = '*' + "必須數字";
       if (!category.label && !category.value) setIsCategory(true)
       else setIsCategory(false)
 
@@ -132,12 +138,13 @@ const Content = () => {
   };
 
   const postProductFilter = async () => {
-    // call api
-    let submitData = {
-      token: reduxToken
+    const response = await service.postProductFilter();
+    if (!['', null, undefined].includes(response?.data)) {
+      let target = response?.data.filter(( item:any )=>{
+        return item.token !== '1'
+      })
+      setCategoryList(target)
     }
-    const response = await service.postProductFilter(submitData);
-    if (!['', null, undefined].includes(response?.data)) setCategoryList(response.data)
   }
 
   React.useEffect(() => {
@@ -147,7 +154,7 @@ const Content = () => {
   return (
     <RN.ScrollView style={{ height: windowHeight - 100 }}>
       <RN.View style={styles.itemContainer}>
-        <RN.TouchableOpacity onPress={handleChoosePhoto} style={{ borderWidth: 2, borderRadius: 10, overflow: 'hidden' }}>
+        <RN.TouchableOpacity onPress={handleChoosePhoto} style={{ borderWidth: 2, borderRadius: 10, overflow: 'hidden', marginBottom:20 }}>
           {photo?.uri ?
             <UI.View>
               <RN.Image
@@ -211,8 +218,8 @@ const Content = () => {
               placeholder="商品價格"
               keyboardType="phone-pad"
             />
-            <RN.TouchableOpacity 
-              style={[styles.transferContainer, { backgroundColor: appCtx.Colors.primary, flex: 3 }]} 
+            <RN.TouchableOpacity
+              style={[styles.transferContainer, { backgroundColor: appCtx.Colors.primary, flex: 3 }]}
               onPress={() => navigation.navigate('transfer', { isGo: true } )}
             >
               <RN.Text style={[{ color: appCtx.Colors.textPrimary }]}>換算</RN.Text>
@@ -221,6 +228,23 @@ const Content = () => {
           <RN.View >
             <RN.Text style={[, { color: appCtx.Colors.errorText, fontSize: 12 }]}>
               {formik.errors.price}
+            </RN.Text>
+          </RN.View>
+        </RN.View>
+        <RN.View >
+          <RN.Text style={styles.itemContainerText}>商品數量</RN.Text>
+          <RN.View style={{ borderWidth: 1.5, borderRadius: 5, overflow: 'hidden', flexDirection: 'row' }}>
+            <RN.TextInput
+              style={[{ backgroundColor: appCtx.Colors.inputContainer, flex: 7, paddingLeft: 15, height: 45, }]}
+              value={formik.values.quantity}
+              onChangeText={formik.handleChange("quantity")}
+              placeholder="商品數量"
+              keyboardType="phone-pad"
+            />
+          </RN.View>
+          <RN.View >
+            <RN.Text style={[, { color: appCtx.Colors.errorText, fontSize: 12 }]}>
+              {formik.errors.quantity}
             </RN.Text>
           </RN.View>
         </RN.View>
@@ -248,7 +272,7 @@ const Content = () => {
   );
 };
 
-const LogisticsItem = () => {
+const AddProductItem = () => {
   return (
     <RN.SafeAreaView style={styles.container}>
       <Goback />
@@ -256,6 +280,7 @@ const LogisticsItem = () => {
     </RN.SafeAreaView>
   );
 };
+
 const styles = RN.StyleSheet.create({
   container: {
     flex: 1,
@@ -264,6 +289,7 @@ const styles = RN.StyleSheet.create({
     width: '75%',
     justifyContent: 'center',
     alignSelf: 'center',
+    marginBottom: 40,
   },
   input: {
     paddingLeft: 15,
@@ -301,4 +327,4 @@ const styles = RN.StyleSheet.create({
   }
 });
 
-export default LogisticsItem;
+export default AddProductItem;

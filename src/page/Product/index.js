@@ -2,6 +2,7 @@ import React from 'react';
 import * as RN from 'react-native';
 import * as UI from 'react-native-ui-lib';
 import {useNavigation, useIsFocused} from '@react-navigation/native';
+import SvgUri from 'react-native-svg-uri';
 
 import service from '../Service/service';
 import {AppContext} from '../../redux/AppContent';
@@ -12,7 +13,7 @@ import Pagination from '../../component/Pagination';
 const windowWidth = RN.Dimensions.get('window').width;
 const windowHeight = RN.Dimensions.get('window').height;
 
-const Logistics = () => {
+const Coupon = () => {
   const appCtx = React.useContext(AppContext);
   const navigation = useNavigation();
   const isFocused = useIsFocused();
@@ -110,10 +111,13 @@ const Logistics = () => {
             styles.searchContent,
             {backgroundColor: appCtx.Colors.inputContainer},
           ]}>
-          <RN.Image
-            source={require('../../assets/search.png')}
-            style={{width: 20, height: 20, marginLeft: 15}}
-          />
+          <RN.View style={[{marginLeft: 10}]}>
+            <SvgUri
+              width="25"
+              height="25"
+              source={require('../../assets/search.svg')}
+            />
+          </RN.View>
           <RN.TextInput
             style={styles.searchInput}
             onChangeText={onChangeText}
@@ -145,9 +149,10 @@ const Logistics = () => {
               styles.itemContent,
               {alignItems: 'center', justifyContent: 'center'},
             ]}>
-            <RN.Image
-              source={require('../../assets/plus.png')}
-              style={{width: 25, height: 25}}
+            <SvgUri
+              width="30"
+              height="30"
+              source={require('../../assets/plus.svg')}
             />
           </RN.View>
         </RN.TouchableOpacity>
@@ -186,8 +191,7 @@ const Logistics = () => {
                         ]}>
                         <RN.Text
                           style={{
-                            paddingLeft: 5,
-                            borderTopRightRadius: 10,
+                            padding: 5,
                             color: appCtx.Colors.proudcut.cardTitleText,
                             width: '35%',
                             backgroundColor: appCtx.Colors.proudcut.cardTitle,
@@ -351,4 +355,4 @@ const styles = RN.StyleSheet.create({
   },
 });
 
-export default Logistics;
+export default Coupon;

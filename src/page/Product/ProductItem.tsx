@@ -4,6 +4,7 @@ import * as UI from 'react-native-ui-lib';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
 import { launchImageLibrary } from 'react-native-image-picker';
 import { useFormik } from "formik";
+
 import { AppContext } from '../../redux/AppContent';
 import Goback from '../../component/Goback'
 import service from "../Service/service";
@@ -22,10 +23,11 @@ interface Photo {
   width?: number
 }
 
-interface PhotoItem {
+interface Item {
   describe?: string,
   price?: string,
   remark?: string,
+  quantity?: string,
 }
 
 interface CategoryItem {
@@ -46,8 +48,8 @@ const Content = (route: { params: any }) => {
   const reduxToken = useAppSelector(state => state.token)
   const isFocused = useIsFocused();
 
-  const save = async (values: PhotoItem) => {
-    if (values?.describe && values?.price) {
+  const save = async (values: Item) => {
+    if (values?.describe && values?.price && values?.quantity) {
       await appCtx.setLoading(true);
       let target = orgialPhoto !== photo ? handleUploadPhoto() : orgialPhoto
 
@@ -59,7 +61,9 @@ const Content = (route: { params: any }) => {
         "remark": values.remark,
         "token": reduxToken,
         "imageUrl": target?.imageUrl,
+        "quantity": values.quantity,
       }
+
       const response = await service.postUploadProduct(submitData);
       await appCtx.setLoading(false);
       if (response?.status === 'success') navigation.goBack()
@@ -71,15 +75,17 @@ const Content = (route: { params: any }) => {
     initialValues: {
       describe: route.params?.item.describe ? route.params.item.describe : '',
       price: route.params?.item.price ? route.params.item.price : '',
-      remark: route.params?.item.remark ? route.params.item.remark : ''
+      remark: route.params?.item.remark ? route.params.item.remark : '',
+      quantity: route.params?.item.quantity ? route.params.item.quantity : ''
     },
     validate: (values) => {
-      const reg = /^\d+(\.\d{1,2})?$/
-      const errors: PhotoItem = {};
+      const regDecimalto2 = /^\d+(\.\d{1,2})?$/
+      const regNumber = /^\d+$/
+      const errors: Item = {};
 
-      if (!values.describe) errors.describe = '*' + "字數必須少於12";
       if (values.price == 0) errors.price = '*' + "必須大於0";
-      if (!reg.test(values.price)) errors.price = '*' + "必須數字且最多小數點後第2位";
+      if (!regDecimalto2.test(values.price)) errors.price = '*' + "必須數字且最多小數點後第2位";
+      if (!regNumber.test(values.quantity)) errors.quantity = '*' + "必須數字";
 
       return errors;
     },
@@ -120,7 +126,7 @@ const Content = (route: { params: any }) => {
   };
 
   const handleUploadPhoto = async () => {
-    let submitData = await createFormData(photo)
+    let submitData = createFormData(photo)
     const response = await service.postUploadImage(submitData);
     if (response?.data) return response.data
   };
@@ -153,12 +159,13 @@ const Content = (route: { params: any }) => {
 
 
   const postProductFilter = async () => {
-    // call api
-    let submitData = {
-      token: reduxToken
+    const response = await service.postProductFilter();
+    if (!['', null, undefined].includes(response?.data)) {
+      let target = response?.data.filter(( item:any )=>{
+        return item.token !== '1'
+      })
+      setCategoryList(target)
     }
-    const response = await service.postProductFilter(submitData);
-    if (!['', null, undefined].includes(response?.data)) setCategoryList(response.data)
   }
 
   React.useEffect(() => {
@@ -173,7 +180,7 @@ const Content = (route: { params: any }) => {
 
   return (
     <RN.View style={styles.itemContainer}>
-      <RN.TouchableOpacity onPress={handleChoosePhoto} style={{ borderWidth: 2, borderRadius: 10, overflow: 'hidden' }}>
+      <RN.TouchableOpacity onPress={handleChoosePhoto} style={{ borderWidth: 2, borderRadius: 10, overflow: 'hidden', marginBottom:20  }}>
         {photo ?
           <RN.View style={{ justifyContent: 'center', alignItems: 'center' }}>
             <RN.Image
@@ -237,6 +244,23 @@ const Content = (route: { params: any }) => {
           </RN.Text>
         </RN.View>
       </RN.View>
+      <RN.View >
+          <RN.Text style={styles.itemContainerText}>商品數量</RN.Text>
+          <RN.View style={{ borderWidth: 1.5, borderRadius: 5, overflow: 'hidden', flexDirection: 'row' }}>
+            <RN.TextInput
+              style={[{ backgroundColor: appCtx.Colors.inputContainer, flex: 7, paddingLeft: 15, height: 45, }]}
+              value={formik.values.quantity}
+              onChangeText={formik.handleChange("quantity")}
+              placeholder="商品數量"
+              keyboardType="phone-pad"
+            />
+          </RN.View>
+          <RN.View >
+            <RN.Text style={[, { color: appCtx.Colors.errorText, fontSize: 12 }]}>
+              {formik.errors.quantity as String}
+            </RN.Text>
+          </RN.View>
+        </RN.View>
       <RN.View>
         <RN.Text style={styles.itemContainerText}>備註</RN.Text>
         <RN.TextInput

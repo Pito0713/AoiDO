@@ -1,15 +1,13 @@
 import React from "react";
 import * as RN from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import SvgUri from 'react-native-svg-uri';
 
 const Goback = () => {
   const navigation = useNavigation();
   return (
     <RN.TouchableOpacity style={styles.iconContainer} onPress={() => navigation.goBack()}>
-      <RN.Image
-        source={require('../assets/leftArrow.png')}
-        style={{ width: 25, height: 25 }}
-      />
+      <SvgUri width="40" height="40" source={require('../assets/ArrowLeft.svg')} />
     </RN.TouchableOpacity>
   )
 }

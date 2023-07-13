@@ -12,7 +12,7 @@ import ScrollViewComponent from "../../component/ScrollViewComponent";
 
 interface Item {
   describe?: string,
-  singNumber?: string,
+  discount?: string,
   remark?: string,
 }
 
@@ -37,13 +37,13 @@ const Content = (route : { params: any }) => {
     let submitData = {
       "id": route.params.item._id,
       "describe": values.describe,
-      "singNumber": values.singNumber,
+      "discount": values.discount,
       "startDate": new Date(startDate),
       "endDate": new Date(endDate),
       "remark": values.remark,
     }
     await appCtx.setLoading(true)
-    const response = await service.patchUpdateCargo(submitData);
+    const response = await service.patchUpdateCoupon(submitData);
     await appCtx.setLoading(false)
     if (response?.status === 'success') navigation.goBack()
   }
@@ -52,20 +52,20 @@ const Content = (route : { params: any }) => {
     validateOnChange: false,
     initialValues: {
       describe: route.params?.item.describe ? route.params.item.describe : '',
-      singNumber: route.params?.item.singNumber ? route.params.item.singNumber : '',
+      discount: route.params?.item.discount ? route.params.item.discount : '',
       remark: route.params?.item.remark ? route.params.item.remark : '',
     },
     validate: (values) => {
       const errors: Item = {};
 
       if (!values?.describe) errors.describe = '*' + "必填";
-      if (!values?.singNumber) errors.singNumber = '*' + "必填";
+      if (!values?.discount) errors.discount = '*' + "必填";
 
       return errors;
     },
     onSubmit: (values, { resetForm }) => {
       if (Date.parse(startDate) > Date.parse(endDate)) {
-        RN.Alert.alert('出關時間必須大於開始運送時間')
+        RN.Alert.alert('結束時間必須大於開始時間')
       } else {
         save(values)
         resetForm()
@@ -84,19 +84,19 @@ const Content = (route : { params: any }) => {
         },
         {
           text: "確認",
-          onPress: () => deleteCargo(route.params.item._id)
+          onPress: () => deleteOneCoupon(route.params.item._id)
         }
       ], {}
     );
   }
 
-  const deleteCargo = async (item: string) => {
+  const deleteOneCoupon = async (item: string) => {
     // call api
     await appCtx.setLoading(true)
     let submitData = {
       "id": item,
     }
-    const response = await service.deleteCargo(submitData);
+    const response = await service.deleteOneCoupon(submitData);
     await appCtx.setLoading(false)
     if (response?.status === 'success') navigation.goBack()
   }
@@ -117,26 +117,26 @@ const Content = (route : { params: any }) => {
         </RN.View>
       </RN.View>
       <RN.View>
-        <RN.Text style={styles.itemContainerText}>貨運單號</RN.Text>
+        <RN.Text style={styles.itemContainerText}>折扣價格</RN.Text>
         <RN.TextInput
           style={[styles.input, { backgroundColor: appCtx.Colors.inputContainer, }]}
-          onChangeText={formik.handleChange("singNumber")}
-          value={formik.values.singNumber}
-          placeholder="貨運單號"
+          onChangeText={formik.handleChange("discount")}
+          value={formik.values.discount}
+          placeholder="折扣價格"
         />
         <RN.View>
           <RN.Text style={[{ color: appCtx.Colors.errorText }]}>
-            {formik.errors.singNumber as String} 
+            {formik.errors.discount as String} 
           </RN.Text>
         </RN.View>
       </RN.View>
       <RN.View>
-        <RN.Text style={styles.itemContainerText}>開始運送日期</RN.Text>
+        <RN.Text style={styles.itemContainerText}>開始日期</RN.Text>
         <DatePicker value={startDate} onValueChange={onValueStartDatechange} />
         <RN.View><RN.Text/></RN.View>
       </RN.View>
       <RN.View>
-        <RN.Text style={styles.itemContainerText}>出關日期</RN.Text>
+        <RN.Text style={styles.itemContainerText}>結束日期</RN.Text>
         <DatePicker value={endDate} onValueChange={onValueEndDatechange} />
         <RN.View><RN.Text/></RN.View>
       </RN.View>
@@ -162,7 +162,7 @@ const Content = (route : { params: any }) => {
   );
 };
 
-const LogisticsItem = ({ route }: { route: any }) => {
+const CouponItem = ({ route }: { route: any }) => {
   return (
     <RN.SafeAreaView style={styles.container}>
       <Goback />
@@ -216,4 +216,4 @@ const styles = RN.StyleSheet.create({
   },
 });
 
-export default LogisticsItem;
+export default CouponItem;

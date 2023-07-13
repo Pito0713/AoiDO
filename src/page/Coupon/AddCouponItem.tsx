@@ -14,7 +14,7 @@ const windowHeight = RN.Dimensions.get('window').height;
 
 interface Item {
   describe?: string,
-  singNumber?: string,
+  discount?: string,
   remark?: string,
 }
 const Content = () => {
@@ -35,20 +35,22 @@ const Content = () => {
     validateOnChange: false,
     initialValues: {
       describe: '',
-      singNumber: '',
+      discount: '',
       remark: '',
     },
     validate: (values) => {
       const errors: Item = {};
-
       if (!values?.describe) errors.describe = '*' + "必填";
-      if (!values?.singNumber) errors.singNumber = '*' + "必填";
+      if (!values?.discount) errors.discount = '*' + "必填";
+
+      const reg = /^\d+$/
+      if (!reg.test(values.discount)) errors.discount = '*' + "必須數字";
 
       return errors;
     },
     onSubmit: (values, { resetForm }) => {
       if (Date.parse(startDate) > Date.parse(endDate)) {
-        RN.Alert.alert('出關時間必須大於開始運送時間')
+        RN.Alert.alert('結束時間必須大於開始時間')
       } else {
         save(values)
         resetForm()
@@ -59,14 +61,14 @@ const Content = () => {
   const save = async (values: Item) => {
     let submitData = {
       describe: values.describe,
-      singNumber: values.singNumber,
+      discount: values.discount,
       startDate: new Date(startDate),
       endDate: new Date(endDate),
       remark: values.remark,
       token: reduxToken,
     }
     await appCtx.setLoading(true)
-    const response = await service.postAddCargo(submitData);
+    const response = await service.postCreateCoupon(submitData);
     await appCtx.setLoading(false)
     if (response?.message) navigation.goBack()
   }
@@ -89,26 +91,26 @@ const Content = () => {
 
       </RN.View>
       <RN.View>
-        <RN.Text style={styles.itemContainerText}>貨運單號</RN.Text>
+        <RN.Text style={styles.itemContainerText}>折扣價格</RN.Text>
         <RN.TextInput
           style={[styles.input, { backgroundColor: appCtx.Colors.inputContainer, }]}
-          onChangeText={formik.handleChange("singNumber")}
-          value={formik.values.singNumber}
-          placeholder="貨運單號"
+          onChangeText={formik.handleChange("discount")}
+          value={formik.values.discount}
+          placeholder="折扣價格"
         />
         <RN.View>
           <RN.Text style={[{ color: appCtx.Colors.errorText }]}>
-            {formik.errors.singNumber}
+            {formik.errors.discount}
           </RN.Text>
         </RN.View>
       </RN.View>
       <RN.View>
-        <RN.Text style={styles.itemContainerText}>開始運送日期</RN.Text>
+        <RN.Text style={styles.itemContainerText}>開始日期</RN.Text>
         <DatePicker onValueChange={onValueStartDatechange} />
         <RN.View><RN.Text/></RN.View>
       </RN.View>
       <RN.View>
-        <RN.Text style={styles.itemContainerText}>出關日期</RN.Text>
+        <RN.Text style={styles.itemContainerText}>結束日期</RN.Text>
         <DatePicker onValueChange={onValueEndDatechange} />
         <RN.View><RN.Text/></RN.View>
       </RN.View>
@@ -131,7 +133,7 @@ const Content = () => {
   );
 };
 
-const AddLogisticsItem = () => {
+const AddCouponItem = () => {
   return (
     <RN.SafeAreaView style={styles.container}>
       <Goback />
@@ -159,7 +161,7 @@ const styles = RN.StyleSheet.create({
   itemContainerText: {
     justifyContent: 'center',
     alignSelf: 'center',
-    margin: 5
+    margin: 8
   },
   saveContainer: {
     width: '75%',
@@ -176,4 +178,4 @@ const styles = RN.StyleSheet.create({
   },
 });
 
-export default AddLogisticsItem;
+export default AddCouponItem;

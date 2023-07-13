@@ -2,6 +2,7 @@ import React from 'react';
 import * as RN from 'react-native';
 import * as UI from 'react-native-ui-lib';
 import {useNavigation, useIsFocused} from '@react-navigation/native';
+import SvgUri from 'react-native-svg-uri';
 
 import service from '../Service/service';
 import {AppContext} from '../../redux/AppContent';
@@ -124,7 +125,7 @@ const PlatformPage = () => {
         <RN.View style={styles.container}>
           {productFilter.length > 0 ? (
             productFilter.map((item, index) => {
-              return (
+              return item.token !== '1' ? (
                 <UI.Card
                   style={styles.itemContainer}
                   onPress={() =>
@@ -134,6 +135,18 @@ const PlatformPage = () => {
                   key={index}>
                   <RN.View style={styles.itemContent}>
                     <RN.Text style={styles.itemContentText}>
+                      {item.category}
+                    </RN.Text>
+                  </RN.View>
+                </UI.Card>
+              ) : (
+                <UI.Card style={styles.itemContainer} key={index}>
+                  <RN.View style={styles.itemContent}>
+                    <RN.Text
+                      style={[
+                        styles.itemContentText,
+                        {color: appCtx.Colors.productFilterDefault},
+                      ]}>
                       {item.category}
                     </RN.Text>
                   </RN.View>
@@ -151,9 +164,10 @@ const PlatformPage = () => {
             style={styles.itemContainer}
             onPress={() => navigation.navigate('addProductFilterItem')}>
             <RN.View style={styles.itemContent}>
-              <RN.Image
-                source={require('../../assets/plus.png')}
-                style={{width: 25, height: 25}}
+              <SvgUri
+                width="30"
+                height="30"
+                source={require('../../assets/plus.svg')}
               />
             </RN.View>
           </UI.Card>
