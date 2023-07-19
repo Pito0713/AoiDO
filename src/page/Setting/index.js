@@ -1,46 +1,82 @@
 import React from 'react';
 import * as RN from 'react-native';
-import {registerActions, useAppDispatch} from '../../redux/store';
 import {useNavigation} from '@react-navigation/native';
+
+import {registerActions, useAppDispatch} from '../../redux/store';
 import {AppContext} from '../../redux/AppContent';
 import ScrollViewComponent from '../../component/ScrollViewComponent';
+import {useAppSelector} from '../../redux/store';
 
 const Content = () => {
   const appCtx = React.useContext(AppContext);
   const dispatch = useAppDispatch();
   const navigation = useNavigation();
 
+  const reduxPermission = useAppSelector(state => state.permission);
+
   const logOut = () => {
     dispatch(registerActions.SET_TOKEN(''));
   };
 
   const List = [
-    {title: '自訂跑馬燈', action: () => navigation.navigate('CarouselImg')},
-    {title: '自訂商品大綱圖片', action: () => navigation.navigate('MainImg')},
-    {title: '自訂關於圖片', action: () => navigation.navigate('AboutImg')},
-    {title: '自訂平台費用', action: () => navigation.navigate('platform')},
-    {title: '自訂商品分類', action: () => navigation.navigate('productFilter')},
-    {title: '修改密碼', action: () => navigation.navigate('handPassWord')},
-    {title: '登出', action: () => logOut()},
+    {
+      title: '自訂跑馬燈',
+      action: () => navigation.navigate('CarouselImg'),
+      permission: ['admin'],
+    },
+    {
+      title: '自訂商品大綱圖片',
+      action: () => navigation.navigate('MainImg'),
+      permission: ['admin'],
+    },
+    {
+      title: '自訂關於圖片',
+      action: () => navigation.navigate('AboutImg'),
+      permission: ['admin'],
+    },
+    {
+      title: '自訂平台費用',
+      action: () => navigation.navigate('platform'),
+      permission: ['admin'],
+    },
+    {
+      title: '自訂商品分類',
+      action: () => navigation.navigate('productFilter'),
+      permission: ['admin'],
+    },
+    {
+      title: '權限修改',
+      action: () => navigation.navigate('Permission'),
+      permission: ['admin'],
+    },
+    {
+      title: '修改密碼',
+      action: () => navigation.navigate('handPassWord'),
+      permission: ['admin', 'guest'],
+    },
+    {title: '登出', action: () => logOut(), permission: ['admin', 'guest']},
   ];
 
   return (
     <RN.View style={styles.container}>
       {List.map((item, index) => {
-        return (
-          <RN.TouchableOpacity
-            style={[
-              styles.itemContainer,
-              {backgroundColor: appCtx.Colors.Setting.cardTitle},
-            ]}
-            onPress={item.action}
-            key={index}>
-            <RN.Text
-              style={[styles.text, {color: appCtx.Colors.Setting.cardText}]}>
-              {item.title}
-            </RN.Text>
-          </RN.TouchableOpacity>
-        );
+        if (item?.permission?.includes(reduxPermission)) {
+          return (
+            <RN.TouchableOpacity
+              style={[
+                styles.itemContainer,
+                {backgroundColor: appCtx.Colors.Setting.cardTitle},
+              ]}
+              onPress={item.action}
+              key={index}>
+              <RN.Text
+                style={[styles.text, {color: appCtx.Colors.Setting.cardText}]}>
+                {item.title}
+              </RN.Text>
+            </RN.TouchableOpacity>
+          );
+        } else {
+        }
       })}
     </RN.View>
   );

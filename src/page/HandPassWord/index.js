@@ -76,7 +76,7 @@ const Content = () => {
         values.newPassWord,
         APP_SECRCT_KEY,
       ).toString();
-      await dispatch(registerActions.SET_PASSWORD(encryptValue));
+      dispatch(registerActions.SET_PASSWORD(encryptValue));
 
       navigation.goBack();
     }

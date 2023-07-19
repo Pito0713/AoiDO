@@ -1,8 +1,9 @@
 import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import * as RN from 'react-native';
-import {AppContext} from '../../redux/AppContent';
 import SvgUri from 'react-native-svg-uri';
+
+import {AppContext} from '../../redux/AppContent';
 
 const Tab = createBottomTabNavigator();
 const bottomTab = [

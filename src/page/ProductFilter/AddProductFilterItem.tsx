@@ -1,10 +1,11 @@
 import React from "react";
 import { useFormik } from "formik";
 import * as RN from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+
 import { AppContext } from '../../redux/AppContent';
 import service from "../Service/service";
 import Goback from '../../component/Goback'
-import { useNavigation } from '@react-navigation/native';
 import { useAppSelector } from '../../redux/store';
 interface ProductFilterItem {
   category?: string
@@ -34,12 +35,11 @@ const AddProductFilterItem = () => {
   });
 
   const postCreateProductFilter = async (values: ProductFilterItem) => {
-    appCtx.setLoading(true)
-
     let submitData = {
       "category": values.category,
       "token": reduxToken,
     }
+    appCtx.setLoading(true)
     const response = await service.postCreateProductFilter(submitData);
     if (response?.status === 'success') navigation.goBack()
     appCtx.setLoading(false);

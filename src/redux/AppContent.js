@@ -55,7 +55,7 @@ const Colors = {
   inputText: '#a0ed9a',
   // border
   borderColor: '#1b1a1c',
-  registerText: '#285724',
+  registerText: '#453f36',
   platformDefault: '#959595',
   productFilterDefault: '#959595',
   // search

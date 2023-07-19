@@ -3,6 +3,8 @@ import * as RN from 'react-native';
 import {useFormik} from 'formik';
 import * as UI from 'react-native-ui-lib';
 import {useNavigation} from '@react-navigation/native';
+import CryptoJS from 'react-native-crypto-js';
+
 import service from '../Service/service';
 import {
   registerActions,
@@ -10,7 +12,6 @@ import {
   useAppDispatch,
 } from '../../redux/store';
 import {AppContext} from '../../redux/AppContent';
-import CryptoJS from 'react-native-crypto-js';
 import {APP_SECRCT_KEY} from '../../env/config';
 
 const windowHeight = RN.Dimensions.get('window').height;
@@ -76,6 +77,8 @@ const SignInPage = () => {
       dispatch(registerActions.SET_TOKEN(values.userBack.token));
     }
     dispatch(registerActions.SET_REMEMBERINFO(rememberInfo));
+    dispatch(registerActions.SET_PERMISSION(values?.userBack?.permission));
+    dispatch(registerActions.SET_ID(values?.userBack?.id));
   };
 
   return (

@@ -57,9 +57,7 @@ const Content = () => {
 
   const save = async (values: Item) => {
     if (values?.describe && values?.price && values?.quantity) {
-      await appCtx.setLoading(true);
       let target = await handleUploadPhoto()
-
       let submitData = {
         "describe": values.describe,
         "price": values.price,
@@ -67,11 +65,14 @@ const Content = () => {
         "remark": values.remark,
         "category": category.value,
         "token": reduxToken,
-        "imageUrl": target.imageUrl,
+        "imageUrl": target?.imageUrl,
       }
-      const response = await service.postAddProduct(submitData);
+      if (target.imageUrl) {
+        await appCtx.setLoading(true);
+        const response = await service.postAddProduct(submitData);
+        if (response?.status === 'success') navigation.goBack()
+      }
       await appCtx.setLoading(false);
-      if (response?.status === 'success') navigation.goBack()
     }
   }
 
@@ -133,8 +134,13 @@ const Content = () => {
 
   const handleUploadPhoto = async () => {
     let submitData = createFormData(photo)
-    const response = await service.postUploadImage(submitData);
-    if (response?.data) return response.data
+    if (submitData) {
+      await appCtx.setLoading(true);
+      const response = await service.postUploadImage(submitData);
+      if (response?.data) return response.data
+    }
+    await appCtx.setLoading(false);
+
   };
 
   const postProductFilter = async () => {
@@ -148,8 +154,8 @@ const Content = () => {
   }
 
   React.useEffect(() => {
-    if (isFocused) postProductFilter()
-  }, [isFocused]);
+    postProductFilter()
+  }, []);
 
   return (
     <RN.ScrollView style={{ height: windowHeight - 100 }}>
@@ -273,10 +279,11 @@ const Content = () => {
 };
 
 const AddProductItem = () => {
+  const reduxPermission = useAppSelector(state => state.permission);
   return (
     <RN.SafeAreaView style={styles.container}>
       <Goback />
-      <ScrollViewComponent item={Content} />
+      {reduxPermission !== 'admin' ? <RN.Text style={{fontSize: 20, marginLeft: 20}}>該帳戶無權限使用</RN.Text> : <ScrollViewComponent item={Content} />}
     </RN.SafeAreaView>
   );
 };

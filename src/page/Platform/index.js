@@ -1,29 +1,24 @@
 import React from 'react';
 import * as RN from 'react-native';
 import * as UI from 'react-native-ui-lib';
+import SvgUri from 'react-native-svg-uri';
 import {useNavigation, useIsFocused} from '@react-navigation/native';
+
 import service from '../Service/service';
 import {AppContext} from '../../redux/AppContent';
-import {useAppSelector} from '../../redux/store';
 import Goback from '../../component/Goback';
 import ReminderText from '../../component/ReminderText';
-import SvgUri from 'react-native-svg-uri';
+import ScrollViewComponent from '../../component/ScrollViewComponent';
 
-const PlatformPage = () => {
+const Content = () => {
   const appCtx = React.useContext(AppContext);
   const navigation = useNavigation();
   const isFocused = useIsFocused();
   const [platform, setPlatform] = React.useState([]);
 
-  const reduxToken = useAppSelector(state => state.token);
-
   const postPlatformRate = async () => {
     await appCtx.setLoading(true);
-    // call api
-    let submitData = {
-      token: reduxToken,
-    };
-    const response = await service.postPlatformRate(submitData);
+    const response = await service.postPlatformRate();
     if (!['', null, undefined].includes(response?.data)) {
       setPlatform(response.data);
     }
@@ -32,9 +27,11 @@ const PlatformPage = () => {
 
   const updateModifyRate = async item => {
     let submitData = {
-      token: item,
+      id: item,
     };
+    await appCtx.setLoading(true);
     const response = await service.updateModifyRate(submitData);
+    await appCtx.setLoading(false);
     if (response?.status === 'success') postPlatformRate();
   };
 
@@ -42,7 +39,10 @@ const PlatformPage = () => {
     let submitData = {
       id: item,
     };
+
+    await appCtx.setLoading(true);
     const response = await service.deleteModifyRate(submitData);
+    await appCtx.setLoading(false);
     if (response?.status === 'success') postPlatformRate();
   };
 
@@ -70,8 +70,7 @@ const PlatformPage = () => {
   }, [isFocused]);
 
   return (
-    <RN.SafeAreaView style={styles.container}>
-      <Goback />
+    <RN.View style={styles.container}>
       <RN.View
         style={[
           styles.listContainer,
@@ -80,87 +79,92 @@ const PlatformPage = () => {
         <ReminderText text={'* 預設費用無法刪除'} />
         <ReminderText text={'* 長按可刪除分類別'} />
       </RN.View>
-
-      <RN.ScrollView>
-        <RN.View style={styles.container}>
-          {platform.length > 0 ? (
-            platform.map((item, index) => {
-              return item.token !== '1' ? (
-                <UI.Card
-                  style={styles.itemContainer}
-                  onPress={() => updateModifyRate(item.token)}
-                  onLongPress={() => deleteItem(item._id)}
-                  key={index}>
-                  <RN.View style={styles.itemContent}>
-                    <RN.Text style={styles.itemContentText}>
-                      {item.label}
-                    </RN.Text>
-                    <RN.Text style={styles.itemContentText}>
-                      {item.rate} %
-                    </RN.Text>
-                  </RN.View>
-                  <RN.View style={styles.itemContent}>
-                    {item.isActive ? (
-                      <RN.Text style={styles.itemContentText}>進行中</RN.Text>
-                    ) : (
-                      <RN.Text style={styles.itemContentText}>啟用</RN.Text>
-                    )}
-                  </RN.View>
-                </UI.Card>
-              ) : (
-                <UI.Card
-                  style={styles.itemContainer}
-                  key={index}
-                  onPress={() => updateModifyRate(item.token)}>
-                  <RN.View style={styles.itemContent}>
-                    <RN.Text
-                      style={[
-                        styles.itemContentText,
-                        {color: appCtx.Colors.platformDefault},
-                      ]}>
-                      {item.label}
-                    </RN.Text>
-                    <RN.Text
-                      style={[
-                        styles.itemContentText,
-                        {color: appCtx.Colors.platformDefault},
-                      ]}>
-                      {item.rate} %
-                    </RN.Text>
-                  </RN.View>
-                  <RN.View style={styles.itemContent}>
-                    {item.isActive ? (
-                      <RN.Text style={styles.itemContentText}>進行中</RN.Text>
-                    ) : (
-                      <RN.Text style={styles.itemContentText}>啟用</RN.Text>
-                    )}
-                  </RN.View>
-                </UI.Card>
-              );
-            })
-          ) : (
-            <UI.Card style={styles.itemContainer}>
-              <RN.View style={styles.itemContent}>
-                <RN.Text style={{fontSize: 20}}>尚無資料</RN.Text>
-              </RN.View>
-            </UI.Card>
-          )}
-          <UI.Card
-            style={styles.itemContainer}
-            onPress={() => navigation.navigate('AddPlatformItem')}>
+      <RN.View style={styles.container}>
+        {platform.length > 0 ? (
+          platform.map((item, index) => {
+            return item.token !== '1' ? (
+              <UI.Card
+                style={styles.itemContainer}
+                onPress={() => updateModifyRate(item._id)}
+                onLongPress={() => deleteItem(item._id)}
+                key={index}>
+                <RN.View style={styles.itemContent}>
+                  <RN.Text style={styles.itemContentText}>{item.label}</RN.Text>
+                  <RN.Text style={styles.itemContentText}>
+                    {item.rate} %
+                  </RN.Text>
+                </RN.View>
+                <RN.View style={styles.itemContent}>
+                  {item.isActive ? (
+                    <RN.Text style={styles.itemContentText}>進行中</RN.Text>
+                  ) : (
+                    <RN.Text style={styles.itemContentText}>啟用</RN.Text>
+                  )}
+                </RN.View>
+              </UI.Card>
+            ) : (
+              <UI.Card
+                style={styles.itemContainer}
+                key={index}
+                onPress={() => updateModifyRate(item.token)}>
+                <RN.View style={styles.itemContent}>
+                  <RN.Text
+                    style={[
+                      styles.itemContentText,
+                      {color: appCtx.Colors.platformDefault},
+                    ]}>
+                    {item.label}
+                  </RN.Text>
+                  <RN.Text
+                    style={[
+                      styles.itemContentText,
+                      {color: appCtx.Colors.platformDefault},
+                    ]}>
+                    {item.rate} %
+                  </RN.Text>
+                </RN.View>
+                <RN.View style={styles.itemContent}>
+                  {item.isActive ? (
+                    <RN.Text style={styles.itemContentText}>進行中</RN.Text>
+                  ) : (
+                    <RN.Text style={styles.itemContentText}>啟用</RN.Text>
+                  )}
+                </RN.View>
+              </UI.Card>
+            );
+          })
+        ) : (
+          <UI.Card style={styles.itemContainer}>
             <RN.View style={styles.itemContent}>
-              <SvgUri
-                width="25"
-                height="25"
-                source={require('../../assets/plus.svg')}
-              />
+              <RN.Text style={{fontSize: 20}}>尚無資料</RN.Text>
             </RN.View>
           </UI.Card>
-        </RN.View>
-      </RN.ScrollView>
+        )}
+        <UI.Card
+          style={styles.itemContainer}
+          onPress={() => navigation.navigate('AddPlatformItem')}>
+          <RN.View style={styles.itemContent}>
+            <SvgUri
+              width="25"
+              height="25"
+              source={require('../../assets/plus.svg')}
+            />
+          </RN.View>
+        </UI.Card>
+      </RN.View>
+    </RN.View>
+  );
+};
+
+const PlatformPage = () => {
+  return (
+    <RN.SafeAreaView style={styles.container}>
+      <Goback />
+      <ScrollViewComponent item={Content}></ScrollViewComponent>
     </RN.SafeAreaView>
   );
 };
+
 const styles = RN.StyleSheet.create({
   container: {
     flex: 1,

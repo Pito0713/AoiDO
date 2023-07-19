@@ -53,7 +53,6 @@ const Transfer = ({route}) => {
   ];
 
   const postPlatformRate = async () => {
-    // call api
     let submitData = {
       token: reduxToken,
     };

@@ -51,8 +51,9 @@ const Content = (route: { params: any }) => {
   const save = async (values: Item) => {
     if (values?.describe && values?.price && values?.quantity) {
       await appCtx.setLoading(true);
-      let target = orgialPhoto !== photo ? handleUploadPhoto() : orgialPhoto
+      let target = orgialPhoto !== photo ? await handleUploadPhoto() : orgialPhoto
 
+      if (target) {
       let submitData = {
         "id": route.params.item._id,
         "describe": values.describe,
@@ -64,9 +65,10 @@ const Content = (route: { params: any }) => {
         "quantity": values.quantity,
       }
 
-      const response = await service.postUploadProduct(submitData);
-      await appCtx.setLoading(false);
-      if (response?.status === 'success') navigation.goBack()
+        const response = await service.postUploadProduct(submitData);
+        await appCtx.setLoading(false);
+        if (response?.status === 'success') navigation.goBack()
+      }
     }
   }
 
@@ -118,6 +120,7 @@ const Content = (route: { params: any }) => {
       let target: Photo = {}
       if (!['', null, undefined].includes(response?.assets)) {
         target = response?.assets[0]
+
         if (['image/jpg', 'image/jpeg', 'image/png'].includes(target.type as string)) {
           setPhoto(target)
         } else RN.Alert.alert('不支援圖片格式')
@@ -127,7 +130,10 @@ const Content = (route: { params: any }) => {
 
   const handleUploadPhoto = async () => {
     let submitData = createFormData(photo)
+
+    await appCtx.setLoading(true);
     const response = await service.postUploadImage(submitData);
+    await appCtx.setLoading(false);
     if (response?.data) return response.data
   };
 
@@ -153,8 +159,11 @@ const Content = (route: { params: any }) => {
     let submitData = {
       "id": item,
     }
+    await appCtx.setLoading(true);
     const response = await service.deleteProductOne(submitData);
+    await appCtx.setLoading(false);
     if (response?.status === 'success') navigation.goBack()
+    
   }
 
 

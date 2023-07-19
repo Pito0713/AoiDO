@@ -24,6 +24,7 @@ const Coupon = () => {
   const [categoryValue, setCategoryValue] = React.useState('');
   const [showDialog, setShowDialog] = React.useState(false);
   const [refreshing, setRefreshing] = React.useState(false);
+  const [searchText, setSearchText] = React.useState('');
 
   const [pagination, setPagination] = React.useState(10);
   const [page, setPage] = React.useState(1);
@@ -41,7 +42,6 @@ const Coupon = () => {
   };
 
   const postSearchProduct = async () => {
-    await appCtx.setLoading(true);
     let target = [];
     Object.entries(categoryValue).forEach(([key, value]) => {
       if (value) target.push(key);
@@ -54,9 +54,11 @@ const Coupon = () => {
       page: page,
       pagination: pagination,
     };
+    await appCtx.setLoading(true);
     const response = await service.postAllProduct(submitData);
 
     if (response?.status === 'success') {
+      setSearchText(text);
       setProduct(response.data);
       setTotal(response.total);
     }
@@ -86,8 +88,10 @@ const Coupon = () => {
     let submitData = {
       id: item,
     };
+    await appCtx.setLoading(true);
     const response = await service.deleteProductOne(submitData);
     if (response?.status === 'success') postSearchProduct();
+    await appCtx.setLoading(false);
   };
 
   React.useEffect(() => {
@@ -245,7 +249,10 @@ const Coupon = () => {
                     height: '100%',
                   },
                 ]}>
-                <RN.Text style={{fontSize: 20}}>暫無資料</RN.Text>
+                <RN.Text style={{fontSize: 20}}>
+                  {' '}
+                  {searchText ? `搜尋 "${searchText}"  查無資料` : `尚無資料`}
+                </RN.Text>
               </RN.View>
             </UI.Card>
           )}

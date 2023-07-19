@@ -3,6 +3,7 @@ import * as RN from 'react-native';
 import { useFormik } from "formik";
 import moment from 'moment'
 import { useNavigation } from '@react-navigation/native';
+
 import { AppContext } from '../../redux/AppContent';
 import Goback from '../../component/Goback'
 import DatePicker from '../../component/DatePicker'
@@ -13,9 +14,9 @@ import ScrollViewComponent from "../../component/ScrollViewComponent";
 const windowHeight = RN.Dimensions.get('window').height;
 
 interface Item {
-  describe?: string,
-  discount?: string,
-  remark?: string,
+  describe?: string | undefined,
+  discount?: string | undefined,
+  remark?: string | undefined,
 }
 const Content = () => {
   const appCtx = React.useContext(AppContext);
@@ -40,10 +41,10 @@ const Content = () => {
     },
     validate: (values) => {
       const errors: Item = {};
+      const reg = /^\d+$/
+
       if (!values?.describe) errors.describe = '*' + "必填";
       if (!values?.discount) errors.discount = '*' + "必填";
-
-      const reg = /^\d+$/
       if (!reg.test(values.discount)) errors.discount = '*' + "必須數字";
 
       return errors;
@@ -107,12 +108,10 @@ const Content = () => {
       <RN.View>
         <RN.Text style={styles.itemContainerText}>開始日期</RN.Text>
         <DatePicker onValueChange={onValueStartDatechange} />
-        <RN.View><RN.Text/></RN.View>
       </RN.View>
       <RN.View>
         <RN.Text style={styles.itemContainerText}>結束日期</RN.Text>
         <DatePicker onValueChange={onValueEndDatechange} />
-        <RN.View><RN.Text/></RN.View>
       </RN.View>
       <RN.View>
         <RN.Text style={styles.itemContainerText}>備註</RN.Text>
@@ -134,10 +133,11 @@ const Content = () => {
 };
 
 const AddCouponItem = () => {
+  const reduxPermission = useAppSelector(state => state.permission);
   return (
     <RN.SafeAreaView style={styles.container}>
       <Goback />
-      <ScrollViewComponent item={Content}/>
+      {reduxPermission !== 'admin' ? <RN.Text style={{fontSize: 20, marginLeft: 20}}>該帳戶無權限使用</RN.Text> : <ScrollViewComponent item={Content} />}
     </RN.SafeAreaView>
   );
 };

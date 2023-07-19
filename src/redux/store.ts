@@ -10,7 +10,9 @@ interface State {
   token: string | undefined | null,
   account: string,
   password: string,
-  rememberInfo: boolean
+  rememberInfo: boolean,
+  permission: string,
+  id: string,
 }
 interface action {
   err?: string,
@@ -25,7 +27,8 @@ const initialState = {
   token: '',
   account: '',
   password: '',
-  rememberInfo: false
+  rememberInfo: false,
+  permission: ''
 } as State
 
 const reduxText = (action: any) => {
@@ -62,6 +65,21 @@ const rememberInfoMiddleWare = (store: any) => (next: any) => (action: action) =
   }
   next(action);
 }
+const permissionMiddleWare = (store: any) => (next: any) => (action: action) => {
+  if (action.type === 'register/SET_PERMISSION') {
+    let TextRes = reduxText(action)
+    console.log(TextRes)
+  }
+  next(action);
+}
+
+const IdMiddleWare = (store: any) => (next: any) => (action: action) => {
+  if (action.type === 'register/SET_ID') {
+    let TextRes = reduxText(action)
+    console.log(TextRes)
+  }
+  next(action);
+}
 
 const registerSlice = createSlice({
   name: "register",
@@ -79,6 +97,12 @@ const registerSlice = createSlice({
     SET_REMEMBERINFO(state, action) {
       state.rememberInfo = action.payload;
     },
+    SET_PERMISSION(state, action) {
+      state.permission = action.payload;
+    },
+    SET_ID(state, action) {
+      state.id = action.payload;
+    },
   }
 });
 
@@ -87,7 +111,7 @@ const persistedReducer = persistReducer(persistConfig, registerSlice.reducer);
 
 const store = configureStore({
   reducer: persistedReducer,
-  middleware: [accountMiddleWare, passwordMiddleWare, tokenMiddleWare, rememberInfoMiddleWare],
+  middleware: [accountMiddleWare, passwordMiddleWare, tokenMiddleWare, rememberInfoMiddleWare, permissionMiddleWare, IdMiddleWare],
 })
 
 const persistor = persistStore(store)

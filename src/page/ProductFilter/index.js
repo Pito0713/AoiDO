@@ -9,8 +9,9 @@ import {AppContext} from '../../redux/AppContent';
 import {useAppSelector} from '../../redux/store';
 import Goback from '../../component/Goback';
 import ReminderText from '../../component/ReminderText';
+import ScrollViewComponent from '../../component/ScrollViewComponent';
 
-const PlatformPage = () => {
+const Content = () => {
   const appCtx = React.useContext(AppContext);
   const navigation = useNavigation();
   const isFocused = useIsFocused();
@@ -37,12 +38,12 @@ const PlatformPage = () => {
   };
 
   const postProductFilter = async () => {
-    let submitData = {
-      token: reduxToken,
-    };
-    const response = await service.postProductFilter(submitData);
+    const response = await service.postProductFilter();
     if (!['', null, undefined].includes(response?.data)) {
-      setProductFilter(response.data);
+      let target = response?.data.filter(item => {
+        return item.token !== '1';
+      });
+      setProductFilter(target);
     }
   };
 
@@ -51,10 +52,12 @@ const PlatformPage = () => {
       searchText: '',
       token: reduxToken,
       category: [item.category],
+      page: 1,
+      pagination: 9999,
     };
     const callProduct = await service.postAllProduct(submitData);
 
-    if (callProduct?.data.length > 0) {
+    if (callProduct?.total > 0) {
       RN.Alert.alert(
         '分類還有相關產品是否全部刪除',
         '',
@@ -110,8 +113,7 @@ const PlatformPage = () => {
   }, [isFocused]);
 
   return (
-    <RN.SafeAreaView style={styles.container}>
-      <Goback />
+    <RN.View>
       <RN.View
         style={[
           styles.listContainer,
@@ -121,61 +123,69 @@ const PlatformPage = () => {
         <ReminderText text={'* 長按可刪除分類別'} />
         <ReminderText text={'* 請注意刪除類別, 類別商品會連同刪除'} />
       </RN.View>
-      <RN.ScrollView>
-        <RN.View style={styles.container}>
-          {productFilter.length > 0 ? (
-            productFilter.map((item, index) => {
-              return item.token !== '1' ? (
-                <UI.Card
-                  style={styles.itemContainer}
-                  onPress={() =>
-                    navigation.navigate('productFilterItem', {item: item})
-                  }
-                  onLongPress={() => deleteItem(item)}
-                  key={index}>
-                  <RN.View style={styles.itemContent}>
-                    <RN.Text style={styles.itemContentText}>
-                      {item.category}
-                    </RN.Text>
-                  </RN.View>
-                </UI.Card>
-              ) : (
-                <UI.Card style={styles.itemContainer} key={index}>
-                  <RN.View style={styles.itemContent}>
-                    <RN.Text
-                      style={[
-                        styles.itemContentText,
-                        {color: appCtx.Colors.productFilterDefault},
-                      ]}>
-                      {item.category}
-                    </RN.Text>
-                  </RN.View>
-                </UI.Card>
-              );
-            })
-          ) : (
-            <UI.Card style={styles.itemContainer}>
-              <RN.View style={styles.itemContent}>
-                <RN.Text style={{fontSize: 20}}>尚無資料</RN.Text>
-              </RN.View>
-            </UI.Card>
-          )}
-          <UI.Card
-            style={styles.itemContainer}
-            onPress={() => navigation.navigate('addProductFilterItem')}>
+      <RN.View style={styles.container}>
+        {productFilter.length > 0 ? (
+          productFilter.map((item, index) => {
+            return item.token !== '1' ? (
+              <UI.Card
+                style={styles.itemContainer}
+                onPress={() =>
+                  navigation.navigate('productFilterItem', {item: item})
+                }
+                onLongPress={() => deleteItem(item)}
+                key={index}>
+                <RN.View style={styles.itemContent}>
+                  <RN.Text style={styles.itemContentText}>
+                    {item.category}
+                  </RN.Text>
+                </RN.View>
+              </UI.Card>
+            ) : (
+              <UI.Card style={styles.itemContainer} key={index}>
+                <RN.View style={styles.itemContent}>
+                  <RN.Text
+                    style={[
+                      styles.itemContentText,
+                      {color: appCtx.Colors.productFilterDefault},
+                    ]}>
+                    {item.category}
+                  </RN.Text>
+                </RN.View>
+              </UI.Card>
+            );
+          })
+        ) : (
+          <UI.Card style={styles.itemContainer}>
             <RN.View style={styles.itemContent}>
-              <SvgUri
-                width="30"
-                height="30"
-                source={require('../../assets/plus.svg')}
-              />
+              <RN.Text style={{fontSize: 20}}>尚無資料</RN.Text>
             </RN.View>
           </UI.Card>
-        </RN.View>
-      </RN.ScrollView>
+        )}
+        <UI.Card
+          style={styles.itemContainer}
+          onPress={() => navigation.navigate('addProductFilterItem')}>
+          <RN.View style={styles.itemContent}>
+            <SvgUri
+              width="30"
+              height="30"
+              source={require('../../assets/plus.svg')}
+            />
+          </RN.View>
+        </UI.Card>
+      </RN.View>
+    </RN.View>
+  );
+};
+
+const ProductFilterPage = () => {
+  return (
+    <RN.SafeAreaView style={styles.container}>
+      <Goback />
+      <ScrollViewComponent item={Content}></ScrollViewComponent>
     </RN.SafeAreaView>
   );
 };
+
 const styles = RN.StyleSheet.create({
   container: {
     flex: 1,
@@ -212,4 +222,4 @@ const styles = RN.StyleSheet.create({
   },
 });
 
-export default PlatformPage;
+export default ProductFilterPage;

@@ -9,11 +9,12 @@ import SvgUri from 'react-native-svg-uri';
 import Goback from '../../component/Goback'
 import { launchImageLibrary } from 'react-native-image-picker';
 import ReminderText from '../../component/ReminderText';
+import ScrollViewComponent from '../../component/ScrollViewComponent';
 
 const windowWidth = RN.Dimensions.get('window').width;
 const windowHeight = RN.Dimensions.get('window').height;
 
-const CarouselImg = () => {
+const Content = () => {
   const appCtx = React.useContext(AppContext);
   const isFocused = useIsFocused();
   interface Photo {
@@ -32,17 +33,8 @@ const CarouselImg = () => {
     isActive?: boolean,
   }
 
-
   const [photoList, setPhotoList] = React.useState([]);
   const [photo, setPhoto] = React.useState<Photo>({});
-  const [refreshing, setRefreshing] = React.useState(false);
-
-  const onRefresh = () => {
-    setRefreshing(true);
-    getFindAllMainImg();
-    /// 預防請求失敗
-    setRefreshing(false);
-  };
 
   const createFormData = (photo: Photo) => {
     if (['image/jpg', 'image/jpeg', 'image/png'].includes(photo?.type as string)) {
@@ -82,15 +74,17 @@ const CarouselImg = () => {
     await appCtx.setLoading(true);
     let target = await handleUploadPhoto()
 
-    let submitData = {
-      img: target.imageUrl,
-      isActive: false
-    }
+    if (target) {
+      let submitData = {
+        img: target.imageUrl,
+        isActive: false
+      }
 
-    const response = await service.postCreateMainImg(submitData);
+      const response = await service.postCreateMainImg(submitData);
 
-    if (response?.status === 'success') {
-      getFindAllMainImg()
+      if (response?.status === 'success') {
+        getFindAllMainImg()
+      }
     }
     await appCtx.setLoading(false);
   };
@@ -148,95 +142,94 @@ const CarouselImg = () => {
   }, [isFocused]);
 
   return (
+    <RN.View>
+      <RN.View style={[styles.addContainer ,{backgroundColor: appCtx.Colors.photo.cardBottom}]}>
+        <RN.TouchableOpacity style={[{alignItems: 'center', justifyContent: 'center'}]} onPress={postCreateMainImg}>
+          <RN.Text>上傳</RN.Text>
+        </RN.TouchableOpacity>
+      </RN.View>
+      {photo?.uri ?
+        <UI.View style={[
+          styles.addContent,
+        ]}>
+          <RN.Image
+            source={{ uri: photo?.uri }}
+            style={{ width: '100%', height: '100%' }}
+          />
+        </UI.View>
+        :
+        <RN.TouchableOpacity onPress={handleChoosePhoto}>
+          <RN.View
+          style={[
+            styles.addContent,
+            {alignItems: 'center', justifyContent: 'center'},
+          ]}>
+            <SvgUri
+              width="30"
+              height="30"
+              source={require('../../assets/plus.svg')}
+            />
+          </RN.View>
+        </RN.TouchableOpacity>
+      }
+      <RN.View style={[styles.listContainer]}>
+        <ReminderText text={'* 長按圖片可刪除'} />
+        <ReminderText text={'* 點擊圖片可啟用或取消'} />
+      </RN.View>
+      <RN.View style={styles.photoContainer}>
+        {photoList.length > 0 ? (
+          photoList.map((item:submitData, index) => {
+            return (
+              <UI.Card
+                style={[
+                  styles.itemContainer,
+                  {backgroundColor: appCtx.Colors.photo.cardContianer},
+                ]}
+                onLongPress={() => deleteItem(item._id)}
+                onPress={() => patchUploadMainImg(item)}
+                key={index}>
+                <RN.ImageBackground
+                  source={{uri: `${item.img}`}}
+                  style={{width: '100%', height: '100%'}}
+                  resizeMode="cover">
+                  { item.isActive ? <SvgUri
+                    width="25"
+                    height="25"
+                    source={require('../../assets/check_bg.svg')}
+                  />: <RN.View /> }
+                </RN.ImageBackground>
+              </UI.Card>
+            );
+          })
+        ) : (
+          <UI.Card style={styles.itemContainer}>
+            <RN.View
+              style={[
+                {
+                  justifyContent: 'space-around',
+                  alignItems: 'center',
+                  height: '100%',
+                },
+              ]}>
+              <RN.Text style={{fontSize: 20}}>暫無資料</RN.Text>
+            </RN.View>
+          </UI.Card>
+        )}
+      </RN.View>
+    </RN.View>
+  );
+};
+
+
+const MainImg = () => {
+  return (
     <RN.SafeAreaView style={styles.container}>
       <Goback />
-      <RN.ScrollView
-        refreshControl={
-          <RN.RefreshControl
-            refreshing={refreshing}
-            onRefresh={onRefresh}
-            colors={[appCtx.Colors.primary]}
-            tintColor={appCtx.Colors.primary}
-            progressViewOffset={-5}
-          />
-        }>
-        <RN.View style={[styles.addContainer ,{backgroundColor: appCtx.Colors.photo.cardBottom}]}>
-          <RN.TouchableOpacity style={[{alignItems: 'center', justifyContent: 'center'}]} onPress={postCreateMainImg}>
-            <RN.Text>上傳</RN.Text>
-          </RN.TouchableOpacity>
-        </RN.View>
-        {photo?.uri ?
-          <UI.View style={[
-            styles.addContent,
-          ]}>
-            <RN.Image
-              source={{ uri: photo?.uri }}
-              style={{ width: windowWidth * 3 / 4, height: windowHeight / 3 }}
-            />
-          </UI.View>
-          :
-          <RN.TouchableOpacity onPress={handleChoosePhoto}>
-            <RN.View
-            style={[
-              styles.addContent,
-              {alignItems: 'center', justifyContent: 'center'},
-            ]}>
-              <SvgUri
-                width="30"
-                height="30"
-                source={require('../../assets/plus.svg')}
-              />
-            </RN.View>
-          </RN.TouchableOpacity>
-        }
-        <RN.View style={[styles.listContainer]}>
-          <ReminderText text={'* 長按圖片可刪除'} />
-          <ReminderText text={'* 點擊圖片可啟用或取消'} />
-        </RN.View>
-        <RN.View style={styles.photoContainer}>
-          {photoList.length > 0 ? (
-            photoList.map((item:submitData, index) => {
-              return (
-                <UI.Card
-                  style={[
-                    styles.itemContainer,
-                    {backgroundColor: appCtx.Colors.photo.cardContianer},
-                  ]}
-                  onLongPress={() => deleteItem(item._id)}
-                  onPress={() => patchUploadMainImg(item)}
-                  key={index}>
-                  <RN.ImageBackground
-                    source={{uri: `${item.img}`}}
-                    style={{width: '100%', height: '100%'}}
-                    resizeMode="cover">
-                    { item.isActive ? <SvgUri
-                      width="25"
-                      height="25"
-                      source={require('../../assets/check_bg.svg')}
-                    />: <RN.View /> }
-                  </RN.ImageBackground>
-                </UI.Card>
-              );
-            })
-          ) : (
-            <UI.Card style={styles.itemContainer}>
-              <RN.View
-                style={[
-                  {
-                    justifyContent: 'space-around',
-                    alignItems: 'center',
-                    height: '100%',
-                  },
-                ]}>
-                <RN.Text style={{fontSize: 20}}>暫無資料</RN.Text>
-              </RN.View>
-            </UI.Card>
-          )}
-        </RN.View>
-      </RN.ScrollView>
+      <ScrollViewComponent item={Content}></ScrollViewComponent>
     </RN.SafeAreaView>
   );
 };
+
 
 const styles = RN.StyleSheet.create({
   container: {
@@ -296,4 +289,4 @@ const styles = RN.StyleSheet.create({
   },
 });
 
-export default CarouselImg;
+export default MainImg;

@@ -11,9 +11,10 @@ import service from "../Service/service";
 import ScrollViewComponent from "../../component/ScrollViewComponent";
 
 interface Item {
-  describe?: string,
-  discount?: string,
-  remark?: string,
+  id?: string | undefined,
+  describe?: string | undefined,
+  discount?: string | undefined,
+  remark?: string | undefined,
 }
 
 const Content = (route : { params: any }) => {
@@ -57,9 +58,11 @@ const Content = (route : { params: any }) => {
     },
     validate: (values) => {
       const errors: Item = {};
+      const reg = /^\d+$/
 
       if (!values?.describe) errors.describe = '*' + "必填";
       if (!values?.discount) errors.discount = '*' + "必填";
+      if (!reg.test(values.discount)) errors.discount = '*' + "必須數字";
 
       return errors;
     },

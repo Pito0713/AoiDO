@@ -1,14 +1,14 @@
 import React from 'react';
 import * as RN from 'react-native';
 import * as UI from 'react-native-ui-lib';
+import SvgUri from 'react-native-svg-uri';
 import {useNavigation, useIsFocused} from '@react-navigation/native';
+import moment from 'moment';
 import service from '../Service/service';
 import {AppContext} from '../../redux/AppContent';
 import {useAppSelector} from '../../redux/store';
 import Pagination from '../../component/Pagination';
-import moment from 'moment';
 import ReminderText from '../../component/ReminderText';
-import SvgUri from 'react-native-svg-uri';
 
 const Coupon = () => {
   const appCtx = React.useContext(AppContext);
@@ -26,6 +26,7 @@ const Coupon = () => {
 
   const onRefresh = () => {
     setRefreshing(true);
+    setPage(1);
     postSearchCoupon();
     /// 預防請求失敗
     setRefreshing(false);
@@ -121,7 +122,7 @@ const Coupon = () => {
             styles.searchContentText,
             {backgroundColor: appCtx.Colors.primary},
           ]}
-          onPress={() => postSearchCoupon()}>
+          onPress={() => onRefresh()}>
           <RN.Text
             style={{
               fontSize: 20,
@@ -152,6 +153,7 @@ const Coupon = () => {
       </RN.View>
       <RN.View style={[styles.listContainer]}>
         <ReminderText text={'* 長按可刪除'} />
+        <ReminderText text={'* 點擊可以修改項目'} />
       </RN.View>
       <RN.ScrollView
         refreshControl={
@@ -234,8 +236,8 @@ const Coupon = () => {
                     </RN.Text>
                     <RN.Text
                       style={[styles.itemContentTextTitle, {fontSize: 10}]}>
-                      {moment(item.startDate).format('YYYY/MM/DD HH:MM:SS')} ~
-                      {moment(item.endDate).format('YYYY/MM/DD HH:MM:SS')}
+                      {moment(item.startDate).format('YYYY/MM/DD')} ~
+                      {moment(item.endDate).format('YYYY/MM/DD')}
                     </RN.Text>
                   </RN.View>
                 </RN.View>

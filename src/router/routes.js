@@ -85,6 +85,10 @@ const authedPages = [
     name: 'MainImg',
     component: require('../page/Image/mainImg').default,
   },
+  {
+    name: 'Permission',
+    component: require('../page/Permission/index').default,
+  },
 ];
 
 export {unAuthedPages, authedPages};

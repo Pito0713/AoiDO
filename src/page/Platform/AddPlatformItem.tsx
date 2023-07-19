@@ -9,6 +9,7 @@ import { useAppSelector } from '../../redux/store';
 import ScrollViewComponent from "../../component/ScrollViewComponent";
 import { AppContext } from '../../redux/AppContent';
 
+const windowHeight = RN.Dimensions.get('window').height;
 interface PlatformItem {
   label?: string
   rate?: string
@@ -35,20 +36,20 @@ const Content = () => {
 
       return errors;
     },
+
     onSubmit: async (values) => {
       postCreateModifyRate(values)
     },
   });
 
   const postCreateModifyRate = async (values: PlatformItem) => {
-    await appCtx.setLoading(true)
-
     let submitData = {
       "label": values.label,
       "rate": values.rate,
       "token": reduxToken,
       "isActive": false,
     }
+    await appCtx.setLoading(true)
     const response = await service.postCreateModifyRate(submitData);
     if (response?.status === 'success') navigation.goBack()
     await appCtx.setLoading(false);
@@ -112,7 +113,7 @@ const AddPlatformItem = () => {
     </RN.SafeAreaView>
   );
 };
-const windowHeight = RN.Dimensions.get('window').height;
+
 const styles = RN.StyleSheet.create({
   container: {
     flex: 1,
