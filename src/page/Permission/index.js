@@ -2,13 +2,13 @@ import React from 'react';
 import * as RN from 'react-native';
 import * as UI from 'react-native-ui-lib';
 import {useIsFocused} from '@react-navigation/native';
-import SvgUri from 'react-native-svg-uri';
 
 import {AppContext} from '../../redux/AppContent';
 import Goback from '../../component/Goback';
 import ScrollViewComponent from '../../component/ScrollViewComponent';
 import service from '../Service/service';
 import {useAppSelector} from '../../redux/store';
+import ArrowDrop from '../../assets/ArrowDrop';
 
 const Content = () => {
   const isFocused = useIsFocused();
@@ -115,13 +115,7 @@ const Content = () => {
                   width: '100%',
                   textAlign: 'center',
                 }}
-                trailingAccessory={
-                  <SvgUri
-                    width="25"
-                    height="25"
-                    source={require('../../assets/ArrowDrop.svg')}
-                  />
-                }>
+                trailingAccessory={<ArrowDrop />}>
                 {permissionList.map((item, index) => (
                   <UI.Picker.Item
                     key={index}

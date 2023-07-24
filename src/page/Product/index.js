@@ -2,7 +2,8 @@ import React from 'react';
 import * as RN from 'react-native';
 import * as UI from 'react-native-ui-lib';
 import {useNavigation, useIsFocused} from '@react-navigation/native';
-import SvgUri from 'react-native-svg-uri';
+import Search from '../../assets/Search';
+import Plus from '../../assets/Plus';
 
 import service from '../Service/service';
 import {AppContext} from '../../redux/AppContent';
@@ -116,11 +117,7 @@ const Coupon = () => {
             {backgroundColor: appCtx.Colors.inputContainer},
           ]}>
           <RN.View style={[{marginLeft: 10}]}>
-            <SvgUri
-              width="25"
-              height="25"
-              source={require('../../assets/search.svg')}
-            />
+            <Search />
           </RN.View>
           <RN.TextInput
             style={styles.searchInput}
@@ -153,11 +150,7 @@ const Coupon = () => {
               styles.itemContent,
               {alignItems: 'center', justifyContent: 'center'},
             ]}>
-            <SvgUri
-              width="30"
-              height="30"
-              source={require('../../assets/plus.svg')}
-            />
+            <Plus />
           </RN.View>
         </RN.TouchableOpacity>
       </RN.View>

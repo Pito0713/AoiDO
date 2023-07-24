@@ -1,12 +1,12 @@
 import React from 'react';
 import * as RN from 'react-native';
 import * as UI from 'react-native-ui-lib';
-import SvgUri from 'react-native-svg-uri';
 
 import {useAppSelector} from '../redux/store';
 import {AppContext} from '../redux/AppContent';
 import service from '../page/Service/service';
 import {useIsFocused} from '@react-navigation/native';
+import Filter from '../assets/Filter';
 
 const Fillter = e => {
   const isFocused = useIsFocused();
@@ -45,11 +45,7 @@ const Fillter = e => {
     <>
       <RN.View style={styles.container}>
         <RN.TouchableOpacity onPress={() => show()}>
-          <SvgUri
-            width="30"
-            height="30"
-            source={require('../assets/filter.svg')}
-          />
+          <Filter />
         </RN.TouchableOpacity>
         <UI.Dialog
           useSafeArea

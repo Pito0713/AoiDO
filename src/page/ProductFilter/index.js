@@ -2,7 +2,7 @@ import React from 'react';
 import * as RN from 'react-native';
 import * as UI from 'react-native-ui-lib';
 import {useNavigation, useIsFocused} from '@react-navigation/native';
-import SvgUri from 'react-native-svg-uri';
+import Plus from '../../assets/Plus';
 
 import service from '../Service/service';
 import {AppContext} from '../../redux/AppContent';
@@ -165,11 +165,7 @@ const Content = () => {
           style={styles.itemContainer}
           onPress={() => navigation.navigate('addProductFilterItem')}>
           <RN.View style={styles.itemContent}>
-            <SvgUri
-              width="30"
-              height="30"
-              source={require('../../assets/plus.svg')}
-            />
+            <Plus />
           </RN.View>
         </UI.Card>
       </RN.View>
