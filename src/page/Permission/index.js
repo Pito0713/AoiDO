@@ -1,6 +1,6 @@
 import React from 'react';
 import * as RN from 'react-native';
-import * as UI from 'react-native-ui-lib';
+import {Picker} from '@react-native-picker/picker';
 import {useIsFocused} from '@react-navigation/native';
 import SvgUri from 'react-native-svg-uri';
 
@@ -101,35 +101,24 @@ const Content = () => {
               {`帳號: ${item.account}`}
             </RN.Text>
             <RN.View style={[styles.pickerContent]}>
-              <UI.Picker
-                placeholder="選擇權限"
-                value={item.permission}
-                onChange={e => handleChange(item, e)}
-                enableModalBlur={false}
-                topBarProps={{title: '權限選項'}}
-                migrateTextField
+              <Picker
+                selectedValue={item.permission}
+                onValueChange={e => handleChange(item, e)}
                 style={{
                   fontSize: 17,
                   marginRight: 40,
                   borderBottomWidth: 1,
                   width: '100%',
                   textAlign: 'center',
-                }}
-                trailingAccessory={
-                  <SvgUri
-                    width="25"
-                    height="25"
-                    source={require('../../assets/ArrowDrop.svg')}
-                  />
-                }>
+                }}>
                 {permissionList.map((item, index) => (
-                  <UI.Picker.Item
+                  <Picker.Item
                     key={index}
                     value={item?.value}
                     label={item?.label}
                   />
                 ))}
-              </UI.Picker>
+              </Picker>
             </RN.View>
           </RN.View>
         );

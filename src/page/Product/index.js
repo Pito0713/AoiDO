@@ -1,6 +1,5 @@
 import React from 'react';
 import * as RN from 'react-native';
-import * as UI from 'react-native-ui-lib';
 import {useNavigation, useIsFocused} from '@react-navigation/native';
 import SvgUri from 'react-native-svg-uri';
 
@@ -175,7 +174,7 @@ const Coupon = () => {
           {product.length > 0 ? (
             product.map((item, index) => {
               return (
-                <UI.Card
+                <RN.View
                   style={[
                     styles.itemContainer,
                     {backgroundColor: appCtx.Colors.proudcut.cardContianer},
@@ -236,11 +235,11 @@ const Coupon = () => {
                       </RN.View>
                     </RN.View>
                   </RN.ImageBackground>
-                </UI.Card>
+                </RN.View>
               );
             })
           ) : (
-            <UI.Card style={styles.itemContainer}>
+            <RN.View style={styles.itemContainer}>
               <RN.View
                 style={[
                   {
@@ -254,7 +253,7 @@ const Coupon = () => {
                   {searchText ? `搜尋 "${searchText}"  查無資料` : `尚無資料`}
                 </RN.Text>
               </RN.View>
-            </UI.Card>
+            </RN.View>
           )}
         </RN.View>
       </RN.ScrollView>

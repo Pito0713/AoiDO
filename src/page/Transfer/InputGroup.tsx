@@ -1,6 +1,6 @@
 import React from "react";
 import * as RN from 'react-native';
-import * as UI from 'react-native-ui-lib';
+import {Slider} from '@miblanchard/react-native-slider';
 
 import numeral from 'numeral';
 import { useIsFocused } from '@react-navigation/native';
@@ -209,7 +209,7 @@ const InputGroup = (value: exchangeValue) => {
           />
           <RN.View style={{ flex: 7, justifyContent: 'center', alignItems: 'center', flexDirection: 'row' }}>
             <RN.Text style={styles.inputText}>負擔手續運費</RN.Text>
-            <UI.Switch value={isPlatformCoupon} onValueChange={() => setIsPlatformCoupon(!isPlatformCoupon)} />
+            <RN.Switch value={isPlatformCoupon} onValueChange={() => setIsPlatformCoupon(!isPlatformCoupon)} />
           </RN.View>
         </RN.View>
       </RN.View>
@@ -231,21 +231,21 @@ const InputGroup = (value: exchangeValue) => {
             </RN.View>
             :
             <RN.View style={{ flexDirection: 'row' }}>
-              <UI.Slider
+              <Slider
                 value={20}
                 minimumValue={0}
                 maximumValue={100}
                 step={5}
                 onValueChange={(e) => setProportion(e)}
                 containerStyle={{ width: '90%' }}
-                accessible={true}
+
               />
               <RN.Text style={{ paddingLeft: 15 }}>{proportion} %</RN.Text>
             </RN.View>
           }
         </RN.View>
         <RN.View style={{ justifyContent: 'center', flex: 3, alignItems: 'center' }}>
-          <UI.Switch value={isbenefitStyle} onValueChange={() => setIsBenefitStyle(!isbenefitStyle)} />
+          <RN.Switch value={isbenefitStyle} onValueChange={() => setIsBenefitStyle(!isbenefitStyle)} />
         </RN.View>
       </RN.View>
 

@@ -1,6 +1,5 @@
 import React from 'react';
 import * as RN from 'react-native';
-import * as UI from 'react-native-ui-lib';
 import SvgUri from 'react-native-svg-uri';
 import {useNavigation, useIsFocused} from '@react-navigation/native';
 import moment from 'moment';
@@ -168,7 +167,7 @@ const Coupon = () => {
         {cargos.length > 0 ? (
           cargos.map((item, index) => {
             return (
-              <UI.Card
+              <RN.View
                 style={[
                   styles.itemContainer,
                   {
@@ -241,11 +240,11 @@ const Coupon = () => {
                     </RN.Text>
                   </RN.View>
                 </RN.View>
-              </UI.Card>
+              </RN.View>
             );
           })
         ) : (
-          <UI.Card
+          <RN.View
             style={[
               styles.itemContainer,
               {
@@ -262,7 +261,7 @@ const Coupon = () => {
                 {searchText ? `搜尋 "${searchText}"  查無資料` : `尚無資料`}
               </RN.Text>
             </RN.View>
-          </UI.Card>
+          </RN.View>
         )}
       </RN.ScrollView>
       <Pagination

@@ -1,7 +1,6 @@
 import React from "react";
 import * as RN from 'react-native';
 import { AppContext } from '../../redux/AppContent';
-import * as UI from 'react-native-ui-lib';
 import service from "../Service/service";
 import Goback from '../../component/Goback'
 import { useIsFocused } from '@react-navigation/native';
@@ -84,10 +83,10 @@ const Content = (route : { params: any }) => {
     <RN.View >
       {productFilter.length > 0 ? productFilter.map((item : ProductFilterItem, index) => {
         return (
-          <UI.Card style={styles.itemContainer} key={index}>
+          <RN.View style={styles.itemContainer} key={index}>
             <RN.View style={styles.itemContent} >
               <RN.View style={{ flex: 2 }}>
-                <UI.Card.Image
+                <RN.Image
                   source={{ uri: `${item.imageUrl }` }}
                   style={{ width: '105%', height:'105%', }}
                 />
@@ -98,14 +97,14 @@ const Content = (route : { params: any }) => {
                 <RN.Text>刪除</RN.Text>
               </RN.TouchableOpacity>
             </RN.View>
-          </UI.Card>
+          </RN.View>
         )
       }) :
-        <UI.Card style={styles.itemContainer}>
+        <RN.View style={styles.itemContainer}>
           <RN.View style={styles.itemContent}>
             <RN.Text style={{ fontSize: 20 }}>尚無資料</RN.Text>
           </RN.View>
-        </UI.Card>}
+        </RN.View>}
       <Pagination
         page={page}
         pagination={pagination}

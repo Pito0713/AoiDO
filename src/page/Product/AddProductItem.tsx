@@ -1,10 +1,10 @@
 import React from "react";
 import * as RN from 'react-native';
-import * as UI from 'react-native-ui-lib';
 import { useFormik } from "formik";
 import { useIsFocused } from '@react-navigation/native';
 import { useNavigation } from '@react-navigation/native';
 import { launchImageLibrary } from 'react-native-image-picker';
+import {Picker} from '@react-native-picker/picker';
 
 import { AppContext } from '../../redux/AppContent';
 import Goback from '../../component/Goback'
@@ -162,16 +162,16 @@ const Content = () => {
       <RN.View style={styles.itemContainer}>
         <RN.TouchableOpacity onPress={handleChoosePhoto} style={{ borderWidth: 2, borderRadius: 10, overflow: 'hidden', marginBottom:20 }}>
           {photo?.uri ?
-            <UI.View>
+            <RN.View>
               <RN.Image
                 source={{ uri: photo?.uri }}
                 style={{ width: windowWidth * 3 / 4, height: windowHeight / 3 }}
               />
-            </UI.View>
+            </RN.View>
             :
-            <UI.View style={{ width: windowWidth * 3 / 4, height: windowHeight / 3, justifyContent: 'center', alignItems: 'center', backgroundColor: appCtx.Colors.inputContainer }}>
-              <UI.Text style={{ fontSize: 20 }}>點擊新增圖片</UI.Text>
-            </UI.View>
+            <RN.View style={{ width: windowWidth * 3 / 4, height: windowHeight / 3, justifyContent: 'center', alignItems: 'center', backgroundColor: appCtx.Colors.inputContainer }}>
+              <RN.Text style={{ fontSize: 20 }}>點擊新增圖片</RN.Text>
+            </RN.View>
           }
         </RN.TouchableOpacity>
         <RN.View>
@@ -190,21 +190,14 @@ const Content = () => {
         </RN.View>
         <RN.View>
           <RN.Text style={styles.itemContainerText}>商品分類</RN.Text>
-          <UI.Picker
-            placeholder="選擇分類"
-            value={!category.label && !category.value ? '' : category}
-            enableModalBlur={false}
-            onChange={(e: any) => { setCategory(e) }}
-            topBarProps={{ title: '分類選項' }}
-            style={[styles.picker, { backgroundColor: appCtx.Colors.inputContainer }]}
-            showSearch
-            searchPlaceholder={'搜尋'}
-            migrateTextField
+          <Picker
+            selectedValue={!category.label && !category.value ? '' : category}
+            onValueChange={(e: any) => { setCategory(e) }}
           >
             {categoryList.map((item: any, index) => (
-              <UI.Picker.Item key={index} value={item?.category} label={item?.category} />
+              <Picker.Item key={index} value={item?.category} label={item?.category} />
             ))}
-          </UI.Picker>
+          </Picker>
           {isCategory ? <RN.View>
             <RN.Text style={[, { color: appCtx.Colors.errorText, fontSize: 12 }]}>
               {`* 必填`}

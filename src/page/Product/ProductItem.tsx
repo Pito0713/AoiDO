@@ -1,9 +1,10 @@
 import React from "react";
 import * as RN from 'react-native';
-import * as UI from 'react-native-ui-lib';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
 import { launchImageLibrary } from 'react-native-image-picker';
 import { useFormik } from "formik";
+
+import {Picker} from '@react-native-picker/picker';
 
 import { AppContext } from '../../redux/AppContent';
 import Goback from '../../component/Goback'
@@ -219,21 +220,14 @@ const Content = (route: { params: any }) => {
       </RN.View>
       <RN.View>
         <RN.Text style={styles.itemContainerText}>商品分類</RN.Text>
-        <UI.Picker
-          placeholder="選擇分類"
-          value={!category.label && !category.value ? '' : category}
-          enableModalBlur={false}
-          onChange={(e: any) => { setCategory(e) }}
-          topBarProps={{ title: '分類選項' }}
-          style={[styles.picker, { backgroundColor: appCtx.Colors.inputContainer }]}
-          showSearch
-          searchPlaceholder={'搜尋'}
-          migrateTextField
+        <Picker
+          selectedValue={!category.label && !category.value ? '' : category}
+          onValueChange={(e: any) => { setCategory(e) }}
         >
           {categoryList.map((item: any, index) => (
-            <UI.Picker.Item key={index} value={item?.category} label={item?.category} />
+            <Picker.Item key={index} value={item?.category} label={item?.category} />
           ))}
-        </UI.Picker>
+        </Picker>
         <RN.View>
           <RN.Text />
         </RN.View>

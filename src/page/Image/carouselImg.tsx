@@ -1,7 +1,5 @@
 import React from 'react';
 import * as RN from 'react-native';
-import * as UI from 'react-native-ui-lib';
-
 import service from '../Service/service';
 import {AppContext} from '../../redux/AppContent';
 import SvgUri from 'react-native-svg-uri';
@@ -148,14 +146,14 @@ const Content = () => {
         </RN.TouchableOpacity>
       </RN.View>
       {photo?.uri ?
-        <UI.View style={[
+        <RN.View style={[
           styles.addContent,
         ]}>
           <RN.Image
             source={{ uri: photo?.uri }}
             style={{ width: '100%', height: '100%' }}
           />
-        </UI.View>
+        </RN.View>
         :
         <RN.TouchableOpacity onPress={handleChoosePhoto}>
           <RN.View
@@ -179,7 +177,7 @@ const Content = () => {
         {photoList.length > 0 ? (
           photoList.map((item:submitData, index) => {
             return (
-              <UI.Card
+              <RN.View
                 style={[
                   styles.itemContainer,
                   {backgroundColor: appCtx.Colors.photo.cardContianer},
@@ -197,11 +195,11 @@ const Content = () => {
                     source={require('../../assets/check_bg.svg')}
                   />: <RN.View /> }
                 </RN.ImageBackground>
-              </UI.Card>
+              </RN.View>
             );
           })
         ) : (
-          <UI.Card style={styles.itemContainer}>
+          <RN.View style={styles.itemContainer}>
             <RN.View
               style={[
                 {
@@ -212,7 +210,7 @@ const Content = () => {
               ]}>
               <RN.Text style={{fontSize: 20}}>暫無資料</RN.Text>
             </RN.View>
-          </UI.Card>
+          </RN.View>
         )}
       </RN.View>
     </RN.View>

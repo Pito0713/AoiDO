@@ -1,6 +1,5 @@
 import React from 'react';
 import * as RN from 'react-native';
-import * as UI from 'react-native-ui-lib';
 import {useNavigation, useIsFocused} from '@react-navigation/native';
 import SvgUri from 'react-native-svg-uri';
 
@@ -127,7 +126,7 @@ const Content = () => {
         {productFilter.length > 0 ? (
           productFilter.map((item, index) => {
             return item.token !== '1' ? (
-              <UI.Card
+              <RN.View
                 style={styles.itemContainer}
                 onPress={() =>
                   navigation.navigate('productFilterItem', {item: item})
@@ -139,9 +138,9 @@ const Content = () => {
                     {item.category}
                   </RN.Text>
                 </RN.View>
-              </UI.Card>
+              </RN.View>
             ) : (
-              <UI.Card style={styles.itemContainer} key={index}>
+              <RN.View style={styles.itemContainer} key={index}>
                 <RN.View style={styles.itemContent}>
                   <RN.Text
                     style={[
@@ -151,17 +150,17 @@ const Content = () => {
                     {item.category}
                   </RN.Text>
                 </RN.View>
-              </UI.Card>
+              </RN.View>
             );
           })
         ) : (
-          <UI.Card style={styles.itemContainer}>
+          <RN.View style={styles.itemContainer}>
             <RN.View style={styles.itemContent}>
               <RN.Text style={{fontSize: 20}}>尚無資料</RN.Text>
             </RN.View>
-          </UI.Card>
+          </RN.View>
         )}
-        <UI.Card
+        <RN.View
           style={styles.itemContainer}
           onPress={() => navigation.navigate('addProductFilterItem')}>
           <RN.View style={styles.itemContent}>
@@ -171,7 +170,7 @@ const Content = () => {
               source={require('../../assets/plus.svg')}
             />
           </RN.View>
-        </UI.Card>
+        </RN.View>
       </RN.View>
     </RN.View>
   );

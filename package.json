@@ -11,10 +11,12 @@
     "lint": "eslint ."
   },
   "dependencies": {
+    "@miblanchard/react-native-slider": "^2.3.1",
     "@react-native-async-storage/async-storage": "^1.17.10",
     "@react-native-community/blur": "^4.2.0",
+    "@react-native-community/checkbox": "^0.5.16",
     "@react-native-community/datetimepicker": "^6.5.3",
-    "@react-native-picker/picker": "^2.4.8",
+    "@react-native-picker/picker": "^2.4.10",
     "@react-navigation/bottom-tabs": "^6.4.0",
     "@react-navigation/material-top-tabs": "^6.3.0",
     "@react-navigation/native": "^6.0.13",
@@ -42,7 +44,6 @@
     "react-native-screens": "^3.18.2",
     "react-native-svg": "^13.10.0",
     "react-native-svg-uri": "^1.2.3",
-    "react-native-ui-lib": "^6.22.2",
     "react-redux": "^8.0.4",
     "redux": "^4.2.0",
     "redux-persist": "^6.0.0",

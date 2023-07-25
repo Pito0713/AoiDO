@@ -1,6 +1,6 @@
 import React from 'react';
 import * as RN from 'react-native';
-import * as UI from 'react-native-ui-lib';
+import CheckBox from '@react-native-community/checkbox';
 import SvgUri from 'react-native-svg-uri';
 
 import {useAppSelector} from '../redux/store';
@@ -51,51 +51,51 @@ const Fillter = e => {
             source={require('../assets/filter.svg')}
           />
         </RN.TouchableOpacity>
-        <UI.Dialog
-          useSafeArea
-          top={true}
-          panDirection={UI.Dialog.directions.DOWN}
-          visible={showDialog}
-          containerStyle={styles.dialog}
-          ignoreBackgroundPress={false}
-          onDismiss={() => show()}>
-          <RN.TouchableOpacity
-            style={styles.cleanFillter}
-            onPress={() => {
-              setDisabledValue('');
-            }}>
-            <RN.Text>清除</RN.Text>
-          </RN.TouchableOpacity>
+        <RN.Modal
+          animationType="slide"
+          style={styles.dialog}
+          visible={showDialog}>
+          <RN.SafeAreaView>
+            <RN.TouchableOpacity
+              style={styles.cleanFillter}
+              onPress={() => {
+                setDisabledValue('');
+              }}>
+              <RN.Text>清除</RN.Text>
+            </RN.TouchableOpacity>
 
-          {categoryList.length > 0 &&
-            categoryList.map((item, index) => {
-              return (
-                <RN.View style={styles.dialogContent} key={index}>
-                  <UI.RadioButton
-                    selected={disabledValue?.[item.category]}
-                    onPress={() =>
-                      setDisabledValue({
-                        ...disabledValue,
-                        [item.category]: !disabledValue?.[item.category],
-                      })
-                    }
-                    label={item.category}
-                  />
-                </RN.View>
-              );
-            })}
-          <RN.TouchableOpacity
-            style={[
-              styles.confirmButton,
-              {backgroundColor: appCtx.Colors.primary},
-            ]}
-            onPress={() => {
-              setShowDialog(false);
-              e.ShowDialog(false);
-            }}>
-            <RN.Text style={[{color: appCtx.Colors.textPrimary}]}>確認</RN.Text>
-          </RN.TouchableOpacity>
-        </UI.Dialog>
+            {categoryList.length > 0 &&
+              categoryList.map((item, index) => {
+                return (
+                  <RN.View style={styles.dialogContent} key={index}>
+                    <CheckBox
+                      disabled={false}
+                      value={disabledValue?.[item.category]}
+                      onValueChange={() =>
+                        setDisabledValue({
+                          ...disabledValue,
+                          [item.category]: !disabledValue?.[item.category],
+                        })
+                      }
+                    />
+                  </RN.View>
+                );
+              })}
+            <RN.TouchableOpacity
+              style={[
+                styles.confirmButton,
+                {backgroundColor: appCtx.Colors.primary},
+              ]}
+              onPress={() => {
+                setShowDialog(false);
+                e.ShowDialog(false);
+              }}>
+              <RN.Text style={[{color: appCtx.Colors.textPrimary}]}>
+                確認
+              </RN.Text>
+            </RN.TouchableOpacity>
+          </RN.SafeAreaView>
+        </RN.Modal>
       </RN.View>
     </>
   );

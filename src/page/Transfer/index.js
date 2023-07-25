@@ -1,6 +1,6 @@
 import React from 'react';
 import * as RN from 'react-native';
-import * as UI from 'react-native-ui-lib';
+import {Picker} from '@react-native-picker/picker';
 import numeral from 'numeral';
 import {useIsFocused} from '@react-navigation/native';
 
@@ -80,56 +80,31 @@ const Transfer = ({route}) => {
   return (
     <RN.SafeAreaView style={styles.container}>
       {route?.params?.isGo && <Goback />}
-      <RN.View
-        style={[
-          styles.pickerContainer,
-          {backgroundColor: appCtx.Colors.Transfer.cardTitle},
-        ]}>
-        <UI.Picker
-          placeholder="選擇貨幣"
-          value={exchangeValue}
-          enableModalBlur={false}
-          onChange={e => setExchangeValue(e)}
-          topBarProps={{title: '貨幣選項'}}
-          style={[
-            styles.pickerContent,
-            {borderColor: appCtx.Colors.borderColor},
-          ]}
-          showSearch
-          searchPlaceholder={'搜尋貨幣'}
-          migrateTextField
-          placeholderTextColor={appCtx.Colors.Transfer.cardTitleText}>
+      <RN.View style={[styles.pickerContainer]}>
+        <Picker
+          selectedValue={exchangeValue}
+          onValueChange={e => setExchangeValue(e)}
+          style={[styles.pickerContent]}>
           {exchangeList.map((item, index) => (
-            <UI.Picker.Item
+            <Picker.Item
               key={index}
               value={Number(item?.value)}
               label={item?.label}
               text={item?.text}
             />
           ))}
-        </UI.Picker>
-        <UI.Picker
-          placeholder="選擇手續費"
-          value={platformValue}
-          enableModalBlur={false}
-          onChange={e => setPlatformValue(e)}
-          topBarProps={{title: 'coin'}}
+        </Picker>
+        <Picker
+          selectedValue={platformValue}
+          onValueChange={e => setPlatformValue(e)}
           style={[
             styles.pickerContent,
             {borderColor: appCtx.Colors.borderColor},
-          ]}
-          showSearch
-          searchPlaceholder={'Search a coin'}
-          migrateTextField
-          placeholderTextColor={appCtx.Colors.Transfer.cardTitleText}>
+          ]}>
           {platform.map((item, index) => (
-            <UI.Picker.Item
-              key={index}
-              value={item?.rate}
-              label={item?.label}
-            />
+            <Picker.Item key={index} value={item?.rate} label={item?.label} />
           ))}
-        </UI.Picker>
+        </Picker>
       </RN.View>
       <ScrollViewComponent item={Content} />
     </RN.SafeAreaView>
@@ -145,13 +120,8 @@ const styles = RN.StyleSheet.create({
     flexDirection: 'row',
   },
   pickerContent: {
-    height: 60,
     textAlign: 'center',
     width: windowWidth / 2,
-    fontSize: 20,
-    marginBottom: -20,
-    borderBottomWidth: 1,
-    borderRightWidth: 1,
   },
   choeseContent: {
     justifyContent: 'center',

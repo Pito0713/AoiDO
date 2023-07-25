@@ -1,6 +1,5 @@
 import React from 'react';
 import * as RN from 'react-native';
-import * as UI from 'react-native-ui-lib';
 import SvgUri from 'react-native-svg-uri';
 import {useNavigation, useIsFocused} from '@react-navigation/native';
 
@@ -83,7 +82,7 @@ const Content = () => {
         {platform.length > 0 ? (
           platform.map((item, index) => {
             return item.token !== '1' ? (
-              <UI.Card
+              <RN.View
                 style={styles.itemContainer}
                 onPress={() => updateModifyRate(item._id)}
                 onLongPress={() => deleteItem(item._id)}
@@ -101,9 +100,9 @@ const Content = () => {
                     <RN.Text style={styles.itemContentText}>啟用</RN.Text>
                   )}
                 </RN.View>
-              </UI.Card>
+              </RN.View>
             ) : (
-              <UI.Card
+              <RN.View
                 style={styles.itemContainer}
                 key={index}
                 onPress={() => updateModifyRate(item.token)}>
@@ -130,17 +129,17 @@ const Content = () => {
                     <RN.Text style={styles.itemContentText}>啟用</RN.Text>
                   )}
                 </RN.View>
-              </UI.Card>
+              </RN.View>
             );
           })
         ) : (
-          <UI.Card style={styles.itemContainer}>
+          <RN.View style={styles.itemContainer}>
             <RN.View style={styles.itemContent}>
               <RN.Text style={{fontSize: 20}}>尚無資料</RN.Text>
             </RN.View>
-          </UI.Card>
+          </RN.View>
         )}
-        <UI.Card
+        <RN.View
           style={styles.itemContainer}
           onPress={() => navigation.navigate('AddPlatformItem')}>
           <RN.View style={styles.itemContent}>
@@ -150,7 +149,7 @@ const Content = () => {
               source={require('../../assets/plus.svg')}
             />
           </RN.View>
-        </UI.Card>
+        </RN.View>
       </RN.View>
     </RN.View>
   );
