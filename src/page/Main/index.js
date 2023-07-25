@@ -1,7 +1,10 @@
 import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import * as RN from 'react-native';
-import SvgUri from 'react-native-svg-uri';
+import Transfer from '../../assets/Transfer';
+import Ticket from '../../assets/Ticket';
+import Product from '../../assets/Product';
+import Setting from '../../assets/Setting';
 
 import {AppContext} from '../../redux/AppContent';
 
@@ -40,19 +43,18 @@ const MainPage = () => {
             let iconName;
 
             if (route.name === 'transfer') {
-              iconName = require('../../assets/transfer.svg');
+              return <Transfer />;
             }
             if (route.name === 'coupon') {
-              iconName = require('../../assets/ticket.svg');
+              return <Ticket />;
             }
             if (route.name === 'product') {
-              iconName = require('../../assets/product.svg');
+              return <Product />;
             }
             if (route.name === 'setting') {
-              iconName = require('../../assets/setting.svg');
+              return <Setting />;
+              ß;
             }
-
-            return <SvgUri source={iconName} width="25" height="25" />;
           },
         })}>
         {bottomTab.map(item => (

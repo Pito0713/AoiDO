@@ -2,11 +2,12 @@ import React from 'react';
 import * as RN from 'react-native';
 import service from '../Service/service';
 import {AppContext} from '../../redux/AppContent';
-import SvgUri from 'react-native-svg-uri';
 import Goback from '../../component/Goback'
 import { launchImageLibrary } from 'react-native-image-picker';
 import ReminderText from '../../component/ReminderText';
 import ScrollViewComponent from '../../component/ScrollViewComponent';
+import Plus from '../../assets/Plus';
+import Checkbg from '../../assets/Checkbg';
 
 const windowWidth = RN.Dimensions.get('window').width;
 const windowHeight = RN.Dimensions.get('window').height;
@@ -161,10 +162,7 @@ const Content = () => {
             styles.addContent,
             {alignItems: 'center', justifyContent: 'center'},
           ]}>
-            <SvgUri
-              width="30"
-              height="30"
-              source={require('../../assets/plus.svg')}
+            <Plus
             />
           </RN.View>
         </RN.TouchableOpacity>
@@ -189,10 +187,7 @@ const Content = () => {
                   source={{uri: `${item.img}`}}
                   style={{width: '100%', height: '100%'}}
                   resizeMode="cover">
-                  { item.isActive ? <SvgUri
-                    width="25"
-                    height="25"
-                    source={require('../../assets/check_bg.svg')}
+                  { item.isActive ? <Checkbg
                   />: <RN.View /> }
                 </RN.ImageBackground>
               </RN.View>

@@ -2,13 +2,13 @@ import React from 'react';
 import * as RN from 'react-native';
 import {Picker} from '@react-native-picker/picker';
 import {useIsFocused} from '@react-navigation/native';
-import SvgUri from 'react-native-svg-uri';
 
 import {AppContext} from '../../redux/AppContent';
 import Goback from '../../component/Goback';
 import ScrollViewComponent from '../../component/ScrollViewComponent';
 import service from '../Service/service';
 import {useAppSelector} from '../../redux/store';
+import ArrowDrop from '../../assets/ArrowDrop';
 
 const Content = () => {
   const isFocused = useIsFocused();

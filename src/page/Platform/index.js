@@ -1,6 +1,5 @@
 import React from 'react';
 import * as RN from 'react-native';
-import SvgUri from 'react-native-svg-uri';
 import {useNavigation, useIsFocused} from '@react-navigation/native';
 
 import service from '../Service/service';
@@ -8,6 +7,7 @@ import {AppContext} from '../../redux/AppContent';
 import Goback from '../../component/Goback';
 import ReminderText from '../../component/ReminderText';
 import ScrollViewComponent from '../../component/ScrollViewComponent';
+import Plus from '../../assets/Plus';
 
 const Content = () => {
   const appCtx = React.useContext(AppContext);
@@ -143,11 +143,7 @@ const Content = () => {
           style={styles.itemContainer}
           onPress={() => navigation.navigate('AddPlatformItem')}>
           <RN.View style={styles.itemContent}>
-            <SvgUri
-              width="25"
-              height="25"
-              source={require('../../assets/plus.svg')}
-            />
+            <Plus />
           </RN.View>
         </RN.View>
       </RN.View>

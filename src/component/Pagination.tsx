@@ -1,6 +1,7 @@
 import React from "react";
 import * as RN from 'react-native';
-import SvgUri from 'react-native-svg-uri';
+import ArrowLeft from "../assets/ArrowLeft";
+import ArrowRight from "../assets/ArrowRight";
 
 interface props {
   page: number
@@ -16,11 +17,11 @@ const Pagination = (props:props) => {
         <RN.Text style={[styles.textContainer]}> {`${(props.pagination*(props.page-1)+1)} - ${(props.pagination*(props.page))} of  ${props.total}`}</RN.Text>
       </RN.View> 
         <RN.TouchableOpacity style={styles.iconContainer}  onPress={ props.page > 1 ? ()=>props.onPageChange(props.page -1) : ()=>{}}>
-          <SvgUri width="40" height="40" source={require('../assets/ArrowLeft.svg')} />
+          <ArrowLeft />
         </RN.TouchableOpacity>
       <RN.Text style={styles.textContainer}> {props.page}</RN.Text>
         <RN.TouchableOpacity style={styles.iconContainer} onPress={(props.total > 10 && props.page * props.pagination < props.total) ? ()=>props.onPageChange(props.page +1) : ()=>{}}>
-          <SvgUri width="40" height="40" source={require('../assets/ArrowRight.svg')} />
+          <ArrowRight />
         </RN.TouchableOpacity>
     </RN.View>
   )
