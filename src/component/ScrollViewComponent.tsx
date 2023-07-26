@@ -6,7 +6,7 @@ const windowHeight = RN.Dimensions.get('window').height;
 const ScrollViewComponent = (props:any) => {
   return (
     props?.item() ?
-      RN.Platform.OS !== "ios" ?
+      (RN.Platform.OS !== "ios" && RN.Platform.OS !== "web") ?
         <RN.ScrollView>
           <RN.KeyboardAvoidingView keyboardVerticalOffset={windowHeight}>
             <RN.TouchableOpacity activeOpacity={1} onPress={RN.Keyboard.dismiss}>

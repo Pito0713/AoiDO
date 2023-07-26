@@ -236,7 +236,7 @@ const InputGroup = (value: exchangeValue) => {
                 minimumValue={0}
                 maximumValue={100}
                 step={5}
-                onValueChange={(e) => setProportion(e)}
+                // onValueChange={(e) => setProportion(e)}
                 containerStyle={{ width: '90%' }}
 
               />

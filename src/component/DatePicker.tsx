@@ -1,7 +1,7 @@
 import React from 'react';
 import * as RN from 'react-native';
 import { AppContext } from '../redux/AppContent';
-import RNDateTimePicker from '@react-native-community/datetimepicker';
+// import RNDateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment'
 
 interface dateValue {
@@ -29,13 +29,13 @@ const DateTimePickerScreen = (dateValue: dateValue) => {
   return (
     <RN.ScrollView >
       <RN.View style={[styles.container]}>
-      {show && (
+      {/* {show && (
         <RNDateTimePicker
           value={new Date(date)}
           onChange={onChange}
           display="default"
         />
-        )}
+        )} */}
       </RN.View>
       <RN.TouchableOpacity  onPress={showTimepicker} style={[styles.pickerText,{backgroundColor: appCtx.Colors.inputContainer,}]}>
         <RN.Text style={{ paddingLeft: 15 }}>{moment(date).format('YYYY / MM / DD')}</RN.Text>

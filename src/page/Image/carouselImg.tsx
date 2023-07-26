@@ -3,7 +3,7 @@ import * as RN from 'react-native';
 import service from '../Service/service';
 import {AppContext} from '../../redux/AppContent';
 import Goback from '../../component/Goback'
-import { launchImageLibrary } from 'react-native-image-picker';
+// import { launchImageLibrary } from 'react-native-image-picker';
 import ReminderText from '../../component/ReminderText';
 import ScrollViewComponent from '../../component/ScrollViewComponent';
 import Plus from '../../assets/Plus';
@@ -49,15 +49,15 @@ const Content = () => {
   };
 
   const handleChoosePhoto = () => {
-    launchImageLibrary({ mediaType: 'photo' }, (response: any) => {
-      let target: Photo = {}
-      if (!['', null, undefined].includes(response?.assets)) {
-        target = response?.assets[0]
-        if (['image/jpg', 'image/jpeg', 'image/png'].includes(target.type as string)) {
-          setPhoto(target)
-        } else RN.Alert.alert('不支援圖片格式')
-      }
-    });
+    // launchImageLibrary({ mediaType: 'photo' }, (response: any) => {
+    //   let target: Photo = {}
+    //   if (!['', null, undefined].includes(response?.assets)) {
+    //     target = response?.assets[0]
+    //     if (['image/jpg', 'image/jpeg', 'image/png'].includes(target.type as string)) {
+    //       setPhoto(target)
+    //     } else RN.Alert.alert('不支援圖片格式')
+    //   }
+    // });
   };
 
 
@@ -180,8 +180,8 @@ const Content = () => {
                   styles.itemContainer,
                   {backgroundColor: appCtx.Colors.photo.cardContianer},
                 ]}
-                onLongPress={() => deleteItem(item._id)}
-                onPress={() => patchUploadCarouselImg(item)}
+                // onLongPress={() => deleteItem(item._id)}
+                // onPress={() => patchUploadCarouselImg(item)}
                 key={index}>
                 <RN.ImageBackground
                   source={{uri: `${item.img}`}}

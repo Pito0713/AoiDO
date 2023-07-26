@@ -169,7 +169,7 @@ const Coupon = () => {
                   },
                 ]}
                 onPress={() => navigation.navigate('CouponItem', {item})}
-                onLongPress={() => deleteItem(item._id)}
+                // onLongPress={() => deleteItem(item._id)}
                 key={index}>
                 <RN.View
                   style={[

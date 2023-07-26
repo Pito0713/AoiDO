@@ -3,7 +3,7 @@ import * as RN from 'react-native';
 import { useFormik } from "formik";
 import { useIsFocused } from '@react-navigation/native';
 import { useNavigation } from '@react-navigation/native';
-import { launchImageLibrary } from 'react-native-image-picker';
+// import { launchImageLibrary } from 'react-native-image-picker';
 import {Picker} from '@react-native-picker/picker';
 
 import { AppContext } from '../../redux/AppContent';
@@ -121,15 +121,15 @@ const Content = () => {
   };
 
   const handleChoosePhoto = () => {
-    launchImageLibrary({ mediaType: 'photo' }, (response: any) => {
-      let target: Photo = {}
-      if (!['', null, undefined].includes(response?.assets)) {
-        target = response?.assets[0]
-        if (['image/jpg', 'image/jpeg', 'image/png'].includes(target.type as string)) {
-          setPhoto(target)
-        } else RN.Alert.alert('不支援圖片格式')
-      }
-    });
+    // launchImageLibrary({ mediaType: 'photo' }, (response: any) => {
+    //   let target: Photo = {}
+    //   if (!['', null, undefined].includes(response?.assets)) {
+    //     target = response?.assets[0]
+    //     if (['image/jpg', 'image/jpeg', 'image/png'].includes(target.type as string)) {
+    //       setPhoto(target)
+    //     } else RN.Alert.alert('不支援圖片格式')
+    //   }
+    // });
   };
 
   const handleUploadPhoto = async () => {

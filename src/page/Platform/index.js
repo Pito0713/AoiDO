@@ -85,7 +85,7 @@ const Content = () => {
               <RN.View
                 style={styles.itemContainer}
                 onPress={() => updateModifyRate(item._id)}
-                onLongPress={() => deleteItem(item._id)}
+                // // onLongPress={() => deleteItem(item._id)}
                 key={index}>
                 <RN.View style={styles.itemContent}>
                   <RN.Text style={styles.itemContentText}>{item.label}</RN.Text>

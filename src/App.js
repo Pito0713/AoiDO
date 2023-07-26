@@ -6,7 +6,6 @@ import {PersistGate} from 'redux-persist/integration/react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {authedPages, unAuthedPages} from './router/routes';
-import {GestureHandlerRootView} from 'react-native-gesture-handler';
 
 const Stack = createNativeStackNavigator();
 
@@ -94,11 +93,9 @@ const App = () => {
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
-        <GestureHandlerRootView style={{flex: 1}}>
-          <AppProvider>
-            <LaunchPage />
-          </AppProvider>
-        </GestureHandlerRootView>
+        <AppProvider>
+          <LaunchPage />
+        </AppProvider>
       </PersistGate>
     </Provider>
   );

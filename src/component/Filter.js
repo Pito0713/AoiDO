@@ -1,6 +1,6 @@
 import React from 'react';
 import * as RN from 'react-native';
-import CheckBox from '@react-native-community/checkbox';
+// import CheckBox from '@react-native-community/checkbox';
 
 import {AppContext} from '../redux/AppContent';
 import service from '../page/Service/service';
@@ -63,7 +63,7 @@ const Fillter = e => {
               categoryList.map((item, index) => {
                 return (
                   <RN.View style={styles.dialogContent} key={index}>
-                    <CheckBox
+                    {/* <CheckBox
                       disabled={false}
                       value={disabledValue?.[item.category]}
                       onValueChange={() =>
@@ -72,7 +72,7 @@ const Fillter = e => {
                           [item.category]: !disabledValue?.[item.category],
                         })
                       }
-                    />
+                    /> */}
                   </RN.View>
                 );
               })}

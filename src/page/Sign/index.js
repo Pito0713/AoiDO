@@ -1,7 +1,7 @@
 import React from 'react';
 import * as RN from 'react-native';
 import {useFormik} from 'formik';
-import CheckBox from '@react-native-community/checkbox';
+// import CheckBox from '@react-native-community/checkbox';
 import {useNavigation} from '@react-navigation/native';
 import CryptoJS from 'react-native-crypto-js';
 
@@ -153,11 +153,11 @@ const SignInPage = () => {
             <RN.TouchableOpacity
               onPress={() => setRememberInfo(!rememberInfo)}
               style={{flexDirection: 'row'}}>
-              <CheckBox
+              {/* <CheckBox
                 disabled={false}
                 value={rememberInfo}
                 onValueChange={() => setRememberInfo(!rememberInfo)}
-              />
+              /> */}
               <RN.Text style={{marginLeft: 8}}>{'記住帳號'}</RN.Text>
             </RN.TouchableOpacity>
             <RN.TouchableOpacity>

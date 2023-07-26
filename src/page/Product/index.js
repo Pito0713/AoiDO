@@ -173,7 +173,7 @@ const Coupon = () => {
                     {backgroundColor: appCtx.Colors.proudcut.cardContianer},
                   ]}
                   onPress={() => navigation.navigate('ProductItem', {item})}
-                  onLongPress={() => deleteItem(item._id)}
+                  // // onLongPress={() => deleteItem(item._id)}
                   key={index}>
                   <RN.ImageBackground
                     source={{uri: `${item.imageUrl}`}}

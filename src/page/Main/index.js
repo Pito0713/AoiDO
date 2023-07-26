@@ -53,7 +53,6 @@ const MainPage = () => {
             }
             if (route.name === 'setting') {
               return <Setting />;
-              ß;
             }
           },
         })}>
@@ -70,7 +69,8 @@ const MainPage = () => {
 };
 const styles = RN.StyleSheet.create({
   container: {
-    flex: 1,
+    height: RN.Platform.OS === 'web' ? '100vh' : '100%',
+    flex: RN.Platform.OS === 'web' ? null : 1,
   },
 });
 export default MainPage;
