@@ -220,14 +220,16 @@ const Content = (route: { params: any }) => {
       </RN.View>
       <RN.View>
         <RN.Text style={styles.itemContainerText}>商品分類</RN.Text>
-        <Picker
-          selectedValue={!category.label && !category.value ? '' : category}
-          onValueChange={(e: any) => { setCategory(e) }}
-        >
-          {categoryList.map((item: any, index) => (
-            <Picker.Item key={index} value={item?.category} label={item?.category} />
-          ))}
-        </Picker>
+        <RN.View style={[styles.picker, { backgroundColor: appCtx.Colors.inputContainer}]}>
+          <Picker
+            selectedValue={!category.label && !category.value ? '' : category}
+            onValueChange={(e: any) => { setCategory(e) }}
+          >
+            {categoryList.map((item: any, index) => (
+              <Picker.Item key={index} value={item?.category} label={item?.category} />
+            ))}
+          </Picker>
+        </RN.View>
         <RN.View>
           <RN.Text />
         </RN.View>
@@ -251,7 +253,7 @@ const Content = (route: { params: any }) => {
           <RN.Text style={styles.itemContainerText}>商品數量</RN.Text>
           <RN.View style={{ borderWidth: 1.5, borderRadius: 5, overflow: 'hidden', flexDirection: 'row' }}>
             <RN.TextInput
-              style={[{ backgroundColor: appCtx.Colors.inputContainer, flex: 7, paddingLeft: 15, height: 45, }]}
+              style={[{ backgroundColor: appCtx.Colors.inputContainer, flex: 7, paddingLeft: 15, height: 60, }]}
               value={formik.values.quantity}
               onChangeText={formik.handleChange("quantity")}
               placeholder="商品數量"
@@ -310,7 +312,7 @@ const styles = RN.StyleSheet.create({
   input: {
     width: '100%',
     paddingLeft: 15,
-    height: 45,
+    height: 60,
     borderWidth: 1.5,
     borderRadius: 5,
   },
@@ -334,8 +336,6 @@ const styles = RN.StyleSheet.create({
   },
   picker: {
     paddingLeft: 15,
-    height: 45,
-    marginBottom: -20,
     borderWidth: 1.5,
     borderRadius: 5,
   },

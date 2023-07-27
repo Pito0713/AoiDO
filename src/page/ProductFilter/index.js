@@ -126,7 +126,7 @@ const Content = () => {
         {productFilter.length > 0 ? (
           productFilter.map((item, index) => {
             return item.token !== '1' ? (
-              <RN.View
+              <RN.TouchableOpacity
                 style={styles.itemContainer}
                 onPress={() =>
                   navigation.navigate('productFilterItem', {item: item})
@@ -138,7 +138,7 @@ const Content = () => {
                     {item.category}
                   </RN.Text>
                 </RN.View>
-              </RN.View>
+              </RN.TouchableOpacity>
             ) : (
               <RN.View style={styles.itemContainer} key={index}>
                 <RN.View style={styles.itemContent}>
@@ -160,13 +160,13 @@ const Content = () => {
             </RN.View>
           </RN.View>
         )}
-        <RN.View
+        <RN.TouchableOpacity
           style={styles.itemContainer}
           onPress={() => navigation.navigate('addProductFilterItem')}>
           <RN.View style={styles.itemContent}>
             <Plus />
           </RN.View>
-        </RN.View>
+        </RN.TouchableOpacity>
       </RN.View>
     </RN.View>
   );
@@ -192,6 +192,7 @@ const styles = RN.StyleSheet.create({
     marginLeft: 10,
     alignItems: 'center',
     borderWidth: 1.5,
+    borderRadius: 10,
   },
   itemContent: {
     flexDirection: 'row',

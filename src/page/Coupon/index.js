@@ -84,6 +84,7 @@ const Coupon = () => {
 
   React.useEffect(() => {
     if (isFocused) postSearchCoupon();
+    else setPage(1);
   }, [isFocused]);
 
   React.useEffect(() => {
@@ -108,7 +109,7 @@ const Coupon = () => {
             ]}
             onChangeText={onChangeText}
             value={text}
-            placeholder={'搜尋優惠'}
+            placeholder={'搜尋描述'}
             textAlign="left"
             placeholderTextColor="gray"
           />
@@ -160,7 +161,7 @@ const Coupon = () => {
         {cargos.length > 0 ? (
           cargos.map((item, index) => {
             return (
-              <RN.View
+              <RN.TouchableOpacity
                 style={[
                   styles.itemContainer,
                   {
@@ -233,7 +234,7 @@ const Coupon = () => {
                     </RN.Text>
                   </RN.View>
                 </RN.View>
-              </RN.View>
+              </RN.TouchableOpacity>
             );
           })
         ) : (
@@ -284,6 +285,7 @@ const styles = RN.StyleSheet.create({
     justifyContent: 'center',
     overflow: 'hidden',
     borderWidth: 1.5,
+    borderRadius: 10,
   },
   itemContent: {
     height: '100%',

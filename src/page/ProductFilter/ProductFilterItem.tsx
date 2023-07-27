@@ -18,7 +18,7 @@ interface ProductFilterItem {
 const Content = (route : { params: any }) => {
   const target = route?.params?.item
   const appCtx = React.useContext(AppContext);
-  const reduxToken = useAppSelector(state => state.token)
+  const reduxToken = useAppSelector((state: { token: any; }) => state.token)
 
   const [productFilter, setProductFilter] = React.useState([]);
   const [pagination, setPagination] = React.useState(10);
@@ -81,7 +81,7 @@ const Content = (route : { params: any }) => {
 
   return (
     <RN.View >
-      {productFilter.length > 0 ? productFilter.map((item : ProductFilterItem, index) => {
+      {productFilter.length > 0 ? productFilter.map((item : ProductFilterItem, index: any) => {
         return (
           <RN.View style={styles.itemContainer} key={index}>
             <RN.View style={styles.itemContent} >

@@ -167,7 +167,7 @@ const Coupon = () => {
           {product.length > 0 ? (
             product.map((item, index) => {
               return (
-                <RN.View
+                <RN.TouchableOpacity
                   style={[
                     styles.itemContainer,
                     {backgroundColor: appCtx.Colors.proudcut.cardContianer},
@@ -187,7 +187,7 @@ const Coupon = () => {
                         ]}>
                         <RN.Text
                           style={{
-                            padding: 5,
+                            padding: 2.5,
                             color: appCtx.Colors.proudcut.cardTitleText,
                             width: '35%',
                             backgroundColor: appCtx.Colors.proudcut.cardTitle,
@@ -228,7 +228,7 @@ const Coupon = () => {
                       </RN.View>
                     </RN.View>
                   </RN.ImageBackground>
-                </RN.View>
+                </RN.TouchableOpacity>
               );
             })
           ) : (
@@ -280,6 +280,7 @@ const styles = RN.StyleSheet.create({
     alignItems: 'center',
     borderWidth: 1.5,
     overflow: 'hidden',
+    borderRadius: 10,
   },
   itemContent: {
     flexDirection: 'row',

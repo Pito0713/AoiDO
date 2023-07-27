@@ -48,6 +48,7 @@ const Colors = {
   Platform: {
     cardTitle: '#f2c274',
     cardTitleText: '#453f36',
+    isActiveText: '#d6572d',
   },
 
   // input
@@ -65,6 +66,13 @@ const Colors = {
   photo: {
     cardContianer: '#ffc852',
     cardBottom: '#f2c274',
+  },
+
+  // Coupon
+  Permission: {
+    cardContianer: '#ffc852',
+    cardText: '#4d4537',
+    cardTitleText: '#FFFFFF',
   },
 };
 

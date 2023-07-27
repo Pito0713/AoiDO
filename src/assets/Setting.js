@@ -5,8 +5,8 @@ const SvgComponent = () => (
     xmlns="http://www.w3.org/2000/svg"
     fill="none"
     viewBox="0 0 24 24"
-    width={35}
-    height={35}>
+    width={40}
+    height={40}>
     <G
       stroke="#000"
       strokeLinecap="round"

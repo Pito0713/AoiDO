@@ -84,7 +84,7 @@ const Content = () => {
       remark: "",
       quantity: "",
     },
-    validate: (values) => {
+    validate: (values: { price: string; quantity: string; }) => {
       const regDecimalto2 = /^\d+(\.\d{1,2})?$/
       const regNumber = /^\d+$/
       const errors: Item = {};
@@ -96,7 +96,7 @@ const Content = () => {
 
       return errors;
     },
-    onSubmit: async (values, { resetForm }) => {
+    onSubmit: async (values: Item, { resetForm }: any) => {
       save(values)
       resetForm()
       setCategory({ label: '', value: '' })
@@ -190,14 +190,16 @@ const Content = () => {
         </RN.View>
         <RN.View>
           <RN.Text style={styles.itemContainerText}>商品分類</RN.Text>
-          <Picker
-            selectedValue={!category.label && !category.value ? '' : category}
-            onValueChange={(e: any) => { setCategory(e) }}
-          >
-            {categoryList.map((item: any, index) => (
-              <Picker.Item key={index} value={item?.category} label={item?.category} />
-            ))}
-          </Picker>
+          <RN.View style={[styles.picker, { backgroundColor: appCtx.Colors.inputContainer}]}>
+            <Picker
+              selectedValue={!category.label && !category.value ? '' : category}
+              onValueChange={(e: any) => { setCategory(e) }}
+            >
+              {categoryList.map((item: any, index: any) => (
+                <Picker.Item key={index} value={item?.category} label={item?.category} />
+              ))}
+            </Picker>
+          </RN.View>
           {isCategory ? <RN.View>
             <RN.Text style={[, { color: appCtx.Colors.errorText, fontSize: 12 }]}>
               {`* 必填`}
@@ -211,7 +213,7 @@ const Content = () => {
           <RN.Text style={styles.itemContainerText}>商品價格</RN.Text>
           <RN.View style={{ borderWidth: 1.5, borderRadius: 5, overflow: 'hidden', flexDirection: 'row' }}>
             <RN.TextInput
-              style={[{ backgroundColor: appCtx.Colors.inputContainer, flex: 7, paddingLeft: 15, height: 45, }]}
+              style={[{ backgroundColor: appCtx.Colors.inputContainer, flex: 7, paddingLeft: 15, height: 60 }]}
               value={formik.values.price}
               onChangeText={formik.handleChange("price")}
               placeholder="商品價格"
@@ -234,7 +236,7 @@ const Content = () => {
           <RN.Text style={styles.itemContainerText}>商品數量</RN.Text>
           <RN.View style={{ borderWidth: 1.5, borderRadius: 5, overflow: 'hidden', flexDirection: 'row' }}>
             <RN.TextInput
-              style={[{ backgroundColor: appCtx.Colors.inputContainer, flex: 7, paddingLeft: 15, height: 45, }]}
+              style={[{ backgroundColor: appCtx.Colors.inputContainer, flex: 7, paddingLeft: 15, height: 60 }]}
               value={formik.values.quantity}
               onChangeText={formik.handleChange("quantity")}
               placeholder="商品數量"
@@ -272,7 +274,7 @@ const Content = () => {
 };
 
 const AddProductItem = () => {
-  const reduxPermission = useAppSelector(state => state.permission);
+  const reduxPermission = useAppSelector((state: { permission: any; }) => state.permission);
   return (
     <RN.SafeAreaView style={styles.container}>
       <Goback />
@@ -293,7 +295,7 @@ const styles = RN.StyleSheet.create({
   },
   input: {
     paddingLeft: 15,
-    height: 45,
+    height: 60,
     borderWidth: 1.5,
     borderRadius: 5,
   },
@@ -320,8 +322,6 @@ const styles = RN.StyleSheet.create({
   },
   picker: {
     paddingLeft: 15,
-    height: 45,
-    marginBottom: -20,
     borderWidth: 1.5,
     borderRadius: 5,
   }

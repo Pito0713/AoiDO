@@ -128,7 +128,7 @@ const Content = () => {
 
   const patchUploadCarouselImg = async (item: submitData) => {
     let submitData = {
-      id: item.id,
+      id: item._id,
       isActive: !item.isActive
     };
     const response = await service.patchUploadCarouselImg(submitData);
@@ -162,8 +162,7 @@ const Content = () => {
             styles.addContent,
             {alignItems: 'center', justifyContent: 'center'},
           ]}>
-            <Plus
-            />
+            <Plus/>
           </RN.View>
         </RN.TouchableOpacity>
       }
@@ -175,7 +174,7 @@ const Content = () => {
         {photoList.length > 0 ? (
           photoList.map((item:submitData, index) => {
             return (
-              <RN.View
+              <RN.TouchableOpacity
                 style={[
                   styles.itemContainer,
                   {backgroundColor: appCtx.Colors.photo.cardContianer},
@@ -187,10 +186,9 @@ const Content = () => {
                   source={{uri: `${item.img}`}}
                   style={{width: '100%', height: '100%'}}
                   resizeMode="cover">
-                  { item.isActive ? <Checkbg
-                  />: <RN.View /> }
+                  { item.isActive ? <Checkbg/>: <RN.View /> }
                 </RN.ImageBackground>
-              </RN.View>
+              </RN.TouchableOpacity>
             );
           })
         ) : (

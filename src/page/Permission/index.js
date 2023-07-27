@@ -8,7 +8,6 @@ import Goback from '../../component/Goback';
 import ScrollViewComponent from '../../component/ScrollViewComponent';
 import service from '../Service/service';
 import {useAppSelector} from '../../redux/store';
-import ArrowDrop from '../../assets/ArrowDrop';
 
 const Content = () => {
   const isFocused = useIsFocused();
@@ -42,13 +41,13 @@ const Content = () => {
   };
 
   const handleChange = async (values, e) => {
-    values.permission = e.value;
+    values.permission = e;
     setUserPermission(values);
   };
 
   const patchUploadUserPermission = async (values, e) => {
     let submitData = {
-      id: userPermission.id,
+      id: userPermission._id,
       permission: userPermission.permission,
     };
 
@@ -85,32 +84,25 @@ const Content = () => {
   }, [isFocused]);
 
   React.useEffect(() => {
-    if (userPermission.id) uploadPermissionItem();
+    if (userPermission._id) uploadPermissionItem();
   }, [userPermission]);
 
   return (
-    <RN.View
-      style={[
-        styles.listContainer,
-        {borderColor: appCtx.Colors.Platform.borderPrimary},
-      ]}>
-      {userList.map(item => {
+    <RN.View style={[styles.listContainer]}>
+      {userList.map((item, index) => {
         return (
-          <RN.View style={[styles.pickerContainer]}>
-            <RN.Text style={[styles.pickerContainerText]}>
-              {`帳號: ${item.account}`}
-            </RN.Text>
+          <RN.View style={styles.pickerContainer} key={index}>
+            <RN.Text
+              style={[
+                styles.pickerContainerText,
+                {color: appCtx.Colors.Permission.cardText},
+              ]}>{`帳號:  ${item.account}`}</RN.Text>
+
             <RN.View style={[styles.pickerContent]}>
               <Picker
                 selectedValue={item.permission}
                 onValueChange={e => handleChange(item, e)}
-                style={{
-                  fontSize: 17,
-                  marginRight: 40,
-                  borderBottomWidth: 1,
-                  width: '100%',
-                  textAlign: 'center',
-                }}>
+                style={{width: 200}}>
                 {permissionList.map((item, index) => (
                   <Picker.Item
                     key={index}
@@ -141,18 +133,25 @@ const styles = RN.StyleSheet.create({
     flex: 1,
   },
   pickerContainer: {
-    display: 'flex',
-    flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
+    width: '100%',
+    borderWidth: 1.5,
+    marginTop: 12,
+    borderRadius: 10,
   },
   pickerContainerText: {
-    fontSize: 17,
-    width: '60%',
+    display: 'flex',
+    flexDirection: 'row',
+    marginTop: 5,
+    fontSize: 18,
     textAlign: 'center',
   },
   pickerContent: {
-    marginTop: 10,
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   listContainer: {
     alignItems: 'flex-start',
@@ -160,7 +159,6 @@ const styles = RN.StyleSheet.create({
     marginLeft: 10,
     marginRight: 10,
     flexWrap: 'wrap',
-    padding: 10,
   },
 });
 export default PermissionPage;

@@ -19,7 +19,7 @@ const Transfer = ({route}) => {
   const isFocused = useIsFocused();
   const reduxToken = useAppSelector(state => state.token);
   const [exchange, setExchange] = React.useState('');
-  const [exchangeValue, setExchangeValue] = React.useState('');
+  const [exchangeValue, setExchangeValue] = React.useState(1);
   const [platform, setPlatform] = React.useState([]);
   const [platformValue, setPlatformValue] = React.useState('');
 
@@ -81,30 +81,37 @@ const Transfer = ({route}) => {
     <RN.SafeAreaView style={styles.container}>
       {route?.params?.isGo && <Goback />}
       <RN.View style={[styles.pickerContainer]}>
-        <Picker
-          selectedValue={exchangeValue}
-          onValueChange={e => setExchangeValue(e)}
-          style={[styles.pickerContent]}>
-          {exchangeList.map((item, index) => (
-            <Picker.Item
-              key={index}
-              value={Number(item?.value)}
-              label={item?.label}
-              text={item?.text}
-            />
-          ))}
-        </Picker>
-        <Picker
-          selectedValue={platformValue}
-          onValueChange={e => setPlatformValue(e)}
+        <RN.View
           style={[
-            styles.pickerContent,
-            {borderColor: appCtx.Colors.borderColor},
+            styles.pickerPickerContainer,
+            {backgroundColor: appCtx.Colors.Transfer.cardTitle},
           ]}>
-          {platform.map((item, index) => (
-            <Picker.Item key={index} value={item?.rate} label={item?.label} />
-          ))}
-        </Picker>
+          <Picker
+            selectedValue={exchangeValue}
+            onValueChange={e => setExchangeValue(e)}
+            style={[styles.pickerContent]}>
+            {exchangeList.map((item, index) => (
+              <Picker.Item key={index} value={item.value} label={item?.label} />
+            ))}
+          </Picker>
+        </RN.View>
+        <RN.View
+          style={[
+            styles.pickerPickerContainer,
+            {backgroundColor: appCtx.Colors.Transfer.cardTitle},
+          ]}>
+          <Picker
+            selectedValue={platformValue}
+            onValueChange={e => setPlatformValue(e)}
+            style={[
+              styles.pickerContent,
+              {borderColor: appCtx.Colors.borderColor},
+            ]}>
+            {platform.map((item, index) => (
+              <Picker.Item key={index} value={item.rate} label={item?.label} />
+            ))}
+          </Picker>
+        </RN.View>
       </RN.View>
       <ScrollViewComponent item={Content} />
     </RN.SafeAreaView>
@@ -118,6 +125,10 @@ const styles = RN.StyleSheet.create({
   pickerContainer: {
     marginBottom: 30,
     flexDirection: 'row',
+  },
+  pickerPickerContainer: {
+    flexDirection: 'row',
+    borderWidth: 1,
   },
   pickerContent: {
     textAlign: 'center',

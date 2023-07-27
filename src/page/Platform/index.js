@@ -82,7 +82,7 @@ const Content = () => {
         {platform.length > 0 ? (
           platform.map((item, index) => {
             return item.token !== '1' ? (
-              <RN.View
+              <RN.TouchableOpacity
                 style={styles.itemContainer}
                 onPress={() => updateModifyRate(item._id)}
                 onLongPress={() => deleteItem(item._id)}
@@ -95,17 +95,23 @@ const Content = () => {
                 </RN.View>
                 <RN.View style={styles.itemContent}>
                   {item.isActive ? (
-                    <RN.Text style={styles.itemContentText}>進行中</RN.Text>
+                    <RN.Text
+                      style={[
+                        styles.itemContentText,
+                        {color: appCtx.Colors.Platform.isActiveText},
+                      ]}>
+                      進行中
+                    </RN.Text>
                   ) : (
-                    <RN.Text style={styles.itemContentText}>啟用</RN.Text>
+                    <RN.Text style={styles.itemContentText}>未啟用</RN.Text>
                   )}
                 </RN.View>
-              </RN.View>
+              </RN.TouchableOpacity>
             ) : (
-              <RN.View
+              <RN.TouchableOpacity
                 style={styles.itemContainer}
                 key={index}
-                onPress={() => updateModifyRate(item.token)}>
+                onPress={() => updateModifyRate(item._id)}>
                 <RN.View style={styles.itemContent}>
                   <RN.Text
                     style={[
@@ -124,12 +130,18 @@ const Content = () => {
                 </RN.View>
                 <RN.View style={styles.itemContent}>
                   {item.isActive ? (
-                    <RN.Text style={styles.itemContentText}>進行中</RN.Text>
+                    <RN.Text
+                      style={[
+                        styles.itemContentText,
+                        {color: appCtx.Colors.Platform.isActiveText},
+                      ]}>
+                      進行中
+                    </RN.Text>
                   ) : (
-                    <RN.Text style={styles.itemContentText}>啟用</RN.Text>
+                    <RN.Text style={styles.itemContentText}>未啟用</RN.Text>
                   )}
                 </RN.View>
-              </RN.View>
+              </RN.TouchableOpacity>
             );
           })
         ) : (
@@ -174,6 +186,8 @@ const styles = RN.StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    borderWidth: 1.5,
+    borderRadius: 10,
   },
   itemContent: {
     flexDirection: 'row',

@@ -18,8 +18,8 @@ interface exchangeValue {
 }
 
 const InputGroup = (value: exchangeValue) => {
-  const exchangeValue = value?.exchangeValue?.value ? Number(value.exchangeValue.value) : 0
-  const platformValue = value?.platformValue?.value ? Number(value.platformValue.value) : 0
+  const exchangeValue = value?.exchangeValue ? Number(value.exchangeValue) : 0
+  const platformValue = value?.platformValue ? Number(value.platformValue) : 0
 
   const isFocused = useIsFocused();
   const appCtx = React.useContext(AppContext) as any;
@@ -33,7 +33,7 @@ const InputGroup = (value: exchangeValue) => {
   // 手續費用
   const [platformCost, setPlatformCost] = React.useState<string | number>(0);
   // 金流費用
-  const [cashFeeCost, setCashFeeCost] = React.useState<string | number>(0);
+  const [cashFeeCost, setCashFeeCost] = React.useState<string | number>(10);
   // 手續運費
   const [platformCoupon, setPlatformCoupon] = React.useState<string | number>(0);
   // 負擔手續運費
@@ -51,8 +51,8 @@ const InputGroup = (value: exchangeValue) => {
 
   // 手續費用轉換
   React.useEffect(() => {
-    if (value?.platformValue?.value) setPlatformCost(numeral((Number(price) * platformValue)/100).format('0.00'))
-  }, [price])
+    if (value?.platformValue) setPlatformCost(numeral((Number(price) * platformValue)/100).format('0.00'))
+  }, [price,platformValue])
 
   React.useEffect(() => {
     if (
@@ -109,12 +109,13 @@ const InputGroup = (value: exchangeValue) => {
         <RN.Text style={styles.inputText}>成本</RN.Text>
         <RN.TextInput
           style={styles.input}
-          onChangeText={(e) => Number(e) !== 0 ? setCostPrice(Number(e)) : setCostPrice(e)}
+          onChangeText={(e: any) => Number(e) !== 0 ? setCostPrice(Number(e)) : setCostPrice(e)}
           value={String(costPrice)}
           placeholder="成本價"
           keyboardType="numeric"
         />
-        <RN.Text style={styles.exchangeValueText}>{value.exchangeValue.label}</RN.Text>
+        <RN.Text style={styles.exchangeValueText}></RN.Text>
+
       </RN.View>
       <RN.View style={styles.inputContainer}>
         <RN.Text style={styles.costPriceTransform}> = {numeral(Number(costPrice) / exchangeValue).format('0.00')} TWD</RN.Text>
@@ -125,7 +126,7 @@ const InputGroup = (value: exchangeValue) => {
         <RN.Text style={styles.inputText}>商品國際運費</RN.Text>
         <RN.TextInput
           style={styles.input}
-          onChangeText={(e) => Number(e) !== 0 ? setFare(Number(e)) : setFare(e)}
+          onChangeText={(e: any) => Number(e) !== 0 ? setFare(Number(e)) : setFare(e)}
           value={String(fare)}
           placeholder="國際運費"
           keyboardType="numeric"
@@ -138,7 +139,7 @@ const InputGroup = (value: exchangeValue) => {
         <RN.Text style={styles.inputText}>包裝費</RN.Text>
         <RN.TextInput
           style={styles.input}
-          onChangeText={(e) => Number(e) !== 0 ? setPackaging(Number(e)) : setPackaging(e)}
+          onChangeText={(e: any) => Number(e) !== 0 ? setPackaging(Number(e)) : setPackaging(e)}
           value={String(Packaging)}
           placeholder="包裝費"
           keyboardType="numeric"
@@ -151,7 +152,7 @@ const InputGroup = (value: exchangeValue) => {
         <RN.Text style={styles.inputText}>售價</RN.Text>
         <RN.TextInput
           style={styles.input}
-          onChangeText={(e) => Number(e) !== 0 ? setPrice(Number(e)) : setPrice(e)}
+          onChangeText={(e: any) => Number(e) !== 0 ? setPrice(Number(e)) : setPrice(e)}
           value={String(price)}
           placeholder="售價"
           keyboardType="numeric"
@@ -167,7 +168,7 @@ const InputGroup = (value: exchangeValue) => {
         <RN.Text style={styles.inputText}>手續費用</RN.Text>
         <RN.View style={{ flexDirection: 'row', height: 40, flex: 7 }}>
           <RN.TextInput
-            onChangeText={(e) => Number(e) !== 0 ? setPlatformCost(Number(e)) : setPlatformCost(e)}
+            onChangeText={(e: any) => Number(e) !== 0 ? setPlatformCost(Number(e)) : setPlatformCost(e)}
             value={String(platformCost)}
             placeholder="手續費用"
             keyboardType="numeric"
@@ -175,7 +176,7 @@ const InputGroup = (value: exchangeValue) => {
             style={{ borderWidth: 1.5, flex: 3, paddingLeft: 10, borderRadius: 5, height: 45, }}
           />
           <RN.View style={{ flex: 7, justifyContent: 'center', alignItems: 'center', flexDirection: 'row' }}>
-            <RN.Text style={styles.inputText}>手續匯率:  {value.platformValue.value} %</RN.Text>
+            <RN.Text style={styles.inputText}>手續匯率:  {value.platformValue} %</RN.Text>
           </RN.View>
         </RN.View>
       </RN.View>
@@ -185,7 +186,7 @@ const InputGroup = (value: exchangeValue) => {
         <RN.Text style={{ textAlign: 'center', flex: 3 }}>金流費用</RN.Text>
         <RN.View style={{ flex: 3, justifyContent: 'center' }}>
           <RN.TextInput
-            onChangeText={(e) => Number(e) !== 0 ? setCashFeeCost(Number(e)) : setCashFeeCost(e)}
+            onChangeText={(e: any) => Number(e) !== 0 ? setCashFeeCost(Number(e)) : setCashFeeCost(e)}
             value={String(cashFeeCost)}
             placeholder="金流費用"
             keyboardType="numeric"
@@ -201,7 +202,7 @@ const InputGroup = (value: exchangeValue) => {
         <RN.Text style={styles.inputText}>手續運費</RN.Text>
         <RN.View style={{ flexDirection: 'row', height: 40, flex: 7 }}>
           <RN.TextInput
-            onChangeText={(e) => Number(e) !== 0 ? setPlatformCoupon(Number(e)) : setPlatformCoupon(e)}
+            onChangeText={(e: any) => Number(e) !== 0 ? setPlatformCoupon(Number(e)) : setPlatformCoupon(e)}
             value={String(platformCoupon)}
             placeholder="手續運費"
             keyboardType="numeric"
@@ -221,7 +222,7 @@ const InputGroup = (value: exchangeValue) => {
           {isbenefitStyle ?
             <RN.View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <RN.TextInput
-                onChangeText={(e) => Number(e) !== 0 ? setProportion(Number(e)) : setProportion(e)}
+                onChangeText={(e: any) => Number(e) !== 0 ? setProportion(Number(e)) : setProportion(e)}
                 value={String(proportion)}
                 placeholder="收益佔比"
                 keyboardType="numeric"
@@ -232,11 +233,11 @@ const InputGroup = (value: exchangeValue) => {
             :
             <RN.View style={{ flexDirection: 'row' }}>
               <Slider
-                value={20}
+                value={proportion}
                 minimumValue={0}
                 maximumValue={100}
                 step={5}
-                onValueChange={(e) => setProportion(e)}
+                onValueChange={(e: any) => setProportion(e)}
                 containerStyle={{ width: '90%' }}
 
               />
@@ -254,7 +255,7 @@ const InputGroup = (value: exchangeValue) => {
         <RN.Text style={styles.inputText}>預計收益</RN.Text>
         <RN.TextInput
           style={styles.input}
-          onChangeText={(e) => Number(e) !== 0 ? setBenefit(Number(e)) : setBenefit(e)}
+          onChangeText={(e: any) => Number(e) !== 0 ? setBenefit(Number(e)) : setBenefit(e)}
           value={String(benefit)}
           placeholder="收益"
           editable={false}

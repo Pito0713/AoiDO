@@ -21,7 +21,7 @@ interface Item {
 const Content = () => {
   const appCtx = React.useContext(AppContext);
   const navigation = useNavigation();
-  const reduxToken = useAppSelector(state => state.token)
+  const reduxToken = useAppSelector((state: { token: any; }) => state.token)
 
   const [startDate, setStartDate] = React.useState<string>(moment().format('YYYY-MM-DD'))
   const onValueStartDatechange = (e: any) => {
@@ -39,7 +39,7 @@ const Content = () => {
       discount: '',
       remark: '',
     },
-    validate: (values) => {
+    validate: (values: { describe: any; discount: string; }) => {
       const errors: Item = {};
       const reg = /^\d+$/
 
@@ -49,7 +49,7 @@ const Content = () => {
 
       return errors;
     },
-    onSubmit: (values, { resetForm }) => {
+    onSubmit: (values: Item, { resetForm }: any) => {
       if (Date.parse(startDate) > Date.parse(endDate)) {
         RN.Alert.alert('結束時間必須大於開始時間')
       } else {
@@ -133,7 +133,7 @@ const Content = () => {
 };
 
 const AddCouponItem = () => {
-  const reduxPermission = useAppSelector(state => state.permission);
+  const reduxPermission = useAppSelector((state: { permission: any; }) => state.permission);
   return (
     <RN.SafeAreaView style={styles.container}>
       <Goback />

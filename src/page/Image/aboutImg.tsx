@@ -131,7 +131,7 @@ const Content = () => {
 
   const patchUploadAboutImg = async (item: submitData) => {
     let submitData = {
-      id: item.id,
+      id: item._id,
       isActive: !item.isActive
     };
     await appCtx.setLoading(true);
@@ -178,9 +178,9 @@ const Content = () => {
       </RN.View>
       <RN.View style={styles.photoContainer}>
         {photoList.length > 0 ? (
-          photoList.map((item:submitData, index) => {
+          photoList.map((item:submitData, index: any) => {
             return (
-              <RN.View
+              <RN.TouchableOpacity
                 style={[
                   styles.itemContainer,
                   {backgroundColor: appCtx.Colors.photo.cardContianer},
@@ -195,7 +195,7 @@ const Content = () => {
                   { item.isActive ? <Checkbg
                   />: <RN.View /> }
                 </RN.ImageBackground>
-              </RN.View>
+              </RN.TouchableOpacity>
             );
           })
         ) : (
