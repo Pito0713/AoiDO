@@ -8,7 +8,6 @@ import { AppContext } from '../../redux/AppContent';
 import Goback from '../../component/Goback'
 import DatePicker from '../../component/DatePicker'
 import service from "../Service/service";
-import ScrollViewComponent from "../../component/ScrollViewComponent";
 
 interface Item {
   id?: string | undefined,
@@ -17,7 +16,7 @@ interface Item {
   remark?: string | undefined,
 }
 
-const Content = (route : { params: any }) => {
+const CouponItem = ({ route }: { route: any }) => {
   const appCtx = React.useContext(AppContext);
   const navigation = useNavigation<Nav>();
   type Nav = {
@@ -104,72 +103,66 @@ const Content = (route : { params: any }) => {
     if (response?.status === 'success') navigation.goBack()
   }
   return (
-    <RN.View style={styles.itemContainer}>
-      <RN.View>
-        <RN.Text style={styles.itemContainerText}>描述</RN.Text>
-        <RN.TextInput
-          style={[styles.input, { backgroundColor: appCtx.Colors.inputContainer, }]}
-          onChangeText={formik.handleChange("describe")}
-          value={formik.values.describe}
-          placeholder="描述"
-        />
-        <RN.View>
-          <RN.Text style={[{ color: appCtx.Colors.errorText }]}>
-            {formik.errors.describe as String}
-          </RN.Text>
-        </RN.View>
-      </RN.View>
-      <RN.View>
-        <RN.Text style={styles.itemContainerText}>折扣價格</RN.Text>
-        <RN.TextInput
-          style={[styles.input, { backgroundColor: appCtx.Colors.inputContainer, }]}
-          onChangeText={formik.handleChange("discount")}
-          value={formik.values.discount}
-          placeholder="折扣價格"
-        />
-        <RN.View>
-          <RN.Text style={[{ color: appCtx.Colors.errorText }]}>
-            {formik.errors.discount as String} 
-          </RN.Text>
-        </RN.View>
-      </RN.View>
-      <RN.View>
-        <RN.Text style={styles.itemContainerText}>開始日期</RN.Text>
-        <DatePicker value={startDate} onValueChange={onValueStartDatechange} />
-        <RN.View><RN.Text/></RN.View>
-      </RN.View>
-      <RN.View>
-        <RN.Text style={styles.itemContainerText}>結束日期</RN.Text>
-        <DatePicker value={endDate} onValueChange={onValueEndDatechange} />
-        <RN.View><RN.Text/></RN.View>
-      </RN.View>
-      <RN.View>
-        <RN.Text style={styles.itemContainerText}>備註</RN.Text>
-        <RN.TextInput
-          style={[styles.input, { backgroundColor: appCtx.Colors.inputContainer, }]}
-          onChangeText={formik.handleChange("remark")}
-          value={formik.values.remark}
-          placeholder="備註"
-        />
-        <RN.View />
-      </RN.View>
-      <RN.View style={styles.buttomGroup}>
-        <RN.TouchableOpacity style={[styles.saveContainer, { backgroundColor: appCtx.Colors.primary }]} onPress={() => formik.submitForm()}>
-          <RN.Text style={styles.saveContainerText}>保存</RN.Text>
-        </RN.TouchableOpacity>
-        <RN.TouchableOpacity style={[styles.saveContainer]} onPress={() => deleteItem()}>
-          <RN.Text style={styles.saveContainerText}>刪除</RN.Text>
-        </RN.TouchableOpacity>
-      </RN.View>
-    </RN.View>
-  );
-};
-
-const CouponItem = ({ route }: { route: any }) => {
-  return (
     <RN.SafeAreaView style={styles.container}>
       <Goback />
-      <ScrollViewComponent item={()=>Content(route)}/>
+      <RN.View style={styles.itemContainer}>
+        <RN.View>
+          <RN.Text style={styles.itemContainerText}>描述</RN.Text>
+          <RN.TextInput
+            style={[styles.input, { backgroundColor: appCtx.Colors.inputContainer, }]}
+            onChangeText={formik.handleChange("describe")}
+            value={formik.values.describe}
+            placeholder="描述"
+          />
+          <RN.View>
+            <RN.Text style={[{ color: appCtx.Colors.errorText }]}>
+              {formik.errors.describe as String}
+            </RN.Text>
+          </RN.View>
+        </RN.View>
+        <RN.View>
+          <RN.Text style={styles.itemContainerText}>折扣價格</RN.Text>
+          <RN.TextInput
+            style={[styles.input, { backgroundColor: appCtx.Colors.inputContainer, }]}
+            onChangeText={formik.handleChange("discount")}
+            value={formik.values.discount}
+            placeholder="折扣價格"
+          />
+          <RN.View>
+            <RN.Text style={[{ color: appCtx.Colors.errorText }]}>
+              {formik.errors.discount as String} 
+            </RN.Text>
+          </RN.View>
+        </RN.View>
+        <RN.View>
+          <RN.Text style={styles.itemContainerText}>開始日期</RN.Text>
+          <DatePicker value={startDate} onValueChange={onValueStartDatechange} />
+          <RN.View><RN.Text/></RN.View>
+        </RN.View>
+        <RN.View>
+          <RN.Text style={styles.itemContainerText}>結束日期</RN.Text>
+          <DatePicker value={endDate} onValueChange={onValueEndDatechange} />
+          <RN.View><RN.Text/></RN.View>
+        </RN.View>
+        <RN.View>
+          <RN.Text style={styles.itemContainerText}>備註</RN.Text>
+          <RN.TextInput
+            style={[styles.input, { backgroundColor: appCtx.Colors.inputContainer, }]}
+            onChangeText={formik.handleChange("remark")}
+            value={formik.values.remark}
+            placeholder="備註"
+          />
+          <RN.View />
+        </RN.View>
+        <RN.View style={styles.buttomGroup}>
+          <RN.TouchableOpacity style={[styles.saveContainer, { backgroundColor: appCtx.Colors.primary }]} onPress={() => formik.submitForm()}>
+            <RN.Text style={styles.saveContainerText}>保存</RN.Text>
+          </RN.TouchableOpacity>
+          <RN.TouchableOpacity style={[styles.saveContainer]} onPress={() => deleteItem()}>
+            <RN.Text style={styles.saveContainerText}>刪除</RN.Text>
+          </RN.TouchableOpacity>
+        </RN.View>
+      </RN.View>
     </RN.SafeAreaView>
   );
 };
