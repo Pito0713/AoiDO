@@ -35,6 +35,15 @@ const authedPages = [
     component: require('../page/Product/index').default,
   },
   {
+    name: 'order',
+    component: require('../page/Order/index').default,
+  },
+
+  {
+    name: 'OrderItem',
+    component: require('../page/Order/orderItem').default,
+  },
+  {
     name: 'AddProductItem',
     component: require('../page/Product/AddProductItem').default,
   },

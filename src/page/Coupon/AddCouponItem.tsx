@@ -11,11 +11,10 @@ import service from "../Service/service";
 import { useAppSelector } from '../../redux/store';
 import ScrollViewComponent from "../../component/ScrollViewComponent";
 
-const windowHeight = RN.Dimensions.get('window').height;
-
 interface Item {
   describe?: string | undefined,
   discount?: string | undefined,
+  count?: string | undefined
   remark?: string | undefined,
 }
 const Content = () => {
@@ -37,15 +36,21 @@ const Content = () => {
     initialValues: {
       describe: '',
       discount: '',
+      count: '',
       remark: '',
     },
-    validate: (values: { describe: any; discount: string; }) => {
+    validate: (values: {
+      count: any; describe: any; discount: string;
+    }) => {
       const errors: Item = {};
       const reg = /^\d+$/
 
       if (!values?.describe) errors.describe = '*' + "必填";
       if (!values?.discount) errors.discount = '*' + "必填";
       if (!reg.test(values.discount)) errors.discount = '*' + "必須數字";
+
+      if (!values?.count) errors.count = '*' + "必填";
+      if (!reg.test(values.count)) errors.count = '*' + "必須數字";
 
       return errors;
     },
@@ -63,6 +68,7 @@ const Content = () => {
     let submitData = {
       describe: values.describe,
       discount: values.discount,
+      count: values.count,
       startDate: new Date(startDate),
       endDate: new Date(endDate),
       remark: values.remark,
@@ -102,6 +108,20 @@ const Content = () => {
         <RN.View>
           <RN.Text style={[{ color: appCtx.Colors.errorText }]}>
             {formik.errors.discount}
+          </RN.Text>
+        </RN.View>
+      </RN.View>
+      <RN.View>
+        <RN.Text style={styles.itemContainerText}>使用次數</RN.Text>
+        <RN.TextInput
+          style={[styles.input, { backgroundColor: appCtx.Colors.inputContainer, }]}
+          onChangeText={formik.handleChange("count")}
+          value={formik.values.count}
+          placeholder="使用次數"
+        />
+        <RN.View>
+          <RN.Text style={[{ color: appCtx.Colors.errorText }]}>
+            {formik.errors.count}
           </RN.Text>
         </RN.View>
       </RN.View>
@@ -148,8 +168,8 @@ const styles = RN.StyleSheet.create({
   itemContainer: {
     width: '75%',
     alignSelf: 'center',
-    marginTop: 20,
-    height: windowHeight - 100
+    marginTop: 25,
+    marginBottom: 25,
   },
   input: {
     width: '100%',

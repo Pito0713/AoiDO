@@ -1,7 +1,7 @@
 import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import * as RN from 'react-native';
-import Transfer from '../../assets/Transfer';
+import Order from '../../assets/Order';
 import Ticket from '../../assets/Ticket';
 import Product from '../../assets/Product';
 import Setting from '../../assets/Setting';
@@ -19,8 +19,8 @@ const bottomTab = [
     component: require('../Coupon').default,
   },
   {
-    name: 'transfer',
-    component: require('../Transfer').default,
+    name: 'order',
+    component: require('../Order').default,
   },
   {
     name: 'setting',
@@ -42,8 +42,8 @@ const MainPage = () => {
           tabBarIcon: ({focused, color, size}) => {
             let iconName;
 
-            if (route.name === 'transfer') {
-              return <Transfer />;
+            if (route.name === 'order') {
+              return <Order />;
             }
             if (route.name === 'coupon') {
               return <Ticket />;

@@ -1,7 +1,6 @@
 import React from "react";
 import * as RN from 'react-native';
 import { useFormik } from "formik";
-import { useIsFocused } from '@react-navigation/native';
 import { useNavigation } from '@react-navigation/native';
 import { launchImageLibrary } from 'react-native-image-picker';
 import {Picker} from '@react-native-picker/picker';
@@ -45,14 +44,9 @@ const Content = () => {
 
   const navigation = useNavigation<Nav>();
   const reduxToken = useAppSelector(state => state.token)
-  const isFocused = useIsFocused();
 
-  const [category, setCategory] = React.useState<CategoryItem>({
-    label: '',
-    value: '',
-  });
+  const [category, setCategory] = React.useState('');
   const [photo, setPhoto] = React.useState<Photo>({});
-  const [isCategory, setIsCategory] = React.useState(false);
   const [categoryList, setCategoryList] = React.useState([]);
 
   const save = async (values: Item) => {
@@ -63,7 +57,7 @@ const Content = () => {
         "price": values.price,
         "quantity": values.quantity,
         "remark": values.remark,
-        "category": category.value,
+        "category": category,
         "token": reduxToken,
         "imageUrl": target?.imageUrl,
       }
@@ -91,15 +85,13 @@ const Content = () => {
 
       if (!regDecimalto2.test(values.price)) errors.price = '*' + "必須數字且最多小數點後第2位";
       if (!regNumber.test(values.quantity)) errors.quantity = '*' + "必須數字";
-      if (!category.label && !category.value) setIsCategory(true)
-      else setIsCategory(false)
 
       return errors;
     },
     onSubmit: async (values: Item, { resetForm }: any) => {
       save(values)
       resetForm()
-      setCategory({ label: '', value: '' })
+      setCategory('')
       setPhoto({})
     },
   });
@@ -192,22 +184,14 @@ const Content = () => {
           <RN.Text style={styles.itemContainerText}>商品分類</RN.Text>
           <RN.View style={[styles.picker, { backgroundColor: appCtx.Colors.inputContainer}]}>
             <Picker
-              selectedValue={!category.label && !category.value ? '' : category}
+              selectedValue={category}
               onValueChange={(e: any) => { setCategory(e) }}
             >
               {categoryList.map((item: any, index: any) => (
-                <Picker.Item key={index} value={item?.category} label={item?.category} />
+                <Picker.Item key={index} value={item?.category} label={item.category} />
               ))}
             </Picker>
           </RN.View>
-          {isCategory ? <RN.View>
-            <RN.Text style={[, { color: appCtx.Colors.errorText, fontSize: 12 }]}>
-              {`* 必填`}
-            </RN.Text>
-          </RN.View>
-            : <RN.View><RN.Text /></RN.View>
-          }
-
         </RN.View>
         <RN.View >
           <RN.Text style={styles.itemContainerText}>商品價格</RN.Text>

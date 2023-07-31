@@ -74,6 +74,13 @@ const Colors = {
     cardText: '#4d4537',
     cardTitleText: '#FFFFFF',
   },
+
+  // Order
+  Order: {
+    cardContianer: '#faefe3',
+    cardText: '#4d4537',
+    cardTitleText: '#FFFFFF',
+  },
 };
 
 /////////////////////////////////////////////////////

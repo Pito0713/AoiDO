@@ -40,13 +40,10 @@ const Content = (route: { params: any }) => {
   const appCtx = React.useContext(AppContext);
   const [photo, setPhoto] = React.useState(route.params?.item.imageUrl ? route.params.item.imageUrl : '');
   const [orgialPhoto, setOrgialPhoto] = React.useState(route.params?.item.imageUrl ? route.params.item.imageUrl : '');
-  const [category, setCategory] = React.useState<CategoryItem>({
-    label: '',
-    value: '',
-  });
+  const [category, setCategory] = React.useState('');
   const [categoryList, setCategoryList] = React.useState([]);
   const navigation = useNavigation();
-  const reduxToken = useAppSelector(state => state.token)
+  const reduxToken = useAppSelector((state: { token: any; }) => state.token)
   const isFocused = useIsFocused();
 
   const save = async (values: Item) => {
@@ -58,7 +55,7 @@ const Content = (route: { params: any }) => {
       let submitData = {
         "id": route.params.item._id,
         "describe": values.describe,
-        "category": category.value,
+        "category": category,
         "price": values.price,
         "remark": values.remark,
         "token": reduxToken,
@@ -86,16 +83,16 @@ const Content = (route: { params: any }) => {
       const regNumber = /^\d+$/
       const errors: Item = {};
 
-      if (values.price == 0) errors.price = '*' + "必須大於0";
-      if (!regDecimalto2.test(values.price)) errors.price = '*' + "必須數字且最多小數點後第2位";
-      if (!regNumber.test(values.quantity)) errors.quantity = '*' + "必須數字";
+      if (Number(values.price) == 0) errors.price = '*' + "必須大於0";
+      if (!regDecimalto2.test(values.price as string)) errors.price = '*' + "必須數字且最多小數點後第2位";
+      if (!regNumber.test(values.quantity as string)) errors.quantity = '*' + "必須數字";
 
       return errors;
     },
-    onSubmit: async (values, { resetForm }) => {
+    onSubmit: async (values: Item, { resetForm }: any) => {
       save(values)
       resetForm()
-      setCategory({ label: '', value: '' })
+      setCategory('')
       setPhoto({})
     },
   });
@@ -181,10 +178,9 @@ const Content = (route: { params: any }) => {
   React.useEffect(() => {
     if (isFocused) {
       postProductFilter()
-      setCategory({
-        label: route.params?.item.category ? route.params?.item.category : '',
-        value: route.params?.item.category ? route.params?.item.category : '',
-      })
+      setCategory(
+        route.params?.item.category ? route.params?.item.category : ''
+      )
     }
   }, [isFocused]);
 
@@ -222,10 +218,10 @@ const Content = (route: { params: any }) => {
         <RN.Text style={styles.itemContainerText}>商品分類</RN.Text>
         <RN.View style={[styles.picker, { backgroundColor: appCtx.Colors.inputContainer}]}>
           <Picker
-            selectedValue={!category.label && !category.value ? '' : category}
+            selectedValue={category}
             onValueChange={(e: any) => { setCategory(e) }}
           >
-            {categoryList.map((item: any, index) => (
+            {categoryList.map((item: any, index: any) => (
               <Picker.Item key={index} value={item?.category} label={item?.category} />
             ))}
           </Picker>
