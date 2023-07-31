@@ -66,6 +66,12 @@ const Colors = {
     cardContianer: '#ffc852',
     cardBottom: '#f2c274',
   },
+  // Order
+  Order: {
+    cardContianer: '#faefe3',
+    cardText: '#4d4537',
+    cardTitleText: '#FFFFFF',
+  },
 };
 
 /////////////////////////////////////////////////////

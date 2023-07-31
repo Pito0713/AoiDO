@@ -128,6 +128,14 @@ interface Image {
   isActive?: Boolean,
 }
 
+interface Order {
+  id?: string,
+  searchText?: string,
+  page?: Number,
+  pagination?: Number,
+}
+
+
 
 const Service = {
   getExchange: async (submitData: getExchange) => {
@@ -141,7 +149,7 @@ const Service = {
   postAllCargos: async (submitData: Cargo) => {
     let data = await fetchApi_AuthData(
       'POST',
-      `http://192.168.23.137:8082/allCargos`,
+      `http://192.168.23.157:8082/allCargos`,
       '',
       submitData,
     );
@@ -151,7 +159,7 @@ const Service = {
   postAddCargo: async (submitData: Cargo) => {
     let data = await fetchApi_AuthData(
       'POST',
-      `http://192.168.23.137:8082/addCargo`,
+      `http://192.168.23.157:8082/addCargo`,
       '',
       submitData
     );
@@ -161,7 +169,7 @@ const Service = {
   patchUpdateCargo: async (submitData: Cargo) => {
     let data = await fetchApi_AuthData(
       'PATCH',
-      `http://192.168.23.137:8082/updateCargo/`,
+      `http://192.168.23.157:8082/updateCargo/`,
       submitData.id,
       submitData
     );
@@ -171,7 +179,7 @@ const Service = {
   deleteCargo: async (submitData: Cargo) => {
     let data = await fetchApi_AuthData(
       'DELETE',
-      `http://192.168.23.137:8082/delCargo/`,
+      `http://192.168.23.157:8082/delCargo/`,
       submitData.id,
       {},
     );
@@ -181,7 +189,7 @@ const Service = {
   postRegister: async (submitData: register) => {
     let data = await fetchApi_AuthData(
       'POST',
-      `http://192.168.23.137:8082/register`,
+      `http://192.168.23.157:8082/register`,
       '',
       submitData
     );
@@ -190,7 +198,7 @@ const Service = {
   postLogin: async (submitData: register) => {
     let data = await fetchApi_AuthData(
       'POST',
-      `http://192.168.23.137:8082/login`,
+      `http://192.168.23.157:8082/login`,
       '',
       submitData
     );
@@ -199,7 +207,7 @@ const Service = {
   postPlatformRate: async (submitData: Platform) => {
     let data = await fetchApi_AuthData(
       'POST',
-      `http://192.168.23.137:8082/platformRate`,
+      `http://192.168.23.157:8082/platformRate`,
       '',
       submitData,
     );
@@ -209,7 +217,7 @@ const Service = {
   postCreateModifyRate: async (submitData: Platform) => {
     let data = await fetchApi_AuthData(
       'POST',
-      `http://192.168.23.137:8082/createModifyRate`,
+      `http://192.168.23.157:8082/createModifyRate`,
       '',
       submitData
     );
@@ -219,7 +227,7 @@ const Service = {
   updateModifyRate: async (submitData: Platform) => {
     let data = await fetchApi_AuthData(
       'POST',
-      `http://192.168.23.137:8082/updateModifyRate`,
+      `http://192.168.23.157:8082/updateModifyRate`,
       '',
       submitData
     );
@@ -229,7 +237,7 @@ const Service = {
   deleteModifyRate: async (submitData: Platform) => {
     let data = await fetchApi_AuthData(
       'DELETE',
-      `http://192.168.23.137:8082/deleteModifyRate`,
+      `http://192.168.23.157:8082/deleteModifyRate`,
       '',
       submitData
     );
@@ -239,7 +247,7 @@ const Service = {
   postSearchCargo: async (submitData: Cargo) => {
     let data = await fetchApi_AuthData(
       'POST',
-      `http://192.168.23.137:8082/searchCargo`,
+      `http://192.168.23.157:8082/searchCargo`,
       '',
       submitData
     );
@@ -249,7 +257,7 @@ const Service = {
   postHandPassWord: async (submitData: Cargo) => {
     let data = await fetchApi_AuthData(
       'POST',
-      `http://192.168.23.137:8082/handPassWord`,
+      `http://192.168.23.157:8082/handPassWord`,
       '',
       submitData
     );
@@ -258,7 +266,7 @@ const Service = {
   postAllProduct: async (submitData: Cargo) => {
     let data = await fetchApi_AuthData(
       'POST',
-      `http://192.168.23.137:8082/allProduct`,
+      `http://192.168.23.157:8082/allProduct`,
       '',
       submitData
     );
@@ -267,7 +275,7 @@ const Service = {
   postAddProduct: async (submitData: Cargo) => {
     let data = await fetchApi_AuthData(
       'POST',
-      `http://192.168.23.137:8082/addProduct`,
+      `http://192.168.23.157:8082/addProduct`,
       '',
       submitData
     );
@@ -276,7 +284,7 @@ const Service = {
   postUploadProduct: async (submitData: Product) => {
     let data = await fetchApi_AuthData(
       'POST',
-      `http://192.168.23.137:8082/uploadProduct`,
+      `http://192.168.23.157:8082/uploadProduct`,
       '',
       submitData
     );
@@ -286,7 +294,7 @@ const Service = {
   deleteProductOne: async (submitData: Cargo) => {
     let data = await fetchApi_AuthData(
       'DELETE',
-      `http://192.168.23.137:8082/deleteProductOne/`,
+      `http://192.168.23.157:8082/deleteProductOne/`,
       submitData.id,
       {},
     );
@@ -296,7 +304,7 @@ const Service = {
   deleteProductCategory: async (submitData: Cargo) => {
     let data = await fetchApi_AuthData(
       'DELETE',
-      `http://192.168.23.137:8082/deleteProductCategory`,
+      `http://192.168.23.157:8082/deleteProductCategory`,
       '',
       submitData,
     );
@@ -306,7 +314,7 @@ const Service = {
   postUploadImage: async (submitData: FormData | undefined) => {
     let data = await fetchApi_upload_file(
       'POST',
-      `http://192.168.23.137:8082/uploadImage`,
+      `http://192.168.23.157:8082/uploadImage`,
       '',
       submitData
     );
@@ -316,7 +324,7 @@ const Service = {
   postProductFilter: async () => {
     let data = await fetchApi_AuthData(
       'POST',
-      `http://192.168.23.137:8082/productFilter`,
+      `http://192.168.23.157:8082/productFilter`,
       '',
       {},
     );
@@ -326,7 +334,7 @@ const Service = {
   postCreateProductFilter: async (submitData: Platform) => {
     let data = await fetchApi_AuthData(
       'POST',
-      `http://192.168.23.137:8082/createProductFilter`,
+      `http://192.168.23.157:8082/createProductFilter`,
       '',
       submitData
     );
@@ -336,7 +344,7 @@ const Service = {
   deleteProductFilter: async (submitData: Platform) => {
     let data = await fetchApi_AuthData(
       'DELETE',
-      `http://192.168.23.137:8082/deleteProductFilter`,
+      `http://192.168.23.157:8082/deleteProductFilter`,
       '',
       submitData
     );
@@ -346,7 +354,7 @@ const Service = {
   postCreateCoupon: async (submitData: Platform) => {
     let data = await fetchApi_AuthData(
       'POST',
-      `http://192.168.23.137:8082/createCoupon`,
+      `http://192.168.23.157:8082/createCoupon`,
       '',
       submitData
     );
@@ -355,7 +363,7 @@ const Service = {
   postFindAllCoupon: async (submitData: Platform) => {
     let data = await fetchApi_AuthData(
       'POST',
-      `http://192.168.23.137:8082/findAllCoupon`,
+      `http://192.168.23.157:8082/findAllCoupon`,
       '',
       submitData
     );
@@ -364,7 +372,7 @@ const Service = {
   postSearchCoupon: async (submitData: Platform) => {
     let data = await fetchApi_AuthData(
       'POST',
-      `http://192.168.23.137:8082/searchCoupon`,
+      `http://192.168.23.157:8082/searchCoupon`,
       '',
       submitData
     );
@@ -373,7 +381,7 @@ const Service = {
   patchUpdateCoupon: async (submitData: Platform) => {
     let data = await fetchApi_AuthData(
       'patch',
-      `http://192.168.23.137:8082/updateCoupon/`,
+      `http://192.168.23.157:8082/updateCoupon/`,
       submitData.id,
       submitData,
     );
@@ -382,7 +390,7 @@ const Service = {
   patchUpdateCouponUser: async (submitData: Platform) => {
     let data = await fetchApi_AuthData(
       'patch',
-      `http://192.168.23.137:8082/updateCouponUser/`,
+      `http://192.168.23.157:8082/updateCouponUser/`,
       submitData.id,
       {},
     );
@@ -391,7 +399,7 @@ const Service = {
   deleteOneCoupon: async (submitData: Platform) => {
     let data = await fetchApi_AuthData(
       'DELETE',
-      `http://192.168.23.137:8082/deleteOneCoupon/`,
+      `http://192.168.23.157:8082/deleteOneCoupon/`,
       submitData.id,
       {},
     );
@@ -400,7 +408,7 @@ const Service = {
   deleteAllCoupon: async (submitData: Platform) => {
     let data = await fetchApi_AuthData(
       'DELETE',
-      `http://192.168.23.137:8082/deleteAllCoupon`,
+      `http://192.168.23.157:8082/deleteAllCoupon`,
       submitData.id,
       {},
     );
@@ -409,7 +417,7 @@ const Service = {
   postCreateCarouselImg: async (submitData: Image) => {
     let data = await fetchApi_AuthData(
       'POST',
-      `http://192.168.23.137:8082/createCarouselImg`,
+      `http://192.168.23.157:8082/createCarouselImg`,
       '',
       submitData,
     );
@@ -418,7 +426,7 @@ const Service = {
   getFindAllCarouselImg: async () => {
     let data = await fetchApi_AuthData(
       'GET',
-      `http://192.168.23.137:8082/findAllCarouselImg`,
+      `http://192.168.23.157:8082/findAllCarouselImg`,
       '',
       '',
     );
@@ -427,7 +435,7 @@ const Service = {
   patchUploadCarouselImg: async (submitData: Image) => {
     let data = await fetchApi_AuthData(
       'PATCH',
-      `http://192.168.23.137:8082/uploadCarouselImg`,
+      `http://192.168.23.157:8082/uploadCarouselImg`,
       '',
       submitData
     );
@@ -437,7 +445,7 @@ const Service = {
   deleteOneCarouselImg: async (submitData: Image) => {
     let data = await fetchApi_AuthData(
       'DELETE',
-      `http://192.168.23.137:8082/deleteOneCarouselImg/`,
+      `http://192.168.23.157:8082/deleteOneCarouselImg/`,
       submitData.id,
       '',
     );
@@ -447,7 +455,7 @@ const Service = {
   postCreateAboutImg: async (submitData: Image) => {
     let data = await fetchApi_AuthData(
       'POST',
-      `http://192.168.23.137:8082/createAboutImg`,
+      `http://192.168.23.157:8082/createAboutImg`,
       '',
       submitData
     );
@@ -456,7 +464,7 @@ const Service = {
   getFindAllAboutImg: async () => {
     let data = await fetchApi_AuthData(
       'GET',
-      `http://192.168.23.137:8082/findAllAboutImg`,
+      `http://192.168.23.157:8082/findAllAboutImg`,
       '',
       '',
     );
@@ -465,7 +473,7 @@ const Service = {
   patchUploadAboutImg: async (submitData: Image) => {
     let data = await fetchApi_AuthData(
       'PATCH',
-      `http://192.168.23.137:8082/uploadAboutImg`,
+      `http://192.168.23.157:8082/uploadAboutImg`,
       '',
       submitData
     );
@@ -475,7 +483,7 @@ const Service = {
   deleteOneAboutImg: async (submitData: Image) => {
     let data = await fetchApi_AuthData(
       'DELETE',
-      `http://192.168.23.137:8082/deleteOneAboutImg/`,
+      `http://192.168.23.157:8082/deleteOneAboutImg/`,
       submitData.id,
       '',
     );
@@ -485,7 +493,7 @@ const Service = {
   postCreateMainImg: async (submitData: Image) => {
     let data = await fetchApi_AuthData(
       'POST',
-      `http://192.168.23.137:8082/createMainImg`,
+      `http://192.168.23.157:8082/createMainImg`,
       '',
       submitData
     );
@@ -494,7 +502,7 @@ const Service = {
   getFindAllMainImg: async () => {
     let data = await fetchApi_AuthData(
       'GET',
-      `http://192.168.23.137:8082/findAllMainImg`,
+      `http://192.168.23.157:8082/findAllMainImg`,
       '',
       '',
     );
@@ -503,7 +511,7 @@ const Service = {
   patchUploadMainImg: async (submitData: Image) => {
     let data = await fetchApi_AuthData(
       'PATCH',
-      `http://192.168.23.137:8082/uploadMainImg`,
+      `http://192.168.23.157:8082/uploadMainImg`,
       '',
       submitData
     );
@@ -513,7 +521,7 @@ const Service = {
   deleteOneMainImg: async (submitData: Image) => {
     let data = await fetchApi_AuthData(
       'DELETE',
-      `http://192.168.23.137:8082/deleteOneMainImg/`,
+      `http://192.168.23.157:8082/deleteOneMainImg/`,
       submitData.id,
       '',
     );
@@ -523,7 +531,7 @@ const Service = {
   posUserBackRegister: async (submitData: register) => {
     let data = await fetchApi_AuthData(
       'POST',
-      `http://192.168.23.137:8082/userBackRegister`,
+      `http://192.168.23.157:8082/userBackRegister`,
       '',
       submitData
     );
@@ -532,7 +540,7 @@ const Service = {
   postUserBackLogin: async (submitData: register) => {
     let data = await fetchApi_AuthData(
       'POST',
-      `http://192.168.23.137:8082/userBackLogin`,
+      `http://192.168.23.157:8082/userBackLogin`,
       '',
       submitData
     );
@@ -541,7 +549,7 @@ const Service = {
   postUserBackhandPassWord: async (submitData: register) => {
     let data = await fetchApi_AuthData(
       'POST',
-      `http://192.168.23.137:8082/userBackhandPassWord`,
+      `http://192.168.23.157:8082/userBackhandPassWord`,
       '',
       submitData
     );
@@ -550,7 +558,7 @@ const Service = {
   getUserBackInfo: async (submitData: register) => {
     let data = await fetchApi_AuthData(
       'GET',
-      `http://192.168.23.137:8082/userBackInfo`,
+      `http://192.168.23.157:8082/userBackInfo`,
       '',
       submitData
     );
@@ -560,7 +568,7 @@ const Service = {
   getFindAllUserBack: async (submitData: register) => {
     let data = await fetchApi_AuthData(
       'post',
-      `http://192.168.23.137:8082/findAllUserBack`,
+      `http://192.168.23.157:8082/findAllUserBack`,
       '',
       submitData
     );
@@ -570,12 +578,32 @@ const Service = {
   patchUploadUserPermission: async (submitData: register) => {
     let data = await fetchApi_AuthData(
       'PATCH',
-      `http://192.168.23.137:8082/uploadUserPermission`,
+      `http://192.168.23.157:8082/uploadUserPermission`,
       '',
       submitData
     );
     return data;
   },
+  postSearchOrder: async (submitData: Order) => {
+    let data = await fetchApi_AuthData(
+      'post',
+      `http://192.168.23.157:8082/searchOrder`,
+      '',
+      submitData
+    );
+    return data;
+  },
+
+  deleteOneOrder: async (submitData: Order) => {
+    let data = await fetchApi_AuthData(
+      'DELETE',
+      `http://192.168.23.157:8082/deleteOneOrder/`,
+      submitData.id,
+      '',
+    );
+    return data;
+  },
+
 }
 
 export default Service;
