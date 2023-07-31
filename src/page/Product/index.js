@@ -167,13 +167,12 @@ const Coupon = () => {
           {product.length > 0 ? (
             product.map((item, index) => {
               return (
-                <RN.View
+                <RN.TouchableOpacity
                   style={[
                     styles.itemContainer,
                     {backgroundColor: appCtx.Colors.proudcut.cardContianer},
                   ]}
                   onPress={() => navigation.navigate('ProductItem', {item})}
-                  // // onLongPress={() => deleteItem(item._id)}
                   key={index}>
                   <RN.ImageBackground
                     source={{uri: `${item.imageUrl}`}}
@@ -228,7 +227,7 @@ const Coupon = () => {
                       </RN.View>
                     </RN.View>
                   </RN.ImageBackground>
-                </RN.View>
+                </RN.TouchableOpacity>
               );
             })
           ) : (
@@ -242,7 +241,6 @@ const Coupon = () => {
                   },
                 ]}>
                 <RN.Text style={{fontSize: 20}}>
-                  {' '}
                   {searchText ? `搜尋 "${searchText}"  查無資料` : `尚無資料`}
                 </RN.Text>
               </RN.View>

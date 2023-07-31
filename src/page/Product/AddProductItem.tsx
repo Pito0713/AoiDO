@@ -1,7 +1,6 @@
 import React from "react";
 import * as RN from 'react-native';
 import { useFormik } from "formik";
-import { useIsFocused } from '@react-navigation/native';
 import { useNavigation } from '@react-navigation/native';
 // import { launchImageLibrary } from 'react-native-image-picker';
 import {Picker} from '@react-native-picker/picker';
@@ -10,10 +9,6 @@ import { AppContext } from '../../redux/AppContent';
 import Goback from '../../component/Goback'
 import service from "../Service/service";
 import { useAppSelector } from '../../redux/store';
-import ScrollViewComponent from "../../component/ScrollViewComponent";
-
-const windowWidth = RN.Dimensions.get('window').width;
-const windowHeight = RN.Dimensions.get('window').height;
 
 interface Photo {
   fileName?: string,
@@ -36,7 +31,7 @@ interface CategoryItem {
   label?: string,
   value?: string,
 }
-const Content = () => {
+const AddProductItem = () => {
   type Nav = {
     navigate: (route: string | undefined ,params:{isGo:boolean}) => void,
     goBack: () => void,
@@ -45,14 +40,9 @@ const Content = () => {
 
   const navigation = useNavigation<Nav>();
   const reduxToken = useAppSelector(state => state.token)
-  const isFocused = useIsFocused();
 
-  const [category, setCategory] = React.useState<CategoryItem>({
-    label: '',
-    value: '',
-  });
+  const [category, setCategory] = React.useState('');
   const [photo, setPhoto] = React.useState<Photo>({});
-  const [isCategory, setIsCategory] = React.useState(false);
   const [categoryList, setCategoryList] = React.useState([]);
 
   const save = async (values: Item) => {
@@ -63,7 +53,7 @@ const Content = () => {
         "price": values.price,
         "quantity": values.quantity,
         "remark": values.remark,
-        "category": category.value,
+        "category": category,
         "token": reduxToken,
         "imageUrl": target?.imageUrl,
       }
@@ -89,17 +79,16 @@ const Content = () => {
       const regNumber = /^\d+$/
       const errors: Item = {};
 
+      if (!values.describe) errors.describe = '*' + '必填';
       if (!regDecimalto2.test(values.price)) errors.price = '*' + "必須數字且最多小數點後第2位";
       if (!regNumber.test(values.quantity)) errors.quantity = '*' + "必須數字";
-      if (!category.label && !category.value) setIsCategory(true)
-      else setIsCategory(false)
 
       return errors;
     },
     onSubmit: async (values, { resetForm }) => {
       save(values)
       resetForm()
-      setCategory({ label: '', value: '' })
+      setCategory('')
       setPhoto({})
     },
   });
@@ -158,18 +147,19 @@ const Content = () => {
   }, []);
 
   return (
-    <RN.ScrollView style={{ height: windowHeight - 100 }}>
-      <RN.View style={styles.itemContainer}>
-        <RN.TouchableOpacity onPress={handleChoosePhoto} style={{ borderWidth: 2, borderRadius: 10, overflow: 'hidden', marginBottom:20 }}>
+    <RN.View style={styles.itemContainer}>
+      <Goback />
+      <RN.View style={[styles.itemContainer]}>
+        <RN.TouchableOpacity onPress={handleChoosePhoto} style={{ borderWidth: 2, borderRadius: 10, overflow: 'hidden', marginBottom:20, justifyContent: 'center', alignItems: 'center', }}>
           {photo?.uri ?
             <RN.View>
               <RN.Image
                 source={{ uri: photo?.uri }}
-                style={{ width: windowWidth * 3 / 4, height: windowHeight / 3 }}
+                style={{ width: 450, height: 450 }}
               />
             </RN.View>
             :
-            <RN.View style={{ width: windowWidth * 3 / 4, height: windowHeight / 3, justifyContent: 'center', alignItems: 'center', backgroundColor: appCtx.Colors.inputContainer }}>
+            <RN.View style={{ width: 450, height: 450, justifyContent: 'center', alignItems: 'center' }}>
               <RN.Text style={{ fontSize: 20 }}>點擊新增圖片</RN.Text>
             </RN.View>
           }
@@ -191,21 +181,21 @@ const Content = () => {
         <RN.View>
           <RN.Text style={styles.itemContainerText}>商品分類</RN.Text>
           <Picker
-            selectedValue={!category.label && !category.value ? '' : category}
+            style={[{ 
+              backgroundColor: appCtx.Colors.inputContainer,
+              width: '100%',
+              paddingLeft: 15,
+              height: 45,
+              borderWidth: 1.5,
+              borderRadius: 5
+            }]}
+            selectedValue={category}
             onValueChange={(e: any) => { setCategory(e) }}
           >
             {categoryList.map((item: any, index) => (
               <Picker.Item key={index} value={item?.category} label={item?.category} />
             ))}
           </Picker>
-          {isCategory ? <RN.View>
-            <RN.Text style={[, { color: appCtx.Colors.errorText, fontSize: 12 }]}>
-              {`* 必填`}
-            </RN.Text>
-          </RN.View>
-            : <RN.View><RN.Text /></RN.View>
-          }
-
         </RN.View>
         <RN.View >
           <RN.Text style={styles.itemContainerText}>商品價格</RN.Text>
@@ -267,17 +257,7 @@ const Content = () => {
           </RN.TouchableOpacity>
         </RN.View>
       </RN.View>
-    </RN.ScrollView>
-  );
-};
-
-const AddProductItem = () => {
-  const reduxPermission = useAppSelector(state => state.permission);
-  return (
-    <RN.SafeAreaView style={styles.container}>
-      <Goback />
-      {reduxPermission !== 'admin' ? <RN.Text style={{fontSize: 20, marginLeft: 20}}>該帳戶無權限使用</RN.Text> : <ScrollViewComponent item={Content} />}
-    </RN.SafeAreaView>
+    </RN.View>
   );
 };
 
