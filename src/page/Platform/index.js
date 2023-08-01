@@ -6,8 +6,8 @@ import service from '../Service/service';
 import {AppContext} from '../../redux/AppContent';
 import Goback from '../../component/Goback';
 import ReminderText from '../../component/ReminderText';
-import ScrollViewComponent from '../../component/ScrollViewComponent';
 import Plus from '../../assets/Plus';
+import Cancel from '../../assets/Cancel';
 
 const Content = () => {
   const appCtx = React.useContext(AppContext);
@@ -69,7 +69,7 @@ const Content = () => {
   }, [isFocused]);
 
   return (
-    <RN.View style={styles.container}>
+    <RN.View>
       <RN.View
         style={[
           styles.listContainer,
@@ -78,28 +78,37 @@ const Content = () => {
         <ReminderText text={'* 預設費用無法刪除'} />
         <ReminderText text={'* 長按可刪除分類別'} />
       </RN.View>
-      <RN.View style={styles.container}>
+      <RN.View>
         {platform.length > 0 ? (
           platform.map((item, index) => {
             return item.token !== '1' ? (
-              <RN.View
-                style={styles.itemContainer}
-                onPress={() => updateModifyRate(item._id)}
-                // // onLongPress={() => deleteItem(item._id)}
-                key={index}>
-                <RN.View style={styles.itemContent}>
-                  <RN.Text style={styles.itemContentText}>{item.label}</RN.Text>
-                  <RN.Text style={styles.itemContentText}>
-                    {item.rate} %
-                  </RN.Text>
-                </RN.View>
-                <RN.View style={styles.itemContent}>
-                  {item.isActive ? (
-                    <RN.Text style={styles.itemContentText}>進行中</RN.Text>
-                  ) : (
-                    <RN.Text style={styles.itemContentText}>啟用</RN.Text>
-                  )}
-                </RN.View>
+              <RN.View>
+                <RN.TouchableOpacity
+                  style={{margin: 10}}
+                  onPress={() => deleteItem(item._id)}>
+                  <Cancel />
+                </RN.TouchableOpacity>
+                <RN.TouchableOpacity
+                  style={styles.itemContainer}
+                  onPress={() => updateModifyRate(item._id)}
+                  // // onLongPress={() => deleteItem(item._id)}
+                  key={index}>
+                  <RN.View style={styles.itemContent}>
+                    <RN.Text style={styles.itemContentText}>
+                      {item.label}
+                    </RN.Text>
+                    <RN.Text style={styles.itemContentText}>
+                      {item.rate} %
+                    </RN.Text>
+                  </RN.View>
+                  <RN.View style={styles.itemContent}>
+                    {item.isActive ? (
+                      <RN.Text style={styles.itemContentText}>進行中</RN.Text>
+                    ) : (
+                      <RN.Text style={styles.itemContentText}>啟用</RN.Text>
+                    )}
+                  </RN.View>
+                </RN.TouchableOpacity>
               </RN.View>
             ) : (
               <RN.View
@@ -139,13 +148,13 @@ const Content = () => {
             </RN.View>
           </RN.View>
         )}
-        <RN.View
-          style={styles.itemContainer}
+        <RN.TouchableOpacity
+          style={[styles.itemContainer, {marginTop: 40}]}
           onPress={() => navigation.navigate('AddPlatformItem')}>
           <RN.View style={styles.itemContent}>
             <Plus />
           </RN.View>
-        </RN.View>
+        </RN.TouchableOpacity>
       </RN.View>
     </RN.View>
   );
@@ -155,7 +164,7 @@ const PlatformPage = () => {
   return (
     <RN.SafeAreaView style={styles.container}>
       <Goback />
-      <ScrollViewComponent item={Content}></ScrollViewComponent>
+      <Content />
     </RN.SafeAreaView>
   );
 };
@@ -170,7 +179,7 @@ const styles = RN.StyleSheet.create({
     marginRight: 10,
     marginLeft: 10,
     borderWidth: 1.5,
-    flex: 1,
+    borderRadius: 10,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',

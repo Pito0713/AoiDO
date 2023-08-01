@@ -7,12 +7,9 @@ import {AppContext} from '../../redux/AppContent';
 import Goback from '../../component/Goback'
 // import { launchImageLibrary } from 'react-native-image-picker';
 import ReminderText from '../../component/ReminderText';
-import ScrollViewComponent from '../../component/ScrollViewComponent';
 import Plus from '../../assets/Plus';
 import Checkbg from '../../assets/Checkbg';
-
-const windowWidth = RN.Dimensions.get('window').width;
-const windowHeight = RN.Dimensions.get('window').height;
+import Cancel from '../../assets/Cancel';
 
 const Content = () => {
   const appCtx = React.useContext(AppContext);
@@ -27,10 +24,10 @@ const Content = () => {
   }
 
   interface submitData {
-    id?: string,
+    id?: string  | undefined,
     _id?: string | undefined,
-    img?: string,
-    isActive?: boolean,
+    img?: string  | undefined,
+    isActive?: boolean | undefined,
   }
 
   const [photoList, setPhotoList] = React.useState([]);
@@ -80,10 +77,11 @@ const Content = () => {
         isActive: false
       }
 
-      const response = await service.postCreateMainImg(submitData);
-
-      if (response?.status === 'success') {
-        getFindAllMainImg()
+      if(submitData.img) {
+        const response = await service.postCreateMainImg(submitData);
+        if (response?.status === 'success') {
+          getFindAllMainImg()
+        }
       }
     }
     await appCtx.setLoading(false);
@@ -124,17 +122,21 @@ const Content = () => {
     let submitData = {
       id: item,
     };
+    await appCtx.setLoading(true);
     const response = await service.deleteOneMainImg(submitData);
     if (response?.status === 'success') getFindAllMainImg();
+    await appCtx.setLoading(false);
   };
 
   const patchUploadMainImg = async (item: submitData) => {
     let submitData = {
-      id: item.id,
+      id: item._id,
       isActive: !item.isActive
     };
+    await appCtx.setLoading(true);
     const response = await service.patchUploadMainImg(submitData);
     if (response?.status === 'success') getFindAllMainImg();
+    await appCtx.setLoading(false);
   };
 
   React.useEffect(() => {
@@ -177,22 +179,28 @@ const Content = () => {
         {photoList.length > 0 ? (
           photoList.map((item:submitData, index) => {
             return (
-              <RN.View
-                style={[
-                  styles.itemContainer,
-                  {backgroundColor: appCtx.Colors.photo.cardContianer},
-                ]}
-                // onLongPress={() => deleteItem(item._id)}
-                // onPress={() => patchUploadMainImg(item)}
-                key={index}>
-                <RN.ImageBackground
-                  source={{uri: `${item.img}`}}
-                  style={{width: '100%', height: '100%'}}
-                  resizeMode="cover">
-                  { item.isActive ? <Checkbg
-                  />: <RN.View /> }
-                </RN.ImageBackground>
-              </RN.View>
+              <RN.View >
+                <RN.TouchableOpacity
+                  style={{margin: 10}}
+                  onPress={() => deleteItem(item._id)}>
+                  <Cancel />
+                </RN.TouchableOpacity>
+                <RN.TouchableOpacity
+                  style={[
+                    styles.itemContainer,
+                    {backgroundColor: appCtx.Colors.photo.cardContianer},
+                  ]}
+                  onPress={() => patchUploadMainImg(item)}
+                  key={index}>
+                  <RN.ImageBackground
+                    source={{uri: `${item.img}`}}
+                    style={{width: '100%', height: '100%'}}
+                    resizeMode="cover">
+                    { item.isActive ? <Checkbg
+                    />: <RN.View /> }
+                  </RN.ImageBackground>
+                </RN.TouchableOpacity>
+              </ RN.View>
             );
           })
         ) : (
@@ -219,7 +227,7 @@ const MainImg = () => {
   return (
     <RN.SafeAreaView style={styles.container}>
       <Goback />
-      <ScrollViewComponent item={Content}></ScrollViewComponent>
+      <Content />
     </RN.SafeAreaView>
   );
 };
@@ -237,8 +245,8 @@ const styles = RN.StyleSheet.create({
     flexWrap: 'wrap',
   },
   itemContainer: {
-    height: windowHeight / 4,
-    width: windowWidth / 2 - 15,
+    height: 200,
+    width: 200,
     marginBottom: 10,
     marginRight: 5,
     marginLeft: 5,
@@ -265,8 +273,8 @@ const styles = RN.StyleSheet.create({
     borderRadius: 10,
   },
   addContent: {
-    height: windowHeight / 4,
-    width: windowWidth / 2 - 15,
+    height: 200,
+    width: 200,
     alignItems: 'center',
     borderWidth: 1.5,
     overflow: 'hidden',

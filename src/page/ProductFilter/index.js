@@ -2,13 +2,13 @@ import React from 'react';
 import * as RN from 'react-native';
 import {useNavigation, useIsFocused} from '@react-navigation/native';
 import Plus from '../../assets/Plus';
+import Cancel from '../../assets/Cancel';
 
 import service from '../Service/service';
 import {AppContext} from '../../redux/AppContent';
 import {useAppSelector} from '../../redux/store';
 import Goback from '../../component/Goback';
 import ReminderText from '../../component/ReminderText';
-import ScrollViewComponent from '../../component/ScrollViewComponent';
 
 const Content = () => {
   const appCtx = React.useContext(AppContext);
@@ -126,18 +126,24 @@ const Content = () => {
         {productFilter.length > 0 ? (
           productFilter.map((item, index) => {
             return item.token !== '1' ? (
-              <RN.View
-                style={styles.itemContainer}
-                onPress={() =>
-                  navigation.navigate('productFilterItem', {item: item})
-                }
-                onLongPress={() => deleteItem(item)}
-                key={index}>
-                <RN.View style={styles.itemContent}>
-                  <RN.Text style={styles.itemContentText}>
-                    {item.category}
-                  </RN.Text>
-                </RN.View>
+              <RN.View>
+                <RN.TouchableOpacity
+                  style={{margin: 10}}
+                  onPress={() => deleteItem(item._id)}>
+                  <Cancel />
+                </RN.TouchableOpacity>
+                <RN.TouchableOpacity
+                  style={styles.itemContainer}
+                  onPress={() =>
+                    navigation.navigate('productFilterItem', {item: item})
+                  }
+                  key={index}>
+                  <RN.View style={styles.itemContent}>
+                    <RN.Text style={styles.itemContentText}>
+                      {item.category}
+                    </RN.Text>
+                  </RN.View>
+                </RN.TouchableOpacity>
               </RN.View>
             ) : (
               <RN.View style={styles.itemContainer} key={index}>
@@ -160,13 +166,13 @@ const Content = () => {
             </RN.View>
           </RN.View>
         )}
-        <RN.View
-          style={styles.itemContainer}
+        <RN.TouchableOpacity
+          style={[styles.itemContainer, {marginTop: 40}]}
           onPress={() => navigation.navigate('addProductFilterItem')}>
           <RN.View style={styles.itemContent}>
             <Plus />
           </RN.View>
-        </RN.View>
+        </RN.TouchableOpacity>
       </RN.View>
     </RN.View>
   );
@@ -176,7 +182,7 @@ const ProductFilterPage = () => {
   return (
     <RN.SafeAreaView style={styles.container}>
       <Goback />
-      <ScrollViewComponent item={Content}></ScrollViewComponent>
+      <Content />
     </RN.SafeAreaView>
   );
 };
@@ -192,6 +198,7 @@ const styles = RN.StyleSheet.create({
     marginLeft: 10,
     alignItems: 'center',
     borderWidth: 1.5,
+    borderRadius: 10,
   },
   itemContent: {
     flexDirection: 'row',

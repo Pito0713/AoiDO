@@ -78,98 +78,92 @@ const SignInPage = () => {
     }
     dispatch(registerActions.SET_REMEMBERINFO(rememberInfo));
     dispatch(registerActions.SET_PERMISSION(values?.userBack?.permission));
-    dispatch(registerActions.SET_ID(values?.userBack?.id));
+    dispatch(registerActions.SET_ID(values?.userBack?._id));
   };
 
   return (
     <RN.SafeAreaView style={styles.container}>
-      <RN.KeyboardAvoidingView keyboardVerticalOffset={windowHeight}>
-        <RN.TouchableOpacity activeOpacity={1} onPress={RN.Keyboard.dismiss}>
-          <RN.View style={styles.logInContainer}>
-            <RN.View style={styles.border}>
-              <RN.View
-                style={[
-                  styles.InputContainer,
-                  {backgroundColor: appCtx.Colors.inputContainer},
-                ]}>
-                <RN.TextInput
-                  placeholder={'請輸入帳號'}
-                  textAlign="left"
-                  placeholderTextColor="gray"
-                  value={formik.values.account}
-                  onChangeText={formik.handleChange('account')}
-                  style={styles.input}
-                />
-              </RN.View>
-              <RN.View style={[styles.errorText]}>
-                {['', null, undefined].includes(formik.values.account) && (
-                  <RN.Text
-                    style={[{color: appCtx.Colors.errorText, fontSize: 12}]}>
-                    {' '}
-                    {formik.errors.account}
-                  </RN.Text>
-                )}
-              </RN.View>
-            </RN.View>
-            <RN.View style={styles.border}>
-              <RN.View
-                style={[
-                  styles.InputContainer,
-                  {backgroundColor: appCtx.Colors.inputContainer},
-                ]}>
-                <RN.TextInput
-                  placeholder={'請輸入密碼'}
-                  placeholderTextColor="gray"
-                  textAlign="left"
-                  value={formik.values.password}
-                  onChangeText={formik.handleChange('password')}
-                  secureTextEntry={true}
-                  style={styles.input}
-                />
-              </RN.View>
-              <RN.View style={[styles.errorText]}>
-                {['', null, undefined].includes(formik.values.password) && (
-                  <RN.Text
-                    style={[{color: appCtx.Colors.errorText, fontSize: 12}]}>
-                    {' '}
-                    {formik.errors.password}
-                  </RN.Text>
-                )}
-              </RN.View>
-            </RN.View>
+      <RN.View style={styles.logInContainer}>
+        <RN.View style={styles.border}>
+          <RN.View
+            style={[
+              styles.InputContainer,
+              {backgroundColor: appCtx.Colors.inputContainer},
+            ]}>
+            <RN.TextInput
+              placeholder={'請輸入帳號'}
+              textAlign="left"
+              placeholderTextColor="gray"
+              value={formik.values.account}
+              onChangeText={formik.handleChange('account')}
+              style={styles.input}
+            />
           </RN.View>
+          <RN.View style={[styles.errorText]}>
+            {['', null, undefined].includes(formik.values.account) && (
+              <RN.Text style={[{color: appCtx.Colors.errorText, fontSize: 12}]}>
+                {' '}
+                {formik.errors.account}
+              </RN.Text>
+            )}
+          </RN.View>
+        </RN.View>
+        <RN.View style={styles.border}>
+          <RN.View
+            style={[
+              styles.InputContainer,
+              {backgroundColor: appCtx.Colors.inputContainer},
+            ]}>
+            <RN.TextInput
+              placeholder={'請輸入密碼'}
+              placeholderTextColor="gray"
+              textAlign="left"
+              value={formik.values.password}
+              onChangeText={formik.handleChange('password')}
+              secureTextEntry={true}
+              style={styles.input}
+            />
+          </RN.View>
+          <RN.View style={[styles.errorText]}>
+            {['', null, undefined].includes(formik.values.password) && (
+              <RN.Text style={[{color: appCtx.Colors.errorText, fontSize: 12}]}>
+                {' '}
+                {formik.errors.password}
+              </RN.Text>
+            )}
+          </RN.View>
+        </RN.View>
+      </RN.View>
 
-          <RN.View style={styles.buttomGround}>
-            <RN.TouchableOpacity
-              style={[
-                styles.registerContainer,
-                {textAlign: 'center', backgroundColor: appCtx.Colors.primary},
-              ]}
-              onPress={() => formik.submitForm()}>
-              <RN.Text style={[styles.registerText]}>{'登入'}</RN.Text>
-            </RN.TouchableOpacity>
-          </RN.View>
-          <RN.View style={styles.rememberInfoContainer}>
-            <RN.TouchableOpacity
-              onPress={() => setRememberInfo(!rememberInfo)}
-              style={{flexDirection: 'row'}}>
-              {/* <CheckBox
+      <RN.View style={styles.buttomGround}>
+        <RN.TouchableOpacity
+          style={[
+            styles.registerContainer,
+            {textAlign: 'center', backgroundColor: appCtx.Colors.primary},
+          ]}
+          onPress={() => formik.submitForm()}>
+          <RN.Text style={[styles.registerText]}>{'登入'}</RN.Text>
+        </RN.TouchableOpacity>
+      </RN.View>
+      <RN.View style={styles.rememberInfoContainer}>
+        <RN.TouchableOpacity
+          onPress={() => setRememberInfo(!rememberInfo)}
+          style={{flexDirection: 'row'}}>
+          {/* <CheckBox
                 disabled={false}
                 value={rememberInfo}
                 onValueChange={() => setRememberInfo(!rememberInfo)}
               /> */}
-              <RN.Text style={{marginLeft: 8}}>{'記住帳號'}</RN.Text>
-            </RN.TouchableOpacity>
-            <RN.TouchableOpacity>
-              <RN.Text
-                style={{marginLeft: 20}}
-                onPress={() => navigation.navigate('register')}>
-                {'創立帳號'}
-              </RN.Text>
-            </RN.TouchableOpacity>
-          </RN.View>
+          <RN.Text style={{marginLeft: 8}}>{'記住帳號'}</RN.Text>
         </RN.TouchableOpacity>
-      </RN.KeyboardAvoidingView>
+        <RN.TouchableOpacity>
+          <RN.Text
+            style={{marginLeft: 20}}
+            onPress={() => navigation.navigate('register')}>
+            {'創立帳號'}
+          </RN.Text>
+        </RN.TouchableOpacity>
+      </RN.View>
     </RN.SafeAreaView>
   );
 };

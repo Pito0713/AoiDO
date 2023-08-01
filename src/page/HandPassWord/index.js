@@ -13,7 +13,6 @@ import {
   useAppSelector,
   useAppDispatch,
 } from '../../redux/store';
-import ScrollViewComponent from '../../component/ScrollViewComponent';
 
 const windowHeight = RN.Dimensions.get('window').height;
 
@@ -171,7 +170,7 @@ const HandPassWordPage = () => {
   return (
     <RN.SafeAreaView style={styles.container}>
       <Goback />
-      <ScrollViewComponent item={Content}></ScrollViewComponent>
+      <Content />
     </RN.SafeAreaView>
   );
 };

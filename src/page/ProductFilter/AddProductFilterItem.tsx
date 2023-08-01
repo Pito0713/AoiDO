@@ -47,36 +47,32 @@ const AddProductFilterItem = () => {
 
   return (
     <RN.SafeAreaView style={styles.container}>
-      <RN.KeyboardAvoidingView behavior={RN.Platform.OS === "ios" ? "padding" : "height"}>
-        <RN.TouchableOpacity activeOpacity={1} onPress={RN.Keyboard.dismiss}>
-          <Goback />
-          <RN.View style={styles.itemContainer}>
-            <RN.View style={styles.inputContainer}>
-              <RN.View style={styles.inputText}>
-                <RN.Text>新增商品分類</RN.Text>
-              </RN.View>
-              <RN.TextInput
-                placeholder={'請輸入新增商品分類'}
-                placeholderTextColor="gray"
-                textAlign='left'
-                value={formik.values.category}
-                onChangeText={formik.handleChange("category")}
-                style={[styles.input, { backgroundColor: appCtx.Colors.inputContainer }]}
-              />
-              <RN.View style={styles.inputText}>
-                <RN.Text style={[, { color: appCtx.Colors.errorText }]}>
-                  {formik.errors.category}
-                </RN.Text>
-              </RN.View>
-            </RN.View>
-            <RN.TouchableOpacity style={styles.registerContainer} onPress={() => formik.submitForm()}>
-              <RN.View style={[styles.registerText,{backgroundColor: appCtx.Colors.primary}]}>
-                <RN.Text style={[{ color: appCtx.Colors.registerText, textAlign: 'center',  }]}>新增商品分類資料</RN.Text>
-              </RN.View>
-            </RN.TouchableOpacity>
+      <Goback />
+      <RN.View style={styles.itemContainer}>
+        <RN.View style={styles.inputContainer}>
+          <RN.View style={styles.inputText}>
+            <RN.Text>新增商品分類</RN.Text>
+          </RN.View>
+          <RN.TextInput
+            placeholder={'請輸入新增商品分類'}
+            placeholderTextColor="gray"
+            textAlign='left'
+            value={formik.values.category}
+            onChangeText={formik.handleChange("category")}
+            style={[styles.input, { backgroundColor: appCtx.Colors.inputContainer }]}
+          />
+          <RN.View style={styles.inputText}>
+            <RN.Text style={[, { color: appCtx.Colors.errorText }]}>
+              {formik.errors.category}
+            </RN.Text>
+          </RN.View>
+        </RN.View>
+        <RN.TouchableOpacity style={styles.registerContainer} onPress={() => formik.submitForm()}>
+          <RN.View style={[styles.registerText,{backgroundColor: appCtx.Colors.primary}]}>
+            <RN.Text style={[{ color: appCtx.Colors.registerText, textAlign: 'center',  }]}>新增商品分類資料</RN.Text>
           </RN.View>
         </RN.TouchableOpacity>
-      </RN.KeyboardAvoidingView>
+      </RN.View>
     </RN.SafeAreaView>
   );
 };

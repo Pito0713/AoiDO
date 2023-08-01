@@ -15,7 +15,7 @@ interface ProductFilterItem {
   _id: string
 }
 
-const Content = (route : { params: any }) => {
+const ProductFilterItem = ({ route }: { route: any }) => {
   const target = route?.params?.item
   const appCtx = React.useContext(AppContext);
   const reduxToken = useAppSelector(state => state.token)
@@ -80,20 +80,25 @@ const Content = (route : { params: any }) => {
   }, [page]);
 
   return (
+    <RN.SafeAreaView style={styles.container}>
+    <Goback />
     <RN.View >
       {productFilter.length > 0 ? productFilter.map((item : ProductFilterItem, index) => {
         return (
           <RN.View style={styles.itemContainer} key={index}>
             <RN.View style={styles.itemContent} >
-              <RN.View style={{ flex: 2 }}>
+              <RN.View style={{ width: 100 ,alignItems: 'center' ,justifyContent: 'center',}}>
                 <RN.Image
                   source={{ uri: `${item.imageUrl }` }}
-                  style={{ width: '105%', height:'105%', }}
+                  style={{ width: 70, height: 70, }}
                 />
               </RN.View>
-              <RN.View style={{ flex: 4 }}><RN.Text style={styles.itemContentText} numberOfLines={1} ellipsizeMode={'tail'}>{item.describe}</RN.Text></RN.View>
-              <RN.View style={{ flex: 2.5 }}><RN.Text style={styles.itemContentText} numberOfLines={1} ellipsizeMode={'tail'}>$ {item.price}</RN.Text></RN.View>
-              <RN.TouchableOpacity style={{ flex: 1.5, alignItems: 'center' ,height:'100%',justifyContent: 'center',backgroundColor: appCtx.Colors.primary}} onPress={() => deleteItem(item._id)}>
+              <RN.View style={{ width: 200 }}><RN.Text style={styles.itemContentText} numberOfLines={1} ellipsizeMode={'tail'}>{item.describe}</RN.Text></RN.View>
+              <RN.View style={{ width: 80 }}><RN.Text style={styles.itemContentText} numberOfLines={1} ellipsizeMode={'tail'}>$ {item.price}</RN.Text></RN.View>
+              <RN.TouchableOpacity 
+                style={{ width: 75, alignItems: 'center' ,height:'100%',justifyContent: 'center',backgroundColor: appCtx.Colors.primary}} 
+                onPress={() => deleteItem(item._id)}
+              >
                 <RN.Text>刪除</RN.Text>
               </RN.TouchableOpacity>
             </RN.View>
@@ -112,18 +117,9 @@ const Content = (route : { params: any }) => {
         onPageChange={onPageChange}
       />
     </RN.View>
-  );
-};
-
-const ProductFilterItem = ({ route }: { route: any }) => {
-  return (
-    <RN.SafeAreaView style={styles.container}>
-      <Goback />
-      <ScrollViewComponent item={() => Content(route)}></ScrollViewComponent>
     </RN.SafeAreaView>
   );
 };
-
 
 const styles = RN.StyleSheet.create({
   container: {
@@ -137,6 +133,7 @@ const styles = RN.StyleSheet.create({
     alignItems: 'center',
     borderWidth: 1.5,
     overflow:'hidden',
+    borderRadius: 10
   },
   itemContent: {
     flexDirection: 'row',

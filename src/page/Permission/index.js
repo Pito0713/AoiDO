@@ -94,9 +94,9 @@ const Content = () => {
         styles.listContainer,
         {borderColor: appCtx.Colors.Platform.borderPrimary},
       ]}>
-      {userList.map(item => {
+      {userList.map((item, index) => {
         return (
-          <RN.View style={[styles.pickerContainer]}>
+          <RN.View style={[styles.pickerContainer]} key={index}>
             <RN.Text style={[styles.pickerContainerText]}>
               {`帳號: ${item.account}`}
             </RN.Text>
@@ -131,7 +131,7 @@ const PermissionPage = () => {
   return (
     <RN.SafeAreaView style={styles.container}>
       <Goback />
-      <ScrollViewComponent item={() => Content()}></ScrollViewComponent>
+      <Content />
     </RN.SafeAreaView>
   );
 };
@@ -145,14 +145,17 @@ const styles = RN.StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
+    width: '100%',
+    marginTop: 20,
   },
   pickerContainerText: {
     fontSize: 17,
-    width: '60%',
+    width: 200,
     textAlign: 'center',
   },
   pickerContent: {
     marginTop: 10,
+    width: 200,
   },
   listContainer: {
     alignItems: 'flex-start',

@@ -109,7 +109,7 @@ const AddPlatformItem = () => {
   return (
     <RN.SafeAreaView style={styles.container}>
       <Goback />
-      <ScrollViewComponent item={Content}/>
+      <Content />
     </RN.SafeAreaView>
   );
 };
