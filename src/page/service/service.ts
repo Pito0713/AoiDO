@@ -128,6 +128,14 @@ interface Image {
   isActive?: Boolean,
 }
 
+interface Order {
+  id?: string,
+  searchText?: string,
+  page?: Number,
+  pagination?: Number,
+}
+
+
 
 const Service = {
   getExchange: async (submitData: getExchange) => {
@@ -576,6 +584,26 @@ const Service = {
     );
     return data;
   },
+  postSearchOrder: async (submitData: Order) => {
+    let data = await fetchApi_AuthData(
+      'post',
+      `http://192.168.23.157:8082/searchOrder`,
+      '',
+      submitData
+    );
+    return data;
+  },
+
+  deleteOneOrder: async (submitData: Order) => {
+    let data = await fetchApi_AuthData(
+      'DELETE',
+      `http://192.168.23.157:8082/deleteOneOrder/`,
+      submitData.id,
+      '',
+    );
+    return data;
+  },
+
 }
 
 export default Service;

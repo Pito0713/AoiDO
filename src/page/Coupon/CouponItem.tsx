@@ -14,6 +14,7 @@ interface Item {
   id?: string | undefined,
   describe?: string | undefined,
   discount?: string | undefined,
+  count?: string | undefined,
   remark?: string | undefined,
 }
 
@@ -39,6 +40,7 @@ const Content = (route : { params: any }) => {
       "id": route.params.item._id,
       "describe": values.describe,
       "discount": values.discount,
+      "count": values.count,
       "startDate": new Date(startDate),
       "endDate": new Date(endDate),
       "remark": values.remark,
@@ -54,6 +56,7 @@ const Content = (route : { params: any }) => {
     initialValues: {
       describe: route.params?.item.describe ? route.params.item.describe : '',
       discount: route.params?.item.discount ? route.params.item.discount : '',
+      count: route.params?.item.count ? route.params.item.count : '',
       remark: route.params?.item.remark ? route.params.item.remark : '',
     },
     validate: (values) => {
@@ -63,6 +66,8 @@ const Content = (route : { params: any }) => {
       if (!values?.describe) errors.describe = '*' + "必填";
       if (!values?.discount) errors.discount = '*' + "必填";
       if (!reg.test(values.discount)) errors.discount = '*' + "必須數字";
+      if (!values?.count) errors.count = '*' + "必填";
+      if (!reg.test(values.count)) errors.count = '*' + "必須數字";
 
       return errors;
     },
@@ -134,6 +139,20 @@ const Content = (route : { params: any }) => {
         </RN.View>
       </RN.View>
       <RN.View>
+        <RN.Text style={styles.itemContainerText}>使用次數</RN.Text>
+        <RN.TextInput
+          style={[styles.input, { backgroundColor: appCtx.Colors.inputContainer, }]}
+          onChangeText={formik.handleChange("count")}
+          value={formik.values.count}
+          placeholder="使用次數"
+        />
+        <RN.View>
+          <RN.Text style={[{ color: appCtx.Colors.errorText }]}>
+            {formik.errors.count as String}
+          </RN.Text>
+        </RN.View>
+      </RN.View>
+      <RN.View>
         <RN.Text style={styles.itemContainerText}>開始日期</RN.Text>
         <DatePicker value={startDate} onValueChange={onValueStartDatechange} />
         <RN.View><RN.Text/></RN.View>
@@ -181,7 +200,8 @@ const styles = RN.StyleSheet.create({
     width: '75%',
     justifyContent: 'center',
     alignSelf: 'center',
-    marginTop: 25
+    marginTop: 25,
+    marginBottom: 25,
   },
   input: {
     width: '100%',
