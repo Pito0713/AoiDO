@@ -9,7 +9,6 @@ import Goback from '../../component/Goback'
 import DatePicker from '../../component/DatePicker'
 import service from "../Service/service";
 import { useAppSelector } from '../../redux/store';
-import ScrollViewComponent from "../../component/ScrollViewComponent";
 
 const windowHeight = RN.Dimensions.get('window').height;
 
@@ -137,7 +136,7 @@ const AddCouponItem = () => {
   return (
     <RN.SafeAreaView style={styles.container}>
       <Goback />
-      {reduxPermission !== 'admin' ? <RN.Text style={{fontSize: 20, marginLeft: 20}}>該帳戶無權限使用</RN.Text> : <ScrollViewComponent item={Content} />}
+      {reduxPermission !== 'admin' ? <RN.Text style={{fontSize: 20, marginLeft: 20}}>該帳戶無權限使用</RN.Text> : <Content />}
     </RN.SafeAreaView>
   );
 };

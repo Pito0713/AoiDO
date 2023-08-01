@@ -160,7 +160,7 @@ const Coupon = () => {
         {cargos.length > 0 ? (
           cargos.map((item, index) => {
             return (
-              <RN.View
+              <RN.TouchableOpacity
                 style={[
                   styles.itemContainer,
                   {
@@ -169,7 +169,6 @@ const Coupon = () => {
                   },
                 ]}
                 onPress={() => navigation.navigate('CouponItem', {item})}
-                // onLongPress={() => deleteItem(item._id)}
                 key={index}>
                 <RN.View
                   style={[
@@ -233,7 +232,7 @@ const Coupon = () => {
                     </RN.Text>
                   </RN.View>
                 </RN.View>
-              </RN.View>
+              </RN.TouchableOpacity>
             );
           })
         ) : (
