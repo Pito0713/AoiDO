@@ -9,6 +9,7 @@ import Goback from '../../component/Goback'
 import DatePicker from '../../component/DatePicker'
 import service from "../Service/service";
 import { useAppSelector } from '../../redux/store';
+import Modal from '../../component/Modal';
 
 const windowHeight = RN.Dimensions.get('window').height;
 
@@ -21,6 +22,14 @@ const Content = () => {
   const appCtx = React.useContext(AppContext);
   const navigation = useNavigation();
   const reduxToken = useAppSelector(state => state.token)
+  const [modalOpen, setModalOpen] = React.useState(false);
+  const openModal = () => {
+    setModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalOpen(false);
+  };
 
   const [startDate, setStartDate] = React.useState<string>(moment().format('YYYY-MM-DD'))
   const onValueStartDatechange = (e: any) => {
@@ -38,7 +47,7 @@ const Content = () => {
       discount: '',
       remark: '',
     },
-    validate: (values) => {
+    validate: (values: { describe: any; discount: string; }) => {
       const errors: Item = {};
       const reg = /^\d+$/
 
@@ -48,9 +57,9 @@ const Content = () => {
 
       return errors;
     },
-    onSubmit: (values, { resetForm }) => {
+    onSubmit: (values: Item, { resetForm }: any) => {
       if (Date.parse(startDate) > Date.parse(endDate)) {
-        RN.Alert.alert('結束時間必須大於開始時間')
+        openModal()
       } else {
         save(values)
         resetForm()
@@ -106,13 +115,17 @@ const Content = () => {
       </RN.View>
       <RN.View>
         <RN.Text style={styles.itemContainerText}>開始日期</RN.Text>
-        <DatePicker onValueChange={onValueStartDatechange} />
+        <RN.View style={[styles.pickerContainer, {backgroundColor: appCtx.Colors.inputContainer}]}>
+        <DatePicker onValueChange={onValueStartDatechange}/>
+      </RN.View>
       </RN.View>
       <RN.View>
-        <RN.Text style={styles.itemContainerText}>結束日期</RN.Text>
-        <DatePicker onValueChange={onValueEndDatechange} />
+      <RN.Text style={styles.itemContainerText}>結束日期</RN.Text>
+      <RN.View style={[styles.pickerContainer, {backgroundColor: appCtx.Colors.inputContainer}]}>
+        <DatePicker onValueChange={onValueEndDatechange}/>
       </RN.View>
-      <RN.View>
+      </RN.View>
+      <RN.View style={{zIndex: 1}}>
         <RN.Text style={styles.itemContainerText}>備註</RN.Text>
         <RN.TextInput
           style={[styles.input, { backgroundColor: appCtx.Colors.inputContainer, }]}
@@ -127,12 +140,18 @@ const Content = () => {
           <RN.Text style={styles.saveContainerText}>保存</RN.Text>
         </RN.TouchableOpacity>
       </RN.View>
+      <Modal
+        isOpen={modalOpen}
+        confirm={closeModal}
+        cancel={closeModal}
+        content={'結束時間必須大於開始時間'}
+      />
     </RN.View>
   );
 };
 
 const AddCouponItem = () => {
-  const reduxPermission = useAppSelector(state => state.permission);
+  const reduxPermission = useAppSelector((state: { permission: any; }) => state.permission);
   return (
     <RN.SafeAreaView style={styles.container}>
       <Goback />
@@ -175,6 +194,12 @@ const styles = RN.StyleSheet.create({
   saveContainerText: {
     textAlign: 'center'
   },
+  pickerContainer: {
+    borderWidth: 1.5,
+    borderRadius: 5,
+    width: '100%',
+    paddingLeft: 15,
+  }
 });
 
 export default AddCouponItem;

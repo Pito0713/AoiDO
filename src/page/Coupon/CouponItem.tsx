@@ -8,6 +8,7 @@ import { AppContext } from '../../redux/AppContent';
 import Goback from '../../component/Goback'
 import DatePicker from '../../component/DatePicker'
 import service from "../Service/service";
+import Modal from '../../component/Modal';
 
 interface Item {
   id?: string | undefined,
@@ -24,6 +25,15 @@ const CouponItem = ({ route }: { route: any }) => {
     navigate: (value: string | undefined) => void,
     goBack: () => void,
   }
+  const [isTimeBetween, setIsTimeBetween] = React.useState(false);
+  const [modalOpen, setModalOpen] = React.useState(false);
+  const openModal = () => {
+    setModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalOpen(false);
+  };
 
   const [startDate, setStartDate] = React.useState<string>(route.params?.item.startDate ? moment(route.params.item.startDate).format('YYYY-MM-DD') : moment().format('YYYY-MM-DD'))
   const onValueStartDatechange = (e: any) => {
@@ -72,39 +82,24 @@ const CouponItem = ({ route }: { route: any }) => {
     },
     onSubmit: (values, { resetForm }) => {
       if (Date.parse(startDate) > Date.parse(endDate)) {
-        RN.Alert.alert('結束時間必須大於開始時間')
+        setIsTimeBetween(true)
       } else {
+        setIsTimeBetween(false)
         save(values)
         resetForm()
       }
     },
   });
 
-  const deleteItem = () => {
-    RN.Alert.alert(
-      '是否刪除',
-      "",
-      [
-        {
-          text: '取消',
-          style: 'cancel',
-        },
-        {
-          text: "確認",
-          onPress: () => deleteOneCoupon(route.params.item._id)
-        }
-      ], {}
-    );
-  }
-
-  const deleteOneCoupon = async (item: string) => {
+  const deleteOneCoupon = async () => {
     // call api
     await appCtx.setLoading(true)
     let submitData = {
-      "id": item,
+      "id": route.params.item._id,
     }
     const response = await service.deleteOneCoupon(submitData);
     await appCtx.setLoading(false)
+    closeModal();
     if (response?.status === 'success') navigation.goBack()
   }
   return (
@@ -140,35 +135,6 @@ const CouponItem = ({ route }: { route: any }) => {
           </RN.View>
         </RN.View>
         <RN.View>
-          <RN.Text style={styles.itemContainerText}>開始日期</RN.Text>
-          <DatePicker value={startDate} onValueChange={onValueStartDatechange} />
-          <RN.View><RN.Text/></RN.View>
-        </RN.View>
-        <RN.View>
-          <RN.Text style={styles.itemContainerText}>結束日期</RN.Text>
-          <DatePicker value={endDate} onValueChange={onValueEndDatechange} />
-          <RN.View><RN.Text/></RN.View>
-        </RN.View>
-        <RN.View>
-          <RN.Text style={styles.itemContainerText}>備註</RN.Text>
-          <RN.TextInput
-            style={[styles.input, { backgroundColor: appCtx.Colors.inputContainer, }]}
-            onChangeText={formik.handleChange("remark")}
-            value={formik.values.remark}
-            placeholder="備註"
-          />
-          <RN.View />
-        </RN.View>
-        <RN.View style={styles.buttomGroup}>
-          <RN.TouchableOpacity style={[styles.saveContainer, { backgroundColor: appCtx.Colors.primary }]} onPress={() => formik.submitForm()}>
-            <RN.Text style={styles.saveContainerText}>保存</RN.Text>
-          </RN.TouchableOpacity>
-          <RN.TouchableOpacity style={[styles.saveContainer]} onPress={() => deleteItem()}>
-            <RN.Text style={styles.saveContainerText}>刪除</RN.Text>
-          </RN.TouchableOpacity>
-        </RN.View>
-      </RN.View>
-      <RN.View>
         <RN.Text style={styles.itemContainerText}>使用次數</RN.Text>
         <RN.TextInput
           style={[styles.input, { backgroundColor: appCtx.Colors.inputContainer, }]}
@@ -184,13 +150,15 @@ const CouponItem = ({ route }: { route: any }) => {
       </RN.View>
       <RN.View>
         <RN.Text style={styles.itemContainerText}>開始日期</RN.Text>
-        <DatePicker value={startDate} onValueChange={onValueStartDatechange} />
-        <RN.View><RN.Text/></RN.View>
+        <RN.View style={[styles.pickerContainer, {backgroundColor: appCtx.Colors.inputContainer}]}>
+          <DatePicker onValueChange={onValueStartDatechange}/>
+        </RN.View>
       </RN.View>
       <RN.View>
         <RN.Text style={styles.itemContainerText}>結束日期</RN.Text>
-        <DatePicker value={endDate} onValueChange={onValueEndDatechange} />
-        <RN.View><RN.Text/></RN.View>
+        <RN.View style={[styles.pickerContainer, {backgroundColor: appCtx.Colors.inputContainer}]}>
+          <DatePicker onValueChange={onValueEndDatechange}/>
+        </RN.View>
       </RN.View>
       <RN.View>
         <RN.Text style={styles.itemContainerText}>備註</RN.Text>
@@ -206,10 +174,17 @@ const CouponItem = ({ route }: { route: any }) => {
         <RN.TouchableOpacity style={[styles.saveContainer, { backgroundColor: appCtx.Colors.primary }]} onPress={() => formik.submitForm()}>
           <RN.Text style={styles.saveContainerText}>保存</RN.Text>
         </RN.TouchableOpacity>
-        <RN.TouchableOpacity style={[styles.saveContainer]} onPress={() => deleteItem()}>
+        <RN.TouchableOpacity style={[styles.saveContainer]} onPress={() => openModal()}>
           <RN.Text style={styles.saveContainerText}>刪除</RN.Text>
         </RN.TouchableOpacity>
       </RN.View>
+      </RN.View>
+      <Modal
+        isOpen={modalOpen}
+        confirm={() => deleteOneCoupon()}
+        cancel={closeModal}
+        content={'是否刪除'}
+      />
     </RN.SafeAreaView>
   );
 };
@@ -255,10 +230,11 @@ const styles = RN.StyleSheet.create({
     marginTop: 15,
   },
   pickerContainer: {
-    justifyContent: 'center',
-    alignSelf: 'center',
-    flexDirection: 'row'
-  },
+    borderWidth: 1.5,
+    borderRadius: 5,
+    width: '100%',
+    paddingLeft: 15,
+  }
 });
 
 export default CouponItem;
