@@ -150,17 +150,15 @@ const CouponItem = ({ route }: { route: any }) => {
       </RN.View>
       <RN.View>
         <RN.Text style={styles.itemContainerText}>開始日期</RN.Text>
-        <DatePicker value={startDate} onValueChange={onValueStartDatechange} />
-        <RN.View><RN.Text style={[{ color: appCtx.Colors.errorText }]}>
-        {isTimeBetween ? "結束時間必須大於開始時間" : ''}
-          </RN.Text></RN.View>
+        <RN.View style={[styles.pickerContainer, {backgroundColor: appCtx.Colors.inputContainer}]}>
+          <DatePicker onValueChange={onValueStartDatechange}/>
+        </RN.View>
       </RN.View>
       <RN.View>
         <RN.Text style={styles.itemContainerText}>結束日期</RN.Text>
-        <DatePicker value={endDate} onValueChange={onValueEndDatechange} />
-        <RN.View><RN.Text style={[{ color: appCtx.Colors.errorText }]}>
-        {isTimeBetween ? "結束時間必須大於開始時間" : ''}
-          </RN.Text></RN.View>
+        <RN.View style={[styles.pickerContainer, {backgroundColor: appCtx.Colors.inputContainer}]}>
+          <DatePicker onValueChange={onValueEndDatechange}/>
+        </RN.View>
       </RN.View>
       <RN.View>
         <RN.Text style={styles.itemContainerText}>備註</RN.Text>
@@ -232,10 +230,11 @@ const styles = RN.StyleSheet.create({
     marginTop: 15,
   },
   pickerContainer: {
-    justifyContent: 'center',
-    alignSelf: 'center',
-    flexDirection: 'row'
-  },
+    borderWidth: 1.5,
+    borderRadius: 5,
+    width: '100%',
+    paddingLeft: 15,
+  }
 });
 
 export default CouponItem;

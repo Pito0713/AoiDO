@@ -47,7 +47,7 @@ const Content = () => {
       discount: '',
       remark: '',
     },
-    validate: (values) => {
+    validate: (values: { describe: any; discount: string; }) => {
       const errors: Item = {};
       const reg = /^\d+$/
 
@@ -57,7 +57,7 @@ const Content = () => {
 
       return errors;
     },
-    onSubmit: (values, { resetForm }) => {
+    onSubmit: (values: Item, { resetForm }: any) => {
       if (Date.parse(startDate) > Date.parse(endDate)) {
         openModal()
       } else {
@@ -115,13 +115,17 @@ const Content = () => {
       </RN.View>
       <RN.View>
         <RN.Text style={styles.itemContainerText}>開始日期</RN.Text>
-        <DatePicker onValueChange={onValueStartDatechange} />
+        <RN.View style={[styles.pickerContainer, {backgroundColor: appCtx.Colors.inputContainer}]}>
+        <DatePicker onValueChange={onValueStartDatechange}/>
+      </RN.View>
       </RN.View>
       <RN.View>
-        <RN.Text style={styles.itemContainerText}>結束日期</RN.Text>
-        <DatePicker onValueChange={onValueEndDatechange} />
+      <RN.Text style={styles.itemContainerText}>結束日期</RN.Text>
+      <RN.View style={[styles.pickerContainer, {backgroundColor: appCtx.Colors.inputContainer}]}>
+        <DatePicker onValueChange={onValueEndDatechange}/>
       </RN.View>
-      <RN.View>
+      </RN.View>
+      <RN.View style={{zIndex: 1}}>
         <RN.Text style={styles.itemContainerText}>備註</RN.Text>
         <RN.TextInput
           style={[styles.input, { backgroundColor: appCtx.Colors.inputContainer, }]}
@@ -147,7 +151,7 @@ const Content = () => {
 };
 
 const AddCouponItem = () => {
-  const reduxPermission = useAppSelector(state => state.permission);
+  const reduxPermission = useAppSelector((state: { permission: any; }) => state.permission);
   return (
     <RN.SafeAreaView style={styles.container}>
       <Goback />
@@ -190,6 +194,12 @@ const styles = RN.StyleSheet.create({
   saveContainerText: {
     textAlign: 'center'
   },
+  pickerContainer: {
+    borderWidth: 1.5,
+    borderRadius: 5,
+    width: '100%',
+    paddingLeft: 15,
+  }
 });
 
 export default AddCouponItem;
