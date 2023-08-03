@@ -35,26 +35,6 @@ const Coupon = () => {
   const onPageChange = page => {
     setPage(page);
   };
-
-  const deleteItem = async item => {
-    RN.Alert.alert(
-      '是否刪除',
-      '',
-      [
-        {
-          text: '取消',
-          style: 'cancel',
-        },
-        {
-          text: '確認',
-          onPress: () => deleteOneCoupon(item),
-          style: 'OK',
-        },
-      ],
-      {},
-    );
-  };
-
   const deleteOneCoupon = async item => {
     await appCtx.setLoading(true);
     let submitData = {

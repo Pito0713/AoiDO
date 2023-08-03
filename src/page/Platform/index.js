@@ -8,12 +8,24 @@ import Goback from '../../component/Goback';
 import ReminderText from '../../component/ReminderText';
 import Plus from '../../assets/Plus';
 import Cancel from '../../assets/Cancel';
+import Modal from '../../component/Modal';
 
 const Content = () => {
   const appCtx = React.useContext(AppContext);
   const navigation = useNavigation();
   const isFocused = useIsFocused();
   const [platform, setPlatform] = React.useState([]);
+  const [modalOpen, setModalOpen] = React.useState(false);
+  const [deleteId, setDeleteId] = React.useState('');
+  const openModal = item => {
+    setModalOpen(true);
+    setDeleteId(item);
+  };
+
+  const closeModal = () => {
+    setModalOpen(false);
+    setDeleteId('');
+  };
 
   const postPlatformRate = async () => {
     await appCtx.setLoading(true);
@@ -34,34 +46,16 @@ const Content = () => {
     if (response?.status === 'success') postPlatformRate();
   };
 
-  const deleteModifyRate = async item => {
+  const deleteModifyRate = async () => {
     let submitData = {
-      id: item,
+      id: deleteId,
     };
 
     await appCtx.setLoading(true);
     const response = await service.deleteModifyRate(submitData);
     await appCtx.setLoading(false);
+    closeModal();
     if (response?.status === 'success') postPlatformRate();
-  };
-
-  const deleteItem = item => {
-    RN.Alert.alert(
-      '是否刪除',
-      '',
-      [
-        {
-          text: '取消',
-          style: 'cancel',
-        },
-        {
-          text: '確認',
-          onPress: () => deleteModifyRate(item),
-          style: 'OK',
-        },
-      ],
-      {},
-    );
   };
 
   React.useEffect(() => {
@@ -85,7 +79,7 @@ const Content = () => {
               <RN.View>
                 <RN.TouchableOpacity
                   style={{margin: 10}}
-                  onPress={() => deleteItem(item._id)}>
+                  onPress={() => openModal(item._id)}>
                   <Cancel />
                 </RN.TouchableOpacity>
                 <RN.TouchableOpacity
@@ -156,6 +150,12 @@ const Content = () => {
           </RN.View>
         </RN.TouchableOpacity>
       </RN.View>
+      <Modal
+        isOpen={modalOpen}
+        confirm={() => deleteModifyRate()}
+        cancel={closeModal}
+        content={'是否刪除'}
+      />
     </RN.View>
   );
 };

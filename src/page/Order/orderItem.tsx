@@ -1,11 +1,12 @@
-import React from "react";
+import React from 'react';
 import * as RN from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 
-import { AppContext } from '../../redux/AppContent';
-import Goback from '../../component/Goback'
-import service from "../Service/service";
-import ScrollViewComponent from "../../component/ScrollViewComponent";
+import {AppContext} from '../../redux/AppContent';
+import Goback from '../../component/Goback';
+import service from '../Service/service';
+import ScrollViewComponent from '../../component/ScrollViewComponent';
+import Modal from '../../component/Modal';
 
 interface Order {
   id: string;
@@ -19,45 +20,39 @@ const Content = (route : { params: any }) => {
     goBack: () => void,
   }
 
-  const deleteItem = () => {
-    RN.Alert.alert(
-      '是否刪除',
-      "",
-      [
-        {
-          text: '取消',
-          style: 'cancel',
-        },
-        {
-          text: "確認",
-          onPress: () => deleteOneOrder(route.params.item._id)
-        }
-      ], {}
-    );
-  }
-
   const deleteOneOrder = async (item: string) => {
-    await appCtx.setLoading(true)
+    await appCtx.setLoading(true);
 
-    let submitData: Order = {
+    let submitData = {
       id: item,
     };
     const response = await service.deleteOneOrder(submitData);
-    await appCtx.setLoading(false)
-    if (response?.status === 'success') navigation.goBack()
-  }
+    await appCtx.setLoading(false);
+    if (response?.status === 'success') navigation.goBack();
+  };
+  const [modalOpen, setModalOpen] = React.useState(false);
 
+  const openModal = () => {
+    setModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalOpen(false);
+  };
   return (
     <RN.View style={styles.itemContainer}>
       <RN.Text style={styles.titleText}>訂單資料: </RN.Text>
-      <RN.View style={[styles.infoContainer]} >
+      <RN.View style={[styles.infoContainer]}>
         <RN.View style={styles.infoContent}>
           <RN.Text>姓名:</RN.Text>
           <RN.Text>{route.params.item.infoData.uesrName}</RN.Text>
         </RN.View>
         <RN.View style={styles.infoContent}>
           <RN.Text>地址:</RN.Text>
-          <RN.Text>{route.params.item.infoData.city} {route.params.item.infoData.town} {route.params.item.infoData.addres}</RN.Text>
+          <RN.Text>
+            {route.params.item.infoData.city} {route.params.item.infoData.town}{' '}
+            {route.params.item.infoData.addres}
+          </RN.Text>
         </RN.View>
         <RN.View style={styles.infoContent}>
           <RN.Text>電話:</RN.Text>
@@ -65,8 +60,8 @@ const Content = (route : { params: any }) => {
         </RN.View>
       </RN.View>
       <RN.Text style={styles.titleText}>商品明細: </RN.Text>
-      <RN.View style={[styles.checkListContainer]} >
-        {route.params.item.ProductList.map((item: { imageUrl: any; describe: any; quantity: any; category:any }, index: any) => {
+      <RN.View style={[styles.checkListContainer]}>
+      {route.params.item.ProductList.map((item: { imageUrl: any; describe: any; quantity: any; category:any }, index: any) => {
           return (
             <RN.View
               style={[
@@ -82,27 +77,22 @@ const Content = (route : { params: any }) => {
                 source={{uri: `${item.imageUrl}`}}
                 style={{width: 60, height: 60}}
               />
-              <RN.View style={[
-                {
-                  paddingLeft: 10,
-                },
-              ]}>
-                <RN.Text>
-                  {`分類:  ${item.category}`}
-                </RN.Text>
-                <RN.Text>
-                  {`名稱:  ${item.describe}`}
-                </RN.Text>
-                <RN.Text>
-                  {`數量:  ${item.quantity}`}
-                </RN.Text>
-                </RN.View>
+              <RN.View
+                style={[
+                  {
+                    paddingLeft: 10,
+                  },
+                ]}>
+                <RN.Text>{`分類:  ${item.category}`}</RN.Text>
+                <RN.Text>{`名稱:  ${item.describe}`}</RN.Text>
+                <RN.Text>{`數量:  ${item.quantity}`}</RN.Text>
+              </RN.View>
             </RN.View>
           );
         })}
       </RN.View>
       <RN.Text style={styles.titleText}>訂單詳情: </RN.Text>
-      <RN.View style={[styles.totalContainer]} >
+      <RN.View style={[styles.totalContainer]}>
         <RN.View style={styles.totalContent}>
           <RN.Text>商品筆數: {route.params.item.totalQuantity}</RN.Text>
         </RN.View>
@@ -111,10 +101,21 @@ const Content = (route : { params: any }) => {
         </RN.View>
       </RN.View>
       <RN.View style={styles.buttonContainer}>
-        <RN.TouchableOpacity style={[styles.buttonContent, { backgroundColor: appCtx.Colors.primary }]}  onPress={() => deleteItem()}>
-          <RN.Text >刪除</RN.Text>
+        <RN.TouchableOpacity
+          style={[
+            styles.buttonContent,
+            {backgroundColor: appCtx.Colors.primary},
+          ]}
+          onPress={() => openModal()}>
+          <RN.Text>刪除</RN.Text>
         </RN.TouchableOpacity>
       </RN.View>
+      <Modal
+        isOpen={modalOpen}
+        confirm={() => deleteOneOrder(route.params.item._id)}
+        cancel={closeModal}
+        content={'是否刪除'}
+      />
     </RN.View>
   );
 };
@@ -123,7 +124,7 @@ const CouponItem = ({ route }: { route: any }) => {
   return (
     <RN.SafeAreaView style={styles.container}>
       <Goback />
-      <ScrollViewComponent item={()=>Content(route)}/>
+      <ScrollViewComponent item={() => Content(route)} />
     </RN.SafeAreaView>
   );
 };
@@ -141,23 +142,23 @@ const styles = RN.StyleSheet.create({
     marginTop: 6,
     borderRadius: 10,
   },
-  infoContent:{
+  infoContent: {
     marginLeft: 10,
-    padding: 5
+    padding: 5,
   },
   checkListContainer: {
     borderWidth: 1.5,
     marginTop: 6,
     borderRadius: 10,
   },
-  totalContainer:{
+  totalContainer: {
     flexDirection: 'row',
     justifyContent: 'space-around',
     borderWidth: 1.5,
     marginTop: 6,
     borderRadius: 10,
   },
-  totalContent:{
+  totalContent: {
     width: '40%',
     height: 50,
     justifyContent: 'center',
@@ -178,8 +179,8 @@ const styles = RN.StyleSheet.create({
   },
   titleText: {
     marginTop: 12,
-    fontSize: 20
-  }
+    fontSize: 20,
+  },
 });
 
 export default CouponItem;

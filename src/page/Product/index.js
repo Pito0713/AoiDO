@@ -65,25 +65,6 @@ const Coupon = () => {
     await appCtx.setLoading(false);
   };
 
-  const deleteItem = item => {
-    RN.Alert.alert(
-      '是否刪除',
-      '',
-      [
-        {
-          text: '取消',
-          style: 'cancel',
-        },
-        {
-          text: '確認',
-          onPress: () => deleteCargo(item),
-          style: 'OK',
-        },
-      ],
-      {},
-    );
-  };
-
   const deleteCargo = async item => {
     let submitData = {
       id: item,

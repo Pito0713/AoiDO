@@ -9,6 +9,7 @@ import {AppContext} from '../../redux/AppContent';
 import {useAppSelector} from '../../redux/store';
 import Goback from '../../component/Goback';
 import ReminderText from '../../component/ReminderText';
+import Modal from '../../component/Modal';
 
 const Content = () => {
   const appCtx = React.useContext(AppContext);
@@ -16,24 +17,18 @@ const Content = () => {
   const isFocused = useIsFocused();
   const [productFilter, setProductFilter] = React.useState('');
   const reduxToken = useAppSelector(state => state.token);
+  const [modalOpen, setModalOpen] = React.useState(false);
+  const [deleteId, setDeleteId] = React.useState('');
+  const [deleteIdCategory, setDeleteIdCategory] = React.useState('');
+  const openModal = item => {
+    setModalOpen(true);
+    setDeleteId(item._id);
+    setDeleteIdCategory(item.category);
+  };
 
-  const deleteItem = item => {
-    RN.Alert.alert(
-      '是否刪除',
-      '',
-      [
-        {
-          text: '取消',
-          style: 'cancel',
-        },
-        {
-          text: '確認',
-          onPress: () => deleteCategory(item),
-          style: 'OK',
-        },
-      ],
-      {},
-    );
+  const closeModal = () => {
+    setModalOpen(false);
+    setDeleteId('');
   };
 
   const postProductFilter = async () => {
@@ -50,36 +45,21 @@ const Content = () => {
     let submitData = {
       searchText: '',
       token: reduxToken,
-      category: [item.category],
+      category: [deleteIdCategory],
       page: 1,
       pagination: 9999,
     };
     const callProduct = await service.postAllProduct(submitData);
 
     if (callProduct?.total > 0) {
-      RN.Alert.alert(
-        '分類還有相關產品是否全部刪除',
-        '',
-        [
-          {
-            text: '取消',
-            style: 'cancel',
-          },
-          {
-            text: '確認',
-            onPress: () =>
-              deleteProductCategory({
-                callProduct: callProduct.data,
-                id: item._id,
-              }),
-            style: 'OK',
-          },
-        ],
-        {},
-      );
+      deleteProductCategory({
+        callProduct: callProduct.data,
+        id: deleteId,
+      });
     } else {
-      deleteProductFilter(item._id);
+      deleteProductFilter(deleteId);
     }
+    closeModal();
   };
 
   const deleteProductCategory = async item => {
@@ -129,7 +109,7 @@ const Content = () => {
               <RN.View>
                 <RN.TouchableOpacity
                   style={{margin: 10}}
-                  onPress={() => deleteItem(item._id)}>
+                  onPress={() => openModal(item)}>
                   <Cancel />
                 </RN.TouchableOpacity>
                 <RN.TouchableOpacity
@@ -174,6 +154,12 @@ const Content = () => {
           </RN.View>
         </RN.TouchableOpacity>
       </RN.View>
+      <Modal
+        isOpen={modalOpen}
+        confirm={() => deleteCategory()}
+        cancel={closeModal}
+        content={'分類還有相關產品是否全部刪除'}
+      />
     </RN.View>
   );
 };

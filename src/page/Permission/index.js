@@ -5,10 +5,9 @@ import {useIsFocused} from '@react-navigation/native';
 
 import {AppContext} from '../../redux/AppContent';
 import Goback from '../../component/Goback';
-import ScrollViewComponent from '../../component/ScrollViewComponent';
 import service from '../Service/service';
 import {useAppSelector} from '../../redux/store';
-import ArrowDrop from '../../assets/ArrowDrop';
+import Modal from '../../component/Modal';
 
 const Content = () => {
   const isFocused = useIsFocused();
@@ -16,6 +15,16 @@ const Content = () => {
   const [userList, setUserList] = React.useState([]);
   const [userPermission, setUserPermission] = React.useState({});
   const reduxId = useAppSelector(state => state.id);
+  const [modalOpen, setModalOpen] = React.useState(false);
+  const openModal = () => {
+    patchUploadUserPermission();
+    setModalOpen(false);
+  };
+
+  const closeModal = () => {
+    getFindAllUserBack();
+    setModalOpen(false);
+  };
 
   const permissionList = [
     {
@@ -42,13 +51,13 @@ const Content = () => {
   };
 
   const handleChange = async (values, e) => {
-    values.permission = e.value;
+    values.permission = e;
     setUserPermission(values);
   };
 
   const patchUploadUserPermission = async (values, e) => {
     let submitData = {
-      id: userPermission.id,
+      id: userPermission._id,
       permission: userPermission.permission,
     };
 
@@ -60,32 +69,13 @@ const Content = () => {
     }
     appCtx.setLoading(false);
   };
-  const uploadPermissionItem = () => {
-    RN.Alert.alert(
-      '是否確認修改',
-      '',
-      [
-        {
-          text: '取消',
-          onPress: () => getFindAllUserBack(),
-          style: 'cancel',
-        },
-        {
-          text: '確認',
-          onPress: () => patchUploadUserPermission(),
-          style: 'OK',
-        },
-      ],
-      {},
-    );
-  };
 
   React.useEffect(() => {
     getFindAllUserBack();
   }, [isFocused]);
 
   React.useEffect(() => {
-    if (userPermission.id) uploadPermissionItem();
+    if (userPermission._id) setModalOpen(true);
   }, [userPermission]);
 
   return (
@@ -123,6 +113,12 @@ const Content = () => {
           </RN.View>
         );
       })}
+      <Modal
+        isOpen={modalOpen}
+        confirm={openModal}
+        cancel={closeModal}
+        content={'是否確認修改'}
+      />
     </RN.View>
   );
 };
