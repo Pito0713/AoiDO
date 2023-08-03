@@ -1,10 +1,9 @@
 import React, {useCallback} from 'react';
-import {View} from 'react-native';
+import * as RN from 'react-native';
 import Dropzone from 'react-dropzone';
 import Plus from '../assets/Plus';
 
 const ImagePicker = imageValue => {
-  console.log(imageValue);
   const handleDrop = useCallback(async acceptedFiles => {
     if (acceptedFiles.length > 0) {
       const file = acceptedFiles[0];
@@ -23,14 +22,10 @@ const ImagePicker = imageValue => {
     }
   }, []);
 
-  console.log(!['', {}, null, undefined].includes(imageValue.photo));
-  console.log(JSON.stringify(imageValue.photo));
-  console.log(imageValue.photo);
-
   return (
     <Dropzone onDrop={handleDrop}>
       {({getRootProps, getInputProps}) => (
-        <View
+        <RN.View
           {...getRootProps()}
           style={{
             width: imageValue.width,
@@ -54,7 +49,7 @@ const ImagePicker = imageValue => {
           ) : (
             <Plus />
           )}
-        </View>
+        </RN.View>
       )}
     </Dropzone>
   );

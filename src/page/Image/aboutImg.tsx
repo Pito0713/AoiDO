@@ -120,7 +120,7 @@ const Content = () => {
       </RN.View>
       <RN.View style={styles.photoContainer}>
         {photoList.length > 0 ? (
-          photoList.map((item:submitData, index) => {
+          photoList.map((item:submitData, index: any) => {
             return (
               <RN.View >
                 <RN.TouchableOpacity

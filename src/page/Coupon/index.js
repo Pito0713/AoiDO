@@ -35,15 +35,6 @@ const Coupon = () => {
   const onPageChange = page => {
     setPage(page);
   };
-  const deleteOneCoupon = async item => {
-    await appCtx.setLoading(true);
-    let submitData = {
-      id: item,
-    };
-    const response = await service.deleteOneCoupon(submitData);
-    if (response?.status === 'success') postSearchCoupon();
-    await appCtx.setLoading(false);
-  };
 
   const postSearchCoupon = async () => {
     await appCtx.setLoading(true);

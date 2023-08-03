@@ -6,7 +6,6 @@ import { useNavigation } from '@react-navigation/native';
 import service from "../Service/service";
 import Goback from '../../component/Goback'
 import { useAppSelector } from '../../redux/store';
-import ScrollViewComponent from "../../component/ScrollViewComponent";
 import { AppContext } from '../../redux/AppContent';
 
 const windowHeight = RN.Dimensions.get('window').height;
@@ -18,7 +17,7 @@ interface PlatformItem {
 const Content = () => {
   const appCtx = React.useContext(AppContext);
   const navigation = useNavigation();
-  const reduxToken = useAppSelector(state => state.token)
+  const reduxToken = useAppSelector((state: { token: any; }) => state.token)
 
   const formik = useFormik({
     validateOnChange: false,
@@ -26,7 +25,7 @@ const Content = () => {
       label: "",
       rate: "",
     },
-    validate: (values) => {
+    validate: (values: { label: any; rate: string; }) => {
       const reg = /^\d+(\.\d{1,4})?$/
       const errors: PlatformItem = {};
 
@@ -37,7 +36,7 @@ const Content = () => {
       return errors;
     },
 
-    onSubmit: async (values) => {
+    onSubmit: async (values: PlatformItem) => {
       postCreateModifyRate(values)
     },
   });

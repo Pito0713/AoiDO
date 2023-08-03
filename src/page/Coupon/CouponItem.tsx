@@ -68,7 +68,7 @@ const CouponItem = ({ route }: { route: any }) => {
       count: route.params?.item.count ? route.params.item.count : '',
       remark: route.params?.item.remark ? route.params.item.remark : '',
     },
-    validate: (values) => {
+    validate: (values:any) => {
       const errors: Item = {};
       const reg = /^\d+$/
 
@@ -80,7 +80,7 @@ const CouponItem = ({ route }: { route: any }) => {
 
       return errors;
     },
-    onSubmit: (values, { resetForm }) => {
+    onSubmit: (values: Item, { resetForm }: any) => {
       if (Date.parse(startDate) > Date.parse(endDate)) {
         setIsTimeBetween(true)
       } else {
@@ -147,38 +147,50 @@ const CouponItem = ({ route }: { route: any }) => {
             {formik.errors.count as String}
           </RN.Text>
         </RN.View>
-      </RN.View>
-      <RN.View>
-        <RN.Text style={styles.itemContainerText}>開始日期</RN.Text>
-        <RN.View style={[styles.pickerContainer, {backgroundColor: appCtx.Colors.inputContainer}]}>
-          <DatePicker onValueChange={onValueStartDatechange}/>
         </RN.View>
-      </RN.View>
-      <RN.View>
-        <RN.Text style={styles.itemContainerText}>結束日期</RN.Text>
-        <RN.View style={[styles.pickerContainer, {backgroundColor: appCtx.Colors.inputContainer}]}>
-          <DatePicker onValueChange={onValueEndDatechange}/>
+        <RN.View>
+          <RN.Text style={styles.itemContainerText}>開始日期</RN.Text>
+          <RN.View style={[styles.pickerContainer, {backgroundColor: appCtx.Colors.inputContainer}]}>
+            <DatePicker value={startDate} onValueChange={onValueStartDatechange}/>
+          </RN.View>
+          <RN.View>
+            <RN.Text style={[{ color: appCtx.Colors.errorText }]}>
+              {isTimeBetween ? "結束時間必須大於開始時間" : ''}
+            </RN.Text>
+          </RN.View>
+
         </RN.View>
-      </RN.View>
-      <RN.View>
-        <RN.Text style={styles.itemContainerText}>備註</RN.Text>
-        <RN.TextInput
-          style={[styles.input, { backgroundColor: appCtx.Colors.inputContainer, }]}
-          onChangeText={formik.handleChange("remark")}
-          value={formik.values.remark}
-          placeholder="備註"
-        />
-        <RN.View />
-      </RN.View>
-      <RN.View style={styles.buttomGroup}>
-        <RN.TouchableOpacity style={[styles.saveContainer, { backgroundColor: appCtx.Colors.primary }]} onPress={() => formik.submitForm()}>
-          <RN.Text style={styles.saveContainerText}>保存</RN.Text>
-        </RN.TouchableOpacity>
-        <RN.TouchableOpacity style={[styles.saveContainer]} onPress={() => openModal()}>
-          <RN.Text style={styles.saveContainerText}>刪除</RN.Text>
-        </RN.TouchableOpacity>
-      </RN.View>
-      </RN.View>
+        <RN.View>
+          <RN.Text style={styles.itemContainerText}>結束日期</RN.Text>
+          <RN.View style={[styles.pickerContainer, {backgroundColor: appCtx.Colors.inputContainer}]}>
+            <DatePicker value={endDate} onValueChange={onValueEndDatechange}/>
+          </RN.View>
+          <RN.View>
+            <RN.Text style={[{ color: appCtx.Colors.errorText }]}>
+              {isTimeBetween ? "結束時間必須大於開始時間" : ''}
+            </RN.Text>
+          </RN.View>
+
+        </RN.View>
+        <RN.View>
+          <RN.Text style={styles.itemContainerText}>備註</RN.Text>
+          <RN.TextInput
+            style={[styles.input, { backgroundColor: appCtx.Colors.inputContainer, }]}
+            onChangeText={formik.handleChange("remark")}
+            value={formik.values.remark}
+            placeholder="備註"
+          />
+          <RN.View />
+        </RN.View>
+        <RN.View style={styles.buttomGroup}>
+          <RN.TouchableOpacity style={[styles.saveContainer, { backgroundColor: appCtx.Colors.primary }]} onPress={() => formik.submitForm()}>
+            <RN.Text style={styles.saveContainerText}>保存</RN.Text>
+          </RN.TouchableOpacity>
+          <RN.TouchableOpacity style={[styles.saveContainer]} onPress={() => openModal()}>
+            <RN.Text style={styles.saveContainerText}>刪除</RN.Text>
+          </RN.TouchableOpacity>
+        </RN.View>
+        </RN.View>
       <Modal
         isOpen={modalOpen}
         confirm={() => deleteOneCoupon()}

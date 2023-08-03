@@ -27,7 +27,7 @@ const Transfer = ({route}) => {
     let submitData = {
       currency: 'TWD',
     };
-    // call api
+
     const response = await service.getExchange(submitData);
     if (!['', null, undefined].includes(response?.data))
       setExchange(response.data.rates);

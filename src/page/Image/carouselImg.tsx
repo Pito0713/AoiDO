@@ -9,7 +9,6 @@ import Cancel from '../../assets/Cancel';
 import ImagePicker from '../../component/ImagePicker'
 import Modal from '../../component/Modal';
 
-
 const Content = () => {
   const appCtx = React.useContext(AppContext);
 
@@ -121,7 +120,7 @@ const Content = () => {
       </RN.View>
       <RN.View style={styles.photoContainer}>
         {photoList.length > 0 ? (
-          photoList.map((item:submitData, index) => {
+          photoList.map((item:submitData, index: any) => {
             return (
               <RN.View >
                 <RN.TouchableOpacity

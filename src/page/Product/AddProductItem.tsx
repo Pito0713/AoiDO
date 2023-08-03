@@ -18,10 +18,6 @@ interface Item {
   quantity?: string,
 }
 
-interface CategoryItem {
-  label?: string,
-  value?: string,
-}
 const AddProductItem = () => {
   type Nav = {
     navigate: (route: string | undefined ,params:{isGo:boolean}) => void,
@@ -84,7 +80,6 @@ const AddProductItem = () => {
     },
   });
 
-
   const handleUploadPhoto = async () => {
     let submitData = {
       image: photo
@@ -106,7 +101,6 @@ const AddProductItem = () => {
   const onValueChange = (e: any) => {
     setPhoto(e)
   }
-
 
   React.useEffect(() => {
     postProductFilter()
@@ -133,7 +127,7 @@ const AddProductItem = () => {
         <RN.View>
           <RN.Text style={styles.itemContainerText}>商品分類</RN.Text>
           <Picker
-            style={[{ 
+            style={[{
               backgroundColor: appCtx.Colors.inputContainer,
               width: '100%',
               paddingLeft: 15,

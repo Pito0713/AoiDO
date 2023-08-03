@@ -76,7 +76,7 @@ const Content = () => {
         {platform.length > 0 ? (
           platform.map((item, index) => {
             return item.token !== '1' ? (
-              <RN.View>
+              <RN.View key={index}>
                 <RN.TouchableOpacity
                   style={{margin: 10}}
                   onPress={() => openModal(item._id)}>
@@ -86,7 +86,7 @@ const Content = () => {
                   style={styles.itemContainer}
                   onPress={() => updateModifyRate(item._id)}
                   // // onLongPress={() => deleteItem(item._id)}
-                  key={index}>
+                >
                   <RN.View style={styles.itemContent}>
                     <RN.Text style={styles.itemContentText}>
                       {item.label}

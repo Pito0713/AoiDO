@@ -21,7 +21,7 @@ const Coupon = () => {
 
   const [product, setProduct] = React.useState([]);
   const [text, onChangeText] = React.useState('');
-  const [categoryValue, setCategoryValue] = React.useState('');
+  const [categoryValue, setCategoryValue] = React.useState([]);
   const [showDialog, setShowDialog] = React.useState(false);
   const [refreshing, setRefreshing] = React.useState(false);
   const [searchText, setSearchText] = React.useState('');
@@ -43,9 +43,13 @@ const Coupon = () => {
 
   const postSearchProduct = async () => {
     let target = [];
-    Object.entries(categoryValue).forEach(([key, value]) => {
-      if (value) target.push(key);
-    });
+    target = categoryValue
+      .filter(item => {
+        return item.checked === true;
+      })
+      .map(element => {
+        return element.category;
+      });
 
     let submitData = {
       searchText: text,
@@ -62,16 +66,6 @@ const Coupon = () => {
       setProduct(response.data);
       setTotal(response.total);
     }
-    await appCtx.setLoading(false);
-  };
-
-  const deleteCargo = async item => {
-    let submitData = {
-      id: item,
-    };
-    await appCtx.setLoading(true);
-    const response = await service.deleteProductOne(submitData);
-    if (response?.status === 'success') postSearchProduct();
     await appCtx.setLoading(false);
   };
 

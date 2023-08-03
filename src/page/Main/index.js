@@ -39,9 +39,7 @@ const MainPage = () => {
           tabBarItemStyle: {borderTopWidth: 1.5},
           tabBarActiveBackgroundColor: appCtx.Colors.primary,
           tabBarActiveTintColor: appCtx.Colors.textPrimary,
-          tabBarIcon: ({focused, color, size}) => {
-            let iconName;
-
+          tabBarIcon: () => {
             if (route.name === 'order') {
               return <Order />;
             }

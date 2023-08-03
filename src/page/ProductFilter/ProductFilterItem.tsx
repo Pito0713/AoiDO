@@ -17,7 +17,7 @@ interface ProductFilterItem {
 const ProductFilterItem = ({ route }: { route: any }) => {
   const target = route?.params?.item
   const appCtx = React.useContext(AppContext);
-  const reduxToken = useAppSelector(state => state.token)
+  const reduxToken = useAppSelector((state: { token: any; }) => state.token)
   const [modalOpen, setModalOpen] = React.useState(false);
   const [deleteId, setDeleteId] = React.useState('');
   const openModal = (item:any) => {
@@ -76,7 +76,7 @@ const ProductFilterItem = ({ route }: { route: any }) => {
     <RN.SafeAreaView style={styles.container}>
     <Goback />
     <RN.View >
-      {productFilter.length > 0 ? productFilter.map((item : ProductFilterItem, index) => {
+      {productFilter.length > 0 ? productFilter.map((item : ProductFilterItem, index: any) => {
         return (
           <RN.View style={styles.itemContainer} key={index}>
             <RN.View style={styles.itemContent} >

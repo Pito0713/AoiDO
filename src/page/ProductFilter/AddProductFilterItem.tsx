@@ -15,21 +15,21 @@ interface ProductFilterItem {
 const AddProductFilterItem = () => {
   const appCtx = React.useContext(AppContext);
   const navigation = useNavigation();
-  const reduxToken = useAppSelector(state => state.token)
+  const reduxToken = useAppSelector((state: { token: any; }) => state.token)
 
   const formik = useFormik({
     validateOnChange: false,
     initialValues: {
       category: "",
     },
-    validate: (values) => {
+    validate: (values: { category: any; }) => {
       const errors: ProductFilterItem = {};
 
       if (!values.category) errors.category = '*' + "商品分類必填";
 
       return errors;
     },
-    onSubmit: async (values) => {
+    onSubmit: async (values: ProductFilterItem) => {
       postCreateProductFilter(values)
     },
   });

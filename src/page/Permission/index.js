@@ -55,7 +55,7 @@ const Content = () => {
     setUserPermission(values);
   };
 
-  const patchUploadUserPermission = async (values, e) => {
+  const patchUploadUserPermission = async () => {
     let submitData = {
       id: userPermission._id,
       permission: userPermission.permission,

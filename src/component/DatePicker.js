@@ -1,11 +1,11 @@
 import React from 'react';
 import * as RN from 'react-native';
-import {AppContext} from '../redux/AppContent';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import moment from 'moment';
 
 const DatePickerCOM = dateValue => {
+  const [isOpen, setIsOpen] = React.useState(false);
   const [selectedDate, setSelectedDate] = React.useState(new Date());
 
   const handleDateChange = date => {
@@ -17,7 +17,6 @@ const DatePickerCOM = dateValue => {
     setIsOpen(!isOpen);
   };
 
-  const [isOpen, setIsOpen] = React.useState(false);
   return (
     <RN.View style={{zIndex: 100}}>
       <RN.TouchableOpacity
@@ -30,7 +29,7 @@ const DatePickerCOM = dateValue => {
             alignItems: 'center',
             paddingTop: 15,
           }}>
-          {moment(selectedDate).format('YYYY / MM / DD')}
+          {moment(dateValue.value).format('YYYY / MM / DD')}
         </RN.Text>
       </RN.TouchableOpacity>
       {isOpen && (

@@ -1,6 +1,4 @@
 import axios from 'axios';
-import * as RN from 'react-native';
-
 import getErrorMessage from '../../xhr/xhr'
 
 const fetchApi = async (method: string, url: string) => {
@@ -47,7 +45,6 @@ const fetchApi_AuthData = async (method: string, url: string, params: string | u
     });
     return response.data;
   } catch (error: any) {
-    console.log(error);
     let errorResult = getErrorMessage(error?.response?.status, error?.response?.data)
     console.log(`\x1B[41m\x1B[37m${errorResult.errorHTTP}\x1B[0m \x1B[31m${errorResult.errorText} `)
   }

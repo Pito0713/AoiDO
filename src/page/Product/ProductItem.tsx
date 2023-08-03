@@ -1,9 +1,7 @@
 import React from 'react';
 import * as RN from 'react-native';
 import {useNavigation, useIsFocused} from '@react-navigation/native';
-// import { launchImageLibrary } from 'react-native-image-picker';
 import {useFormik} from 'formik';
-
 import {Picker} from '@react-native-picker/picker';
 
 import {AppContext} from '../../redux/AppContent';
@@ -12,15 +10,6 @@ import service from '../Service/service';
 import {useAppSelector} from '../../redux/store';
 import ImagePicker from '../../component/ImagePicker'
 import Modal from '../../component/Modal';
-
-interface Photo {
-  fileName?: string,
-  fileSize?: number,
-  height?: number,
-  type?: string,
-  uri?: string
-  width?: number
-}
 
 interface Item {
   describe?: string,
@@ -40,7 +29,7 @@ const ProductItem = ({ route }: { route: any }) => {
   const [category, setCategory] = React.useState('');
   const [categoryList, setCategoryList] = React.useState([]);
   const navigation = useNavigation();
-  const reduxToken = useAppSelector(state => state.token);
+  const reduxToken = useAppSelector((state: { token: any; }) => state.token);
   const isFocused = useIsFocused();
   const [modalOpen, setModalOpen] = React.useState(false);
 
@@ -85,7 +74,7 @@ const ProductItem = ({ route }: { route: any }) => {
       remark: route.params?.item.remark ? route.params.item.remark : '',
       quantity: route.params?.item.quantity ? route.params.item.quantity : '',
     },
-    validate: values => {
+    validate: (values:any) => {
       const regDecimalto2 = /^\d+(\.\d{1,2})?$/;
       const regNumber = /^\d+$/;
       const errors: Item = {};
@@ -97,7 +86,7 @@ const ProductItem = ({ route }: { route: any }) => {
 
       return errors;
     },
-    onSubmit: async (values, {resetForm}) => {
+    onSubmit: async (values: Item, {resetForm}: any) => {
       save(values);
       resetForm();
       setCategory('');
@@ -177,7 +166,7 @@ const ProductItem = ({ route }: { route: any }) => {
           ]}
           selectedValue={category}
           onValueChange={(e: any) => { setCategory(e) }}>
-          {categoryList.map((item: any, index) => (
+          {categoryList.map((item: any, index: any) => (
             <Picker.Item
               key={index}
               value={item?.category}

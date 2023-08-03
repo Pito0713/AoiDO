@@ -1,7 +1,7 @@
 import React from "react";
 import * as RN from 'react-native';
-import { useFormik } from "formik";
 import moment from 'moment'
+import { useFormik } from "formik";
 import { useNavigation } from '@react-navigation/native';
 
 import { AppContext } from '../../redux/AppContent';
@@ -9,7 +9,6 @@ import Goback from '../../component/Goback'
 import DatePicker from '../../component/DatePicker'
 import service from "../Service/service";
 import { useAppSelector } from '../../redux/store';
-import Modal from '../../component/Modal';
 
 const windowHeight = RN.Dimensions.get('window').height;
 
@@ -18,19 +17,13 @@ interface Item {
   discount?: string | undefined,
   remark?: string | undefined,
 }
+
 const Content = () => {
   const appCtx = React.useContext(AppContext);
   const navigation = useNavigation();
-  const reduxToken = useAppSelector(state => state.token)
-  const [modalOpen, setModalOpen] = React.useState(false);
-  const openModal = () => {
-    setModalOpen(true);
-  };
+  const reduxToken = useAppSelector((state: { token: any; }) => state.token)
 
-  const closeModal = () => {
-    setModalOpen(false);
-  };
-
+  const [isTimeBetween, setIsTimeBetween] = React.useState(false);
   const [startDate, setStartDate] = React.useState<string>(moment().format('YYYY-MM-DD'))
   const onValueStartDatechange = (e: any) => {
     setStartDate(moment(e).format('YYYY-MM-DD'))
@@ -59,8 +52,9 @@ const Content = () => {
     },
     onSubmit: (values: Item, { resetForm }: any) => {
       if (Date.parse(startDate) > Date.parse(endDate)) {
-        openModal()
+        setIsTimeBetween(true)
       } else {
+        setIsTimeBetween(false)
         save(values)
         resetForm()
       }
@@ -116,14 +110,24 @@ const Content = () => {
       <RN.View>
         <RN.Text style={styles.itemContainerText}>開始日期</RN.Text>
         <RN.View style={[styles.pickerContainer, {backgroundColor: appCtx.Colors.inputContainer}]}>
-        <DatePicker onValueChange={onValueStartDatechange}/>
-      </RN.View>
+          <DatePicker value={startDate} onValueChange={onValueStartDatechange}/>
+        </RN.View>
+        <RN.View>
+          <RN.Text style={[{ color: appCtx.Colors.errorText }]}>
+            {isTimeBetween ? "結束時間必須大於開始時間" : ''}
+          </RN.Text>
+        </RN.View>
       </RN.View>
       <RN.View>
-      <RN.Text style={styles.itemContainerText}>結束日期</RN.Text>
-      <RN.View style={[styles.pickerContainer, {backgroundColor: appCtx.Colors.inputContainer}]}>
-        <DatePicker onValueChange={onValueEndDatechange}/>
-      </RN.View>
+        <RN.Text style={styles.itemContainerText}>結束日期</RN.Text>
+        <RN.View style={[styles.pickerContainer, {backgroundColor: appCtx.Colors.inputContainer}]}>
+          <DatePicker value={endDate} onValueChange={onValueEndDatechange}/>
+        </RN.View>
+        <RN.View>
+          <RN.Text style={[{ color: appCtx.Colors.errorText }]}>
+            {isTimeBetween ? "結束時間必須大於開始時間" : ''}
+          </RN.Text>
+        </RN.View>
       </RN.View>
       <RN.View style={{zIndex: 1}}>
         <RN.Text style={styles.itemContainerText}>備註</RN.Text>
@@ -140,12 +144,6 @@ const Content = () => {
           <RN.Text style={styles.saveContainerText}>保存</RN.Text>
         </RN.TouchableOpacity>
       </RN.View>
-      <Modal
-        isOpen={modalOpen}
-        confirm={closeModal}
-        cancel={closeModal}
-        content={'結束時間必須大於開始時間'}
-      />
     </RN.View>
   );
 };
