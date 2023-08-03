@@ -271,7 +271,6 @@ const windowHeight = RN.Dimensions.get('window').height;
 const styles = RN.StyleSheet.create({
   container: {
     flex: 1,
-    // alignItems: 'flex-start',
   },
   itemContainer: {
     height: windowHeight / 10,
@@ -283,6 +282,7 @@ const styles = RN.StyleSheet.create({
     justifyContent: 'center',
     overflow: 'hidden',
     borderWidth: 1.5,
+    borderRadius: 10,
   },
   itemContent: {
     height: '100%',

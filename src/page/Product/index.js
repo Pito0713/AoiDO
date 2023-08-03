@@ -276,6 +276,7 @@ const styles = RN.StyleSheet.create({
     marginRight: 5,
     marginLeft: 5,
     alignItems: 'center',
+    borderRadius: 10,
     borderWidth: 1.5,
     overflow: 'hidden',
   },
