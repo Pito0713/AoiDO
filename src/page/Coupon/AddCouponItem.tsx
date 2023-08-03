@@ -9,6 +9,7 @@ import Goback from '../../component/Goback'
 import DatePicker from '../../component/DatePicker'
 import service from "../Service/service";
 import { useAppSelector } from '../../redux/store';
+import Modal from '../../component/Modal';
 
 const windowHeight = RN.Dimensions.get('window').height;
 
@@ -21,6 +22,14 @@ const Content = () => {
   const appCtx = React.useContext(AppContext);
   const navigation = useNavigation();
   const reduxToken = useAppSelector(state => state.token)
+  const [modalOpen, setModalOpen] = React.useState(false);
+  const openModal = () => {
+    setModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalOpen(false);
+  };
 
   const [startDate, setStartDate] = React.useState<string>(moment().format('YYYY-MM-DD'))
   const onValueStartDatechange = (e: any) => {
@@ -50,7 +59,7 @@ const Content = () => {
     },
     onSubmit: (values, { resetForm }) => {
       if (Date.parse(startDate) > Date.parse(endDate)) {
-        RN.Alert.alert('結束時間必須大於開始時間')
+        openModal()
       } else {
         save(values)
         resetForm()
@@ -127,6 +136,12 @@ const Content = () => {
           <RN.Text style={styles.saveContainerText}>保存</RN.Text>
         </RN.TouchableOpacity>
       </RN.View>
+      <Modal
+        isOpen={modalOpen}
+        confirm={closeModal}
+        cancel={closeModal}
+        content={'結束時間必須大於開始時間'}
+      />
     </RN.View>
   );
 };

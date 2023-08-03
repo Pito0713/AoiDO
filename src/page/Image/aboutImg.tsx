@@ -1,25 +1,16 @@
 import React from 'react';
 import * as RN from 'react-native';
-// import { launchImageLibrary } from 'react-native-image-picker';
 import service from '../Service/service';
 import {AppContext} from '../../redux/AppContent';
 import Goback from '../../component/Goback'
 import ReminderText from '../../component/ReminderText';
-import Plus from '../../assets/Plus';
 import Checkbg from '../../assets/Checkbg';
 import Cancel from '../../assets/Cancel';
+import ImagePicker from '../../component/ImagePicker'
+import Modal from '../../component/Modal';
 
 const Content = () => {
   const appCtx = React.useContext(AppContext);
-  interface Photo {
-    fileName?: string,
-    fileSize?: number,
-    height?: number,
-    type?: string,
-    uri?: string
-    width?: number
-  }
-
   interface submitData {
     id?: string  | undefined,
     _id?: string | undefined,
@@ -28,45 +19,32 @@ const Content = () => {
   }
 
   const [photoList, setPhotoList] = React.useState([]);
-  const [photo, setPhoto] = React.useState<Photo>({});
+  const [photo, setPhoto] = React.useState('');
+  const [modalOpen, setModalOpen] = React.useState(false);
+  const [deleteId, setDeleteId] = React.useState('');
 
-  const createFormData = (photo: Photo) => {
-    if (['image/jpg', 'image/jpeg', 'image/png'].includes(photo?.type as string)) {
-      const data = new FormData();
-
-      data.append('file', {
-        name: photo.fileName,
-        type: photo.type,
-        uri: photo.uri,
-      });
-      return data;
-    } else {
-      RN.Alert.alert('不支援圖片格式')
-    }
+  const openModal = (item:any) => {
+    setModalOpen(true);
+    setDeleteId(item)
   };
 
-  const handleChoosePhoto = () => {
-    // launchImageLibrary({ mediaType: 'photo' }, (response: any) => {
-    //   let target: Photo = {}
-    //   if (!['', null, undefined].includes(response?.assets)) {
-    //     target = response?.assets[0]
-    //     if (['image/jpg', 'image/jpeg', 'image/png'].includes(target.type as string)) {
-    //       setPhoto(target)
-    //     } else RN.Alert.alert('不支援圖片格式')
-    //   }
-    // });
+  const closeModal = () => {
+    setModalOpen(false);
+    setDeleteId('')
   };
 
 
   const handleUploadPhoto = async () => {
-    let submitData = createFormData(photo)
-    const response = await service.postUploadImage(submitData);
+    let submitData = {
+      image: photo
+    }
+    const response = await service.postUploadWebImage(submitData);
     if (response?.data) return response.data
   };
 
-  const postCreateCarouselImg = async () => {
-    let target = await handleUploadPhoto()
+  const postCreateAboutImg = async () => {
     await appCtx.setLoading(true);
+    let target = await handleUploadPhoto()
 
     if(target) {
       let submitData = {
@@ -91,37 +69,19 @@ const Content = () => {
 
     if (response?.status === 'success') {
       setPhotoList(response.data);
-      setPhoto({})
+      setPhoto('')
     }
     await appCtx.setLoading(false);
   };
 
-  const deleteItem = (item: string | undefined)=> {
-    RN.Alert.alert(
-      '是否刪除',
-      '',
-      [
-        {
-          text: '取消',
-          style: 'cancel',
-        },
-        {
-          text: '確認',
-          onPress: () => deleteOneAboutImg(item),
-          style: 'default',
-        },
-      ],
-      {},
-    );
-  };
-
-  const deleteOneAboutImg = async (item:string | undefined) => {
+  const deleteOneAboutImg = async () => {
     let submitData = {
-      id: item,
+      id: deleteId,
     };
     await appCtx.setLoading(true);
     const response = await service.deleteOneAboutImg(submitData);
     if (response?.status === 'success') getFindAllAboutImg();
+    closeModal()
     await appCtx.setLoading(false);
   };
 
@@ -136,6 +96,10 @@ const Content = () => {
     await appCtx.setLoading(false);
   };
 
+  const onValueChange = (e: any) => {
+    setPhoto(e)
+  }
+
   React.useEffect(() => {
     getFindAllAboutImg();
   }, []);
@@ -143,31 +107,13 @@ const Content = () => {
   return (
     <RN.View style={styles.container}>
       <RN.View style={[styles.addContainer ,{backgroundColor: appCtx.Colors.photo.cardBottom}]}>
-        <RN.TouchableOpacity style={[{alignItems: 'center', justifyContent: 'center'}]} onPress={postCreateCarouselImg}>
+        <RN.TouchableOpacity style={[{alignItems: 'center', justifyContent: 'center'}]} onPress={postCreateAboutImg}>
           <RN.Text>上傳</RN.Text>
         </RN.TouchableOpacity>
       </RN.View>
-      {photo?.uri ?
-        <RN.View style={[
-          styles.addContent,
-        ]}>
-          <RN.Image
-            source={{ uri: photo?.uri }}
-            style={{ width: '100%', height: '100%' }}
-          />
-        </RN.View>
-        :
-        <RN.TouchableOpacity onPress={handleChoosePhoto}>
-          <RN.View
-          style={[
-            styles.addContent,
-            {alignItems: 'center', justifyContent: 'center'},
-          ]}>
-            <Plus
-            />
-          </RN.View>
-        </RN.TouchableOpacity>
-      }
+      <RN.View style={{margin: 10}}>
+        <ImagePicker onValuechange={onValueChange} photo={photo} width={200} height={200}/>
+      </RN.View>
       <RN.View style={[styles.listContainer]}>
         <ReminderText text={'* 長按圖片可刪除'} />
         <ReminderText text={'* 點擊圖片可啟用或取消'} />
@@ -179,7 +125,8 @@ const Content = () => {
               <RN.View >
                 <RN.TouchableOpacity
                   style={{margin: 10}}
-                  onPress={() => deleteItem(item._id)}>
+                  onPress={() => openModal(item._id)}
+                >
                   <Cancel />
                 </RN.TouchableOpacity>
                 <RN.TouchableOpacity
@@ -215,6 +162,12 @@ const Content = () => {
           </RN.View>
         )}
       </RN.View>
+      <Modal
+        isOpen={modalOpen}
+        confirm={() => deleteOneAboutImg()}
+        cancel={closeModal}
+        content={'是否刪除'}
+      />
     </RN.View>
   );
 };

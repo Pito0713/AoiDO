@@ -3,10 +3,9 @@ import * as RN from 'react-native';
 import { AppContext } from '../../redux/AppContent';
 import service from "../Service/service";
 import Goback from '../../component/Goback'
-import { useIsFocused } from '@react-navigation/native';
 import { useAppSelector } from '../../redux/store';
 import Pagination from '../../component/Pagination';
-import ScrollViewComponent from '../../component/ScrollViewComponent';
+import Modal from '../../component/Modal';
 
 interface ProductFilterItem {
   imageUrl?: string
@@ -19,6 +18,17 @@ const ProductFilterItem = ({ route }: { route: any }) => {
   const target = route?.params?.item
   const appCtx = React.useContext(AppContext);
   const reduxToken = useAppSelector(state => state.token)
+  const [modalOpen, setModalOpen] = React.useState(false);
+  const [deleteId, setDeleteId] = React.useState('');
+  const openModal = (item:any) => {
+    setModalOpen(true);
+    setDeleteId(item);
+  };
+
+  const closeModal = () => {
+    setModalOpen(false);
+    setDeleteId('');
+  };
 
   const [productFilter, setProductFilter] = React.useState([]);
   const [pagination, setPagination] = React.useState(10);
@@ -46,31 +56,14 @@ const ProductFilterItem = ({ route }: { route: any }) => {
     await appCtx.setLoading(false)
   }
 
-  const deleteItem = async (item: string) => {
-    RN.Alert.alert(
-      '是否刪除',
-      "",
-      [
-        {
-          text: "取消",
-          style: "cancel",
-        },
-        {
-          text: "確認",
-          onPress: () => deleteCargo(item),
-          style: "default",
-        }
-      ], {}
-    );
-  }
-
-  const deleteCargo = async (item: string) => {
+  const deleteCargo = async () => {
     await appCtx.setLoading(true)
     let submitData = {
-      "id": item,
+      "id": deleteId,
     }
     const response = await service.deleteProductOne(submitData);
     if (response?.status === 'success') postAllProduct()
+    closeModal();
     await appCtx.setLoading(false)
   }
 
@@ -97,7 +90,7 @@ const ProductFilterItem = ({ route }: { route: any }) => {
               <RN.View style={{ width: 80 }}><RN.Text style={styles.itemContentText} numberOfLines={1} ellipsizeMode={'tail'}>$ {item.price}</RN.Text></RN.View>
               <RN.TouchableOpacity 
                 style={{ width: 75, alignItems: 'center' ,height:'100%',justifyContent: 'center',backgroundColor: appCtx.Colors.primary}} 
-                onPress={() => deleteItem(item._id)}
+                onPress={() => openModal(item._id)}
               >
                 <RN.Text>刪除</RN.Text>
               </RN.TouchableOpacity>
@@ -117,6 +110,12 @@ const ProductFilterItem = ({ route }: { route: any }) => {
         onPageChange={onPageChange}
       />
     </RN.View>
+    <Modal
+        isOpen={modalOpen}
+        confirm={() => deleteCargo()}
+        cancel={closeModal}
+        content={'是否刪除'}
+      />
     </RN.SafeAreaView>
   );
 };

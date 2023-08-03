@@ -10,9 +10,8 @@ import {AppContext} from '../../redux/AppContent';
 import Goback from '../../component/Goback';
 import service from '../Service/service';
 import {useAppSelector} from '../../redux/store';
-
-const windowWidth = RN.Dimensions.get('window').width;
-const windowHeight = RN.Dimensions.get('window').height;
+import ImagePicker from '../../component/ImagePicker'
+import Modal from '../../component/Modal';
 
 interface Photo {
   fileName?: string,
@@ -30,7 +29,6 @@ interface Item {
   quantity?: string,
 }
 
-
 const ProductItem = ({ route }: { route: any }) => {
   const appCtx = React.useContext(AppContext);
   const [photo, setPhoto] = React.useState(
@@ -44,6 +42,15 @@ const ProductItem = ({ route }: { route: any }) => {
   const navigation = useNavigation();
   const reduxToken = useAppSelector(state => state.token);
   const isFocused = useIsFocused();
+  const [modalOpen, setModalOpen] = React.useState(false);
+
+  const openModal = () => {
+    setModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalOpen(false);
+  };
 
   const save = async (values: Item) => {
     if (values?.describe && values?.price && values?.quantity) {
@@ -94,73 +101,26 @@ const ProductItem = ({ route }: { route: any }) => {
       save(values);
       resetForm();
       setCategory('');
-      setPhoto({});
+      setPhoto('');
     },
   });
 
-  const createFormData = (photo: Photo) => {
-    if (['image/jpg', 'image/jpeg', 'image/png'].includes(photo?.type as string)) {
-      const data = new FormData();
-
-      data.append('file', {
-        name: photo.fileName,
-        type: photo.type,
-        uri: photo.uri,
-        // uri: RN.Platform.OS === 'ios' ? photo.uri.replace('file://', '') : photo.uri,
-      });
-      return data;
-    } else {
-      RN.Alert.alert('不支援圖片格式');
-    }
-  };
-
-  const handleChoosePhoto = () => {
-    // launchImageLibrary({ mediaType: 'photo' }, (response: any) => {
-    //   let target: Photo = {}
-    //   if (!['', null, undefined].includes(response?.assets)) {
-    //     target = response?.assets[0]
-    //     if (['image/jpg', 'image/jpeg', 'image/png'].includes(target.type as string)) {
-    //       setPhoto(target)
-    //     } else RN.Alert.alert('不支援圖片格式')
-    //   }
-    // });
-  };
-
   const handleUploadPhoto = async () => {
-    let submitData = createFormData(photo);
-
-    await appCtx.setLoading(true);
-    const response = await service.postUploadImage(submitData);
-    await appCtx.setLoading(false);
-    if (response?.data) return response.data;
-  };
-
-  const deleteItem = async (item: string) => {
-    RN.Alert.alert(
-      '是否刪除',
-      '',
-      [
-        {
-          text: '取消',
-          style: 'cancel',
-        },
-        {
-          text: '確認',
-          onPress: () => deleteCargo(item),
-          style: 'default',
-        },
-      ],
-      {},
-    );
-  };
-
-  const deleteCargo = async (item: string) => {
     let submitData = {
-      id: item,
+      image: photo
+    }
+    const response = await service.postUploadWebImage(submitData);
+    if (response?.data) return response.data
+  };
+
+  const deleteCargo = async () => {
+    let submitData = {
+      id: route.params.item._id,
     };
     await appCtx.setLoading(true);
     const response = await service.deleteProductOne(submitData);
     await appCtx.setLoading(false);
+    closeModal()
     if (response?.status === 'success') navigation.goBack();
   };
 
@@ -183,37 +143,14 @@ const ProductItem = ({ route }: { route: any }) => {
     }
   }, [isFocused]);
 
+  const onValueChange = (e: any) => {
+    setPhoto(e)
+  }
+
   return (
     <RN.View style={styles.itemContainer}>
       <Goback />
-      <RN.TouchableOpacity
-        onPress={handleChoosePhoto}
-        style={{
-          borderWidth: 2,
-          borderRadius: 10,
-          overflow: 'hidden',
-          marginBottom: 20,
-        }}>
-        {photo ? (
-          <RN.View style={{justifyContent: 'center', alignItems: 'center'}}>
-            <RN.Image
-              source={{uri: orgialPhoto !== photo ? photo?.uri : orgialPhoto}}
-              style={{width: 450, height: 450}}
-            />
-          </RN.View>
-        ) : (
-          <RN.View
-            style={{
-              width: 450,
-              height: 450,
-              justifyContent: 'center',
-              alignItems: 'center',
-              backgroundColor: appCtx.Colors.inputContainer,
-            }}>
-            <RN.Text style={{fontSize: 20}}>點擊新增圖片</RN.Text>
-          </RN.View>
-        )}
-      </RN.TouchableOpacity>
+      <ImagePicker onValuechange={onValueChange} photo={photo} width={'100%'} height={250}/>
       <RN.View>
         <RN.Text style={styles.itemContainerText}>商品描述</RN.Text>
         <RN.TextInput
@@ -328,10 +265,16 @@ const ProductItem = ({ route }: { route: any }) => {
         </RN.TouchableOpacity>
         <RN.TouchableOpacity
           style={[styles.saveContainer]}
-          onPress={() => deleteItem(route.params.item._id)}>
+          onPress={() => openModal()}>
           <RN.Text style={styles.saveContainerText}>刪除</RN.Text>
         </RN.TouchableOpacity>
       </RN.View>
+      <Modal
+        isOpen={modalOpen}
+        confirm={() => deleteCargo()}
+        cancel={closeModal}
+        content={'是否刪除'}
+      />
     </RN.View>
   );
 };

@@ -15,10 +15,6 @@ const fetchApi = async (method: string, url: string) => {
     return response.data;
   } catch (error: any) {
     let errorResult = getErrorMessage(error?.response?.status, error?.response?.data)
-    RN.Alert.alert(
-      errorResult.errorHTTP,
-      errorResult.errorText,
-    )
     console.log(`\x1B[41m\x1B[37m${errorResult.errorHTTP}\x1B[0m \x1B[31m${errorResult.errorText} `)
   }
 };
@@ -35,10 +31,6 @@ const fetchApi_AuthParams = async (method: string, url: string, params: string) 
     return response.data;
   } catch (error: any) {
     let errorResult = getErrorMessage(error?.response?.status, error?.response?.data)
-    RN.Alert.alert(
-      errorResult.errorHTTP,
-      errorResult.errorText,
-    )
     console.log(`\x1B[41m\x1B[37m${errorResult.errorHTTP}\x1B[0m \x1B[31m${errorResult.errorText} `)
   }
 };
@@ -57,10 +49,6 @@ const fetchApi_AuthData = async (method: string, url: string, params: string | u
   } catch (error: any) {
     console.log(error);
     let errorResult = getErrorMessage(error?.response?.status, error?.response?.data)
-    RN.Alert.alert(
-      errorResult.errorHTTP,
-      errorResult.errorText,
-    )
     console.log(`\x1B[41m\x1B[37m${errorResult.errorHTTP}\x1B[0m \x1B[31m${errorResult.errorText} `)
   }
 };
@@ -78,10 +66,6 @@ const fetchApi_upload_file = async (method: string, url: string, params: string 
     return response.data;
   } catch (error: any) {
     let errorResult = getErrorMessage(error?.response?.status, error?.response?.data)
-    RN.Alert.alert(
-      errorResult.errorHTTP,
-      errorResult.errorText,
-    )
     console.log(`\x1B[41m\x1B[37m${errorResult.errorHTTP}\x1B[0m \x1B[31m${errorResult.errorText} `)
   }
 };
@@ -315,6 +299,16 @@ const Service = {
     let data = await fetchApi_upload_file(
       'POST',
       `http://192.168.23.157:8082/uploadImage`,
+      '',
+      submitData
+    );
+    return data;
+  },
+
+  postUploadWebImage: async (submitData:any) => {
+    let data = await fetchApi_AuthData(
+      'POST',
+      `http://192.168.23.157:8082/uploadWebImage`,
       '',
       submitData
     );

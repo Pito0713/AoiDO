@@ -2,22 +2,13 @@ import React from "react";
 import * as RN from 'react-native';
 import { useFormik } from "formik";
 import { useNavigation } from '@react-navigation/native';
-// import { launchImageLibrary } from 'react-native-image-picker';
 import {Picker} from '@react-native-picker/picker';
 
 import { AppContext } from '../../redux/AppContent';
 import Goback from '../../component/Goback'
 import service from "../Service/service";
 import { useAppSelector } from '../../redux/store';
-
-interface Photo {
-  fileName?: string,
-  fileSize?: number,
-  height?: number,
-  type?: string,
-  uri?: string
-  width?: number
-}
+import ImagePicker from '../../component/ImagePicker'
 
 interface Item {
   describe?: string,
@@ -39,10 +30,10 @@ const AddProductItem = () => {
   const appCtx = React.useContext(AppContext);
 
   const navigation = useNavigation<Nav>();
-  const reduxToken = useAppSelector(state => state.token)
+  const reduxToken = useAppSelector((state: { token: any; }) => state.token)
 
   const [category, setCategory] = React.useState('');
-  const [photo, setPhoto] = React.useState<Photo>({});
+  const [photo, setPhoto] = React.useState('');
   const [categoryList, setCategoryList] = React.useState([]);
 
   const save = async (values: Item) => {
@@ -74,7 +65,7 @@ const AddProductItem = () => {
       remark: "",
       quantity: "",
     },
-    validate: (values) => {
+    validate: (values: { describe: any; price: string; quantity: string; }) => {
       const regDecimalto2 = /^\d+(\.\d{1,2})?$/
       const regNumber = /^\d+$/
       const errors: Item = {};
@@ -85,51 +76,21 @@ const AddProductItem = () => {
 
       return errors;
     },
-    onSubmit: async (values, { resetForm }) => {
+    onSubmit: async (values: Item, { resetForm }: any) => {
       save(values)
       resetForm()
       setCategory('')
-      setPhoto({})
+      setPhoto('')
     },
   });
 
-  const createFormData = (photo: Photo) => {
-    if (['image/jpg', 'image/jpeg', 'image/png'].includes(photo?.type as string)) {
-      const data = new FormData();
-
-      data.append('file', {
-        name: photo.fileName,
-        type: photo.type,
-        uri: photo.uri,
-        // uri: RN.Platform.OS === 'ios' ? photo.uri.replace('file://', '') : photo.uri,
-      });
-      return data;
-    } else {
-      RN.Alert.alert('不支援圖片格式')
-    }
-  };
-
-  const handleChoosePhoto = () => {
-    // launchImageLibrary({ mediaType: 'photo' }, (response: any) => {
-    //   let target: Photo = {}
-    //   if (!['', null, undefined].includes(response?.assets)) {
-    //     target = response?.assets[0]
-    //     if (['image/jpg', 'image/jpeg', 'image/png'].includes(target.type as string)) {
-    //       setPhoto(target)
-    //     } else RN.Alert.alert('不支援圖片格式')
-    //   }
-    // });
-  };
 
   const handleUploadPhoto = async () => {
-    let submitData = createFormData(photo)
-    if (submitData) {
-      await appCtx.setLoading(true);
-      const response = await service.postUploadImage(submitData);
-      if (response?.data) return response.data
+    let submitData = {
+      image: photo
     }
-    await appCtx.setLoading(false);
-
+    const response = await service.postUploadWebImage(submitData);
+    if (response?.data) return response.data
   };
 
   const postProductFilter = async () => {
@@ -142,6 +103,11 @@ const AddProductItem = () => {
     }
   }
 
+  const onValueChange = (e: any) => {
+    setPhoto(e)
+  }
+
+
   React.useEffect(() => {
     postProductFilter()
   }, []);
@@ -149,21 +115,7 @@ const AddProductItem = () => {
   return (
     <RN.View style={styles.itemContainer}>
       <Goback />
-      <RN.View style={[styles.itemContainer]}>
-        <RN.TouchableOpacity onPress={handleChoosePhoto} style={{ borderWidth: 2, borderRadius: 10, overflow: 'hidden', marginBottom:20, justifyContent: 'center', alignItems: 'center', }}>
-          {photo?.uri ?
-            <RN.View>
-              <RN.Image
-                source={{ uri: photo?.uri }}
-                style={{ width: 450, height: 450 }}
-              />
-            </RN.View>
-            :
-            <RN.View style={{ width: 450, height: 450, justifyContent: 'center', alignItems: 'center' }}>
-              <RN.Text style={{ fontSize: 20 }}>點擊新增圖片</RN.Text>
-            </RN.View>
-          }
-        </RN.TouchableOpacity>
+      <ImagePicker onValuechange={onValueChange} photo={photo} width={'100%'} height={250}/>
         <RN.View>
           <RN.Text style={styles.itemContainerText}>商品描述</RN.Text>
           <RN.TextInput
@@ -192,7 +144,7 @@ const AddProductItem = () => {
             selectedValue={category}
             onValueChange={(e: any) => { setCategory(e) }}
           >
-            {categoryList.map((item: any, index) => (
+            {categoryList.map((item: any, index: any) => (
               <Picker.Item key={index} value={item?.category} label={item?.category} />
             ))}
           </Picker>
@@ -256,7 +208,6 @@ const AddProductItem = () => {
             <RN.Text style={styles.saveContainerText}>保存</RN.Text>
           </RN.TouchableOpacity>
         </RN.View>
-      </RN.View>
     </RN.View>
   );
 };
