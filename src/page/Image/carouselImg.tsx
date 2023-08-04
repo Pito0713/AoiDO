@@ -1,9 +1,10 @@
 import React from 'react';
 import * as RN from 'react-native';
+import { launchImageLibrary } from 'react-native-image-picker';
+
 import service from '../Service/service';
 import {AppContext} from '../../redux/AppContent';
 import Goback from '../../component/Goback'
-import { launchImageLibrary } from 'react-native-image-picker';
 import ReminderText from '../../component/ReminderText';
 import ScrollViewComponent from '../../component/ScrollViewComponent';
 import Plus from '../../assets/Plus';

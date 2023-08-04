@@ -1,13 +1,14 @@
 import React from "react";
 import * as RN from 'react-native';
 import { useFormik } from "formik";
+//@ts-ignore
 import { useNavigation } from '@react-navigation/native';
 
+import { AppContext } from '../../redux/AppContent';
+import { useAppSelector } from '../../redux/store';
 import service from "../Service/service";
 import Goback from '../../component/Goback'
-import { useAppSelector } from '../../redux/store';
 import ScrollViewComponent from "../../component/ScrollViewComponent";
-import { AppContext } from '../../redux/AppContent';
 
 const windowHeight = RN.Dimensions.get('window').height;
 interface PlatformItem {

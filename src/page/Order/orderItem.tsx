@@ -1,10 +1,11 @@
 import React from "react";
 import * as RN from 'react-native';
+//@ts-ignore
 import { useNavigation } from '@react-navigation/native';
 
+import service from "../Service/service";
 import { AppContext } from '../../redux/AppContent';
 import Goback from '../../component/Goback'
-import service from "../Service/service";
 import ScrollViewComponent from "../../component/ScrollViewComponent";
 
 interface Order {

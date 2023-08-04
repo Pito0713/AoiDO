@@ -1,11 +1,11 @@
 import React from 'react';
 import * as RN from 'react-native';
-import {useIsFocused} from '@react-navigation/native';
+import { launchImageLibrary } from 'react-native-image-picker';
 
 import service from '../Service/service';
 import {AppContext} from '../../redux/AppContent';
 import Goback from '../../component/Goback'
-import { launchImageLibrary } from 'react-native-image-picker';
+
 import ReminderText from '../../component/ReminderText';
 import ScrollViewComponent from '../../component/ScrollViewComponent';
 import Plus from '../../assets/Plus';
@@ -16,7 +16,6 @@ const windowHeight = RN.Dimensions.get('window').height;
 
 const Content = () => {
   const appCtx = React.useContext(AppContext);
-  const isFocused = useIsFocused();
   interface Photo {
     fileName?: string,
     fileSize?: number,
@@ -138,8 +137,8 @@ const Content = () => {
   };
 
   React.useEffect(() => {
-    if (isFocused) getFindAllMainImg();
-  }, [isFocused]);
+    getFindAllMainImg();
+  }, []);
 
   return (
     <RN.View>

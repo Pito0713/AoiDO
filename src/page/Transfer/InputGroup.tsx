@@ -3,13 +3,14 @@ import * as RN from 'react-native';
 import {Slider} from '@miblanchard/react-native-slider';
 
 import numeral from 'numeral';
+//@ts-ignore
 import { useIsFocused } from '@react-navigation/native';
 import { AppContext } from '../../redux/AppContent';
 import ReminderText from "../../component/ReminderText"
 
 interface exchangeValue {
   exchangeValue: {
-    [Key in string]?: string
+    [Key in string]?: string | number | undefined
   }
   platformValue: {
     label: string,
@@ -176,7 +177,7 @@ const InputGroup = (value: exchangeValue) => {
             style={{ borderWidth: 1.5, flex: 3, paddingLeft: 10, borderRadius: 5, height: 45, }}
           />
           <RN.View style={{ flex: 7, justifyContent: 'center', alignItems: 'center', flexDirection: 'row' }}>
-            <RN.Text style={styles.inputText}>手續匯率:  {value.platformValue} %</RN.Text>
+            <RN.Text style={styles.inputText}>手續匯率:  {value.platformValue.value }  %</RN.Text>
           </RN.View>
         </RN.View>
       </RN.View>
@@ -233,13 +234,12 @@ const InputGroup = (value: exchangeValue) => {
             :
             <RN.View style={{ flexDirection: 'row' }}>
               <Slider
-                value={proportion}
+                value={proportion as number}
                 minimumValue={0}
                 maximumValue={100}
                 step={5}
                 onValueChange={(e: any) => setProportion(e)}
                 containerStyle={{ width: '90%' }}
-
               />
               <RN.Text style={{ paddingLeft: 15 }}>{proportion} %</RN.Text>
             </RN.View>

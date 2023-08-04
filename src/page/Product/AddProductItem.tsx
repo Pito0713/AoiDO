@@ -1,14 +1,15 @@
 import React from "react";
 import * as RN from 'react-native';
 import { useFormik } from "formik";
+//@ts-ignore
 import { useNavigation } from '@react-navigation/native';
 import { launchImageLibrary } from 'react-native-image-picker';
 import {Picker} from '@react-native-picker/picker';
 
-import { AppContext } from '../../redux/AppContent';
-import Goback from '../../component/Goback'
 import service from "../Service/service";
 import { useAppSelector } from '../../redux/store';
+import { AppContext } from '../../redux/AppContent';
+import Goback from '../../component/Goback'
 import ScrollViewComponent from "../../component/ScrollViewComponent";
 
 const windowWidth = RN.Dimensions.get('window').width;
@@ -104,7 +105,6 @@ const Content = () => {
         name: photo.fileName,
         type: photo.type,
         uri: photo.uri,
-        // uri: RN.Platform.OS === 'ios' ? photo.uri.replace('file://', '') : photo.uri,
       });
       return data;
     } else {

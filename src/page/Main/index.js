@@ -1,6 +1,7 @@
 import React from 'react';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import * as RN from 'react-native';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+
 import Order from '../../assets/Order';
 import Ticket from '../../assets/Ticket';
 import Product from '../../assets/Product';

@@ -2,9 +2,8 @@ import React from "react";
 import * as RN from 'react-native';
 import { AppContext } from '../../redux/AppContent';
 import service from "../Service/service";
-import Goback from '../../component/Goback'
-import { useIsFocused } from '@react-navigation/native';
 import { useAppSelector } from '../../redux/store';
+import Goback from '../../component/Goback'
 import Pagination from '../../component/Pagination';
 import ScrollViewComponent from '../../component/ScrollViewComponent';
 

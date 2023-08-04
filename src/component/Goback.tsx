@@ -1,6 +1,8 @@
 import React from "react";
 import * as RN from 'react-native';
+//@ts-ignore
 import { useNavigation } from '@react-navigation/native';
+
 import ArrowLeft from "../assets/ArrowLeft";
 
 const Goback = () => {

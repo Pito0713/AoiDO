@@ -273,7 +273,6 @@ const windowHeight = RN.Dimensions.get('window').height;
 const styles = RN.StyleSheet.create({
   container: {
     flex: 1,
-    // alignItems: 'flex-start',
   },
   itemContainer: {
     height: windowHeight / 10,

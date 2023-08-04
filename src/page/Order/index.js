@@ -97,10 +97,7 @@ const Coupon = () => {
           </RN.Text>
         </RN.TouchableOpacity>
       </RN.View>
-      <RN.View style={[styles.listContainer]}>
-        {/* <ReminderText text={'* 長按可刪除'} />
-        <ReminderText text={'* 點擊可以修改項目'} /> */}
-      </RN.View>
+      <RN.View style={[styles.listContainer]}></RN.View>
       <RN.ScrollView
         refreshControl={
           <RN.RefreshControl
@@ -261,7 +258,6 @@ const windowHeight = RN.Dimensions.get('window').height;
 const styles = RN.StyleSheet.create({
   container: {
     flex: 1,
-    // alignItems: 'flex-start',
   },
   itemContainer: {
     height: windowHeight / 5,

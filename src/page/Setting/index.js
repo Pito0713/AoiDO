@@ -2,10 +2,10 @@ import React from 'react';
 import * as RN from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 
+import {useAppSelector} from '../../redux/store';
 import {registerActions, useAppDispatch} from '../../redux/store';
 import {AppContext} from '../../redux/AppContent';
 import ScrollViewComponent from '../../component/ScrollViewComponent';
-import {useAppSelector} from '../../redux/store';
 
 const Content = () => {
   const appCtx = React.useContext(AppContext);

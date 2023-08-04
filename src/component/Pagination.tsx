@@ -15,7 +15,7 @@ const Pagination = (props:props) => {
     <RN.View style={styles.container}>
       <RN.View>
         <RN.Text style={[styles.textContainer]}> {`${(props.pagination*(props.page-1)+1)} - ${(props.pagination*(props.page))} of  ${props.total}`}</RN.Text>
-      </RN.View> 
+      </RN.View>
         <RN.TouchableOpacity style={styles.iconContainer}  onPress={ props.page > 1 ? ()=>props.onPageChange(props.page -1) : ()=>{}}>
           <ArrowLeft />
         </RN.TouchableOpacity>

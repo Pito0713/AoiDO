@@ -1,14 +1,16 @@
 import React from "react";
 import * as RN from 'react-native';
+//@ts-ignore
 import { useNavigation } from '@react-navigation/native';
+//@ts-ignore
 import moment from 'moment'
 import { useFormik } from "formik";
 
 import { AppContext } from '../../redux/AppContent';
 import Goback from '../../component/Goback'
 import DatePicker from '../../component/DatePicker'
-import service from "../Service/service";
 import ScrollViewComponent from "../../component/ScrollViewComponent";
+import service from "../Service/service";
 
 interface Item {
   id?: string | undefined,
@@ -59,9 +61,7 @@ const Content = (route : { params: any }) => {
       count: route.params?.item.count ? route.params.item.count : '',
       remark: route.params?.item.remark ? route.params.item.remark : '',
     },
-    validate: (values: {
-      count: any; describe: any; discount: string;
-}) => {
+    validate: (values:any) => {
       const errors: Item = {};
       const reg = /^\d+$/
 

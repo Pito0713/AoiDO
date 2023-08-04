@@ -1,7 +1,6 @@
 import React from 'react';
 import * as RN from 'react-native';
 import {useNavigation, useIsFocused} from '@react-navigation/native';
-import Plus from '../../assets/Plus';
 
 import service from '../Service/service';
 import {AppContext} from '../../redux/AppContent';
@@ -9,6 +8,7 @@ import {useAppSelector} from '../../redux/store';
 import Goback from '../../component/Goback';
 import ReminderText from '../../component/ReminderText';
 import ScrollViewComponent from '../../component/ScrollViewComponent';
+import Plus from '../../assets/Plus';
 
 const Content = () => {
   const appCtx = React.useContext(AppContext);

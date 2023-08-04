@@ -1,12 +1,14 @@
 import React from "react";
 import { useFormik } from "formik";
 import * as RN from 'react-native';
+//@ts-ignore
 import { useNavigation } from '@react-navigation/native';
 
+import { useAppSelector } from '../../redux/store';
 import { AppContext } from '../../redux/AppContent';
 import service from "../Service/service";
 import Goback from '../../component/Goback'
-import { useAppSelector } from '../../redux/store';
+
 interface ProductFilterItem {
   category?: string
   token?: string
@@ -22,7 +24,7 @@ const AddProductFilterItem = () => {
     initialValues: {
       category: "",
     },
-    validate: (values: { category: any; }) => {
+    validate: (values:  any ) => {
       const errors: ProductFilterItem = {};
 
       if (!values.category) errors.category = '*' + "商品分類必填";

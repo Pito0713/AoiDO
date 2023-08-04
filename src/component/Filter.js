@@ -71,8 +71,8 @@ const Fillter = e => {
                           ...disabledValue,
                           [item.category]: !disabledValue?.[item.category],
                         })
-                      }
-                    />
+                      }></CheckBox>
+                    <RN.Text>{item.category}</RN.Text>
                   </RN.View>
                 );
               })}
@@ -111,6 +111,9 @@ const styles = RN.StyleSheet.create({
   dialogContent: {
     width: width / 2 - 40,
     padding: 15,
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
   },
   confirmButton: {
     justifyContent: 'center',

@@ -8,8 +8,8 @@ import service from '../Service/service';
 import {useAppSelector} from '../../redux/store';
 import {AppContext} from '../../redux/AppContent';
 import Goback from '../../component/Goback';
-import InputGroup from './InputGroup';
 import ScrollViewComponent from '../../component/ScrollViewComponent';
+import InputGroup from './InputGroup';
 
 const windowWidth = RN.Dimensions.get('window').width;
 const windowHeight = RN.Dimensions.get('window').height;

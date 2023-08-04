@@ -1,15 +1,19 @@
 import React from "react";
 import * as RN from 'react-native';
 import { useFormik } from "formik";
+//@ts-ignore
 import moment from 'moment'
+//@ts-ignore
 import { useNavigation } from '@react-navigation/native';
 
 import { AppContext } from '../../redux/AppContent';
+import { useAppSelector } from '../../redux/store';
 import Goback from '../../component/Goback'
 import DatePicker from '../../component/DatePicker'
-import service from "../Service/service";
-import { useAppSelector } from '../../redux/store';
 import ScrollViewComponent from "../../component/ScrollViewComponent";
+import service from "../Service/service";
+
+
 
 interface Item {
   describe?: string | undefined,
