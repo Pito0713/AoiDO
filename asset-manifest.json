@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/AoiDO/static/css/main.d3d79b46.css",
+    "main.js": "/AoiDO/static/js/main.5fa92c71.js",
+    "index.html": "/AoiDO/index.html",
+    "main.d3d79b46.css.map": "/AoiDO/static/css/main.d3d79b46.css.map",
+    "main.5fa92c71.js.map": "/AoiDO/static/js/main.5fa92c71.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.d3d79b46.css",
+    "static/js/main.5fa92c71.js"
+  ]
+}
