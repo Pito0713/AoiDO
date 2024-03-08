@@ -1,12 +1,10 @@
 import React from 'react';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import * as RN from 'react-native';
-import Order from '../../assets/Order';
-import Ticket from '../../assets/Ticket';
-import Product from '../../assets/Product';
-import Setting from '../../assets/Setting';
 
-import {AppContext} from '../../redux/AppContent';
+import { Setting, Product, Ticket, Order } from '../../assets';
+
+import { AppContext } from '../../redux/AppContent';
 
 const Tab = createBottomTabNavigator();
 const bottomTab = [
@@ -34,9 +32,9 @@ const MainPage = () => {
     <RN.View style={styles.container}>
       <Tab.Navigator
         initialRouteName="product"
-        screenOptions={({route}) => ({
+        screenOptions={({ route }) => ({
           headerShown: false,
-          tabBarItemStyle: {borderTopWidth: 1.5},
+          tabBarItemStyle: { borderTopWidth: 1.5 },
           tabBarActiveBackgroundColor: appCtx.Colors.primary,
           tabBarActiveTintColor: appCtx.Colors.textPrimary,
           tabBarIcon: () => {

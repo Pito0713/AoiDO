@@ -2,6 +2,7 @@ import React from 'react';
 import * as RN from 'react-native';
 
 const AppContext = React.createContext();
+import Modal from '../component/Modal';
 
 /////////////////////////////////////////////////////
 
@@ -10,22 +11,22 @@ const Colors = {
   primary: '#f5a442',
   errorText: '#bf0000',
   textPrimary: '#FFFFFF',
-  // proudcut
-  proudcut: {
-    cardContianer: '#ffc852',
+  // product
+  product: {
+    cardContainer: '#ffc852',
     cardTitle: '#d44b2c',
     cardTitleText: '#FFFFFF',
     cardText: '#4d4537',
   },
 
-  proudcutFilter: {
+  productFilter: {
     borderPrimary: '#4d4537',
     Text: '#4d4537',
   },
 
   // Coupon
   Coupon: {
-    cardContianer: '#FFFFFF',
+    cardContainer: '#FFFFFF',
     cardTitle: '#d6572d',
     cardTitleText: '#FFFFFF',
     cardText: '#4d4537',
@@ -63,12 +64,12 @@ const Colors = {
 
   // photo
   photo: {
-    cardContianer: '#ffc852',
+    cardContainer: '#ffc852',
     cardBottom: '#f2c274',
   },
   // Order
   Order: {
-    cardContianer: '#faefe3',
+    cardContainer: '#faefe3',
     cardText: '#4d4537',
     cardTitleText: '#FFFFFF',
   },
@@ -76,13 +77,13 @@ const Colors = {
 
 /////////////////////////////////////////////////////
 
-const LoadingView = ({visible}) => {
+const LoadingView = ({ visible }) => {
   return (
     <RN.Modal
       animationType="fade"
       transparent
       visible={visible}
-      onRequestClose={() => {}}>
+      onRequestClose={() => { }}>
       <RN.View
         style={{
           ...RN.StyleSheet.absoluteFillObject,
@@ -107,7 +108,7 @@ const LoadingView = ({visible}) => {
 
 /////////////////////////////////////////////////////
 
-const AppProvider = ({children}) => {
+const AppProvider = ({ children }) => {
   const [loading, setLoading] = React.useState(false);
   const [initialized, setInitialized] = React.useState(false);
 
@@ -124,6 +125,11 @@ const AppProvider = ({children}) => {
     console.log(nextAppState);
   };
 
+  const [modalOpen, setModalOpen] = React.useState(false);
+  const [confirmModal, setConfirmModal] = React.useState(false);
+  const [cancelModal, setCancelModal] = React.useState(false);
+  const [contentModal, setContentModal] = React.useState('');
+
   const value = {
     ///////////////////////
     Colors: Colors,
@@ -131,15 +137,29 @@ const AppProvider = ({children}) => {
     setLoading: setLoading,
     initialized: initialized,
     setInitialized: setInitialized,
+    modalOpen: modalOpen,
+    setModalOpen: (e) => setModalOpen(e),
+    confirmModal: confirmModal,
+    setConfirmModal: setConfirmModal,
+    cancelModal: cancelModal,
+    setCancelModal: setCancelModal,
+    contentModal: contentModal,
+    setContentModal: setContentModal,
     ///////////////////////
   };
 
   return (
     <AppContext.Provider value={value}>
       <LoadingView visible={loading} />
+      <Modal
+        isOpen={modalOpen}
+        confirm={() => setModalOpen(false)}
+        cancel={() => setModalOpen(false)}
+        content={contentModal}
+      />
       {children}
     </AppContext.Provider>
   );
 };
 
-export {AppContext, AppProvider};
+export { AppContext, AppProvider };

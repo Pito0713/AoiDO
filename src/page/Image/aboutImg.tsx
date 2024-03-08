@@ -1,20 +1,19 @@
 import React from 'react';
 import * as RN from 'react-native';
 import service from '../Service/service';
-import {AppContext} from '../../redux/AppContent';
+import { AppContext } from '../../redux/AppContent';
 import Goback from '../../component/Goback'
 import ReminderText from '../../component/ReminderText';
-import Checkbg from '../../assets/Checkbg';
-import Cancel from '../../assets/Cancel';
+import { Checkbg, Cancel } from '../../assets'
 import ImagePicker from '../../component/ImagePicker'
 import Modal from '../../component/Modal';
 
 const Content = () => {
   const appCtx = React.useContext(AppContext);
   interface submitData {
-    id?: string  | undefined,
+    id?: string | undefined,
     _id?: string | undefined,
-    img?: string  | undefined,
+    img?: string | undefined,
     isActive?: boolean | undefined,
   }
 
@@ -23,7 +22,7 @@ const Content = () => {
   const [modalOpen, setModalOpen] = React.useState(false);
   const [deleteId, setDeleteId] = React.useState('');
 
-  const openModal = (item:any) => {
+  const openModal = (item: any) => {
     setModalOpen(true);
     setDeleteId(item)
   };
@@ -46,13 +45,13 @@ const Content = () => {
     await appCtx.setLoading(true);
     let target = await handleUploadPhoto()
 
-    if(target) {
+    if (target) {
       let submitData = {
         img: target?.imageUrl,
         isActive: false
       }
 
-      if(submitData.img) {
+      if (submitData.img) {
         const response = await service.postCreateAboutImg(submitData);
         if (response?.status === 'success') {
           getFindAllAboutImg()
@@ -106,13 +105,13 @@ const Content = () => {
 
   return (
     <RN.View style={styles.container}>
-      <RN.View style={[styles.addContainer ,{backgroundColor: appCtx.Colors.photo.cardBottom}]}>
-        <RN.TouchableOpacity style={[{alignItems: 'center', justifyContent: 'center'}]} onPress={postCreateAboutImg}>
+      <RN.View style={[styles.addContainer, { backgroundColor: appCtx.Colors.photo.cardBottom }]}>
+        <RN.TouchableOpacity style={[{ alignItems: 'center', justifyContent: 'center' }]} onPress={postCreateAboutImg}>
           <RN.Text>上傳</RN.Text>
         </RN.TouchableOpacity>
       </RN.View>
-      <RN.View style={{margin: 10}}>
-        <ImagePicker onValuechange={onValueChange} photo={photo} width={200} height={200}/>
+      <RN.View style={{ margin: 10 }}>
+        <ImagePicker onValuechange={onValueChange} photo={photo} width={200} height={200} />
       </RN.View>
       <RN.View style={[styles.listContainer]}>
         <ReminderText text={'* 長按圖片可刪除'} />
@@ -120,11 +119,11 @@ const Content = () => {
       </RN.View>
       <RN.View style={styles.photoContainer}>
         {photoList.length > 0 ? (
-          photoList.map((item:submitData, index: any) => {
+          photoList.map((item: submitData, index: any) => {
             return (
               <RN.View >
                 <RN.TouchableOpacity
-                  style={{margin: 10}}
+                  style={{ margin: 10 }}
                   onPress={() => openModal(item._id)}
                 >
                   <Cancel />
@@ -132,16 +131,16 @@ const Content = () => {
                 <RN.TouchableOpacity
                   style={[
                     styles.itemContainer,
-                    {backgroundColor: appCtx.Colors.photo.cardContianer},
+                    { backgroundColor: appCtx.Colors.photo.cardContainer },
                   ]}
                   onPress={() => patchUploadAboutImg(item)}
                   key={index}>
                   <RN.ImageBackground
-                    source={{uri: `${item.img}`}}
-                    style={{width: '100%', height: '100%'}}
+                    source={{ uri: `${item.img}` }}
+                    style={{ width: '100%', height: '100%' }}
                     resizeMode="cover">
-                    { item.isActive ? <Checkbg
-                    />: <RN.View /> }
+                    {item.isActive ? <Checkbg
+                    /> : <RN.View />}
                   </RN.ImageBackground>
                 </RN.TouchableOpacity>
               </ RN.View>
@@ -157,7 +156,7 @@ const Content = () => {
                   height: '100%',
                 },
               ]}>
-              <RN.Text style={{fontSize: 20}}>暫無資料</RN.Text>
+              <RN.Text style={{ fontSize: 20 }}>暫無資料</RN.Text>
             </RN.View>
           </RN.View>
         )}

@@ -1,15 +1,15 @@
 import React from "react";
 import * as RN from 'react-native';
-import {AppContext} from '../redux/AppContent';
+import { AppContext } from '../redux/AppContent';
 
-const ReminderText = (props:any) => {
+const ReminderText = (props: any) => {
   const appCtx = React.useContext(AppContext);
   return (
     <RN.View>
       <RN.Text
         style={[
           styles.listText,
-          {borderColor: appCtx.Colors.proudcutFilter.text},
+          { borderColor: appCtx.Colors.productFilter.text },
         ]}>
         {props.text}
       </RN.Text>

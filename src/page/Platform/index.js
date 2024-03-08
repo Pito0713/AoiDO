@@ -1,13 +1,12 @@
 import React from 'react';
 import * as RN from 'react-native';
-import {useNavigation, useIsFocused} from '@react-navigation/native';
+import { useNavigation, useIsFocused } from '@react-navigation/native';
 
 import service from '../Service/service';
-import {AppContext} from '../../redux/AppContent';
+import { AppContext } from '../../redux/AppContent';
 import Goback from '../../component/Goback';
 import ReminderText from '../../component/ReminderText';
-import Plus from '../../assets/Plus';
-import Cancel from '../../assets/Cancel';
+import { Plus, Cancel } from '../../assets';
 import Modal from '../../component/Modal';
 
 const Content = () => {
@@ -67,7 +66,7 @@ const Content = () => {
       <RN.View
         style={[
           styles.listContainer,
-          {borderColor: appCtx.Colors.Platform.borderPrimary},
+          { borderColor: appCtx.Colors.Platform.borderPrimary },
         ]}>
         <ReminderText text={'* 預設費用無法刪除'} />
         <ReminderText text={'* 長按可刪除分類別'} />
@@ -78,14 +77,14 @@ const Content = () => {
             return item.token !== '1' ? (
               <RN.View key={index}>
                 <RN.TouchableOpacity
-                  style={{margin: 10}}
+                  style={{ margin: 10 }}
                   onPress={() => openModal(item._id)}>
                   <Cancel />
                 </RN.TouchableOpacity>
                 <RN.TouchableOpacity
                   style={styles.itemContainer}
                   onPress={() => updateModifyRate(item._id)}
-                  // // onLongPress={() => deleteItem(item._id)}
+                // // onLongPress={() => deleteItem(item._id)}
                 >
                   <RN.View style={styles.itemContent}>
                     <RN.Text style={styles.itemContentText}>
@@ -113,14 +112,14 @@ const Content = () => {
                   <RN.Text
                     style={[
                       styles.itemContentText,
-                      {color: appCtx.Colors.platformDefault},
+                      { color: appCtx.Colors.platformDefault },
                     ]}>
                     {item.label}
                   </RN.Text>
                   <RN.Text
                     style={[
                       styles.itemContentText,
-                      {color: appCtx.Colors.platformDefault},
+                      { color: appCtx.Colors.platformDefault },
                     ]}>
                     {item.rate} %
                   </RN.Text>
@@ -138,12 +137,12 @@ const Content = () => {
         ) : (
           <RN.View style={styles.itemContainer}>
             <RN.View style={styles.itemContent}>
-              <RN.Text style={{fontSize: 20}}>尚無資料</RN.Text>
+              <RN.Text style={{ fontSize: 20 }}>尚無資料</RN.Text>
             </RN.View>
           </RN.View>
         )}
         <RN.TouchableOpacity
-          style={[styles.itemContainer, {marginTop: 40}]}
+          style={[styles.itemContainer, { marginTop: 40 }]}
           onPress={() => navigation.navigate('AddPlatformItem')}>
           <RN.View style={styles.itemContent}>
             <Plus />

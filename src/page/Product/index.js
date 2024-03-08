@@ -1,47 +1,41 @@
 import React from 'react';
 import * as RN from 'react-native';
-import {useNavigation, useIsFocused} from '@react-navigation/native';
-import Search from '../../assets/Search';
-import Plus from '../../assets/Plus';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
+
+// svg element
+import { Search, Plus } from '../../assets'
+
+// redux
+import { AppContext } from '../../redux/AppContent';
 
 import service from '../Service/service';
-import {AppContext} from '../../redux/AppContent';
-import {useAppSelector} from '../../redux/store';
-import Fillter from '../../component/Filter';
+import Filter from '../../component/Filter';
 import Pagination from '../../component/Pagination';
 
 const windowWidth = RN.Dimensions.get('window').width;
 const windowHeight = RN.Dimensions.get('window').height;
 
-const Coupon = () => {
+const Product = () => {
   const appCtx = React.useContext(AppContext);
   const navigation = useNavigation();
-  const isFocused = useIsFocused();
-  const reduxToken = useAppSelector(state => state.token);
 
-  const [product, setProduct] = React.useState([]);
+  const [init, setInit] = React.useState(false);
   const [text, onChangeText] = React.useState('');
   const [categoryValue, setCategoryValue] = React.useState([]);
   const [showDialog, setShowDialog] = React.useState(false);
-  const [refreshing, setRefreshing] = React.useState(false);
   const [searchText, setSearchText] = React.useState('');
 
-  const [pagination, setPagination] = React.useState(10);
   const [page, setPage] = React.useState(1);
+  const [pagination, setPagination] = React.useState(10);
+  const [productData, setProductData] = React.useState([]);
   const [total, setTotal] = React.useState(0);
-
-  const onRefresh = () => {
-    setRefreshing(true);
-    postSearchProduct();
-    /// 預防請求失敗
-    setRefreshing(false);
-  };
 
   const onPageChange = page => {
     setPage(page);
   };
 
-  const postSearchProduct = async () => {
+  // 搜尋全部商品
+  const postAllProduct = async () => {
     let target = [];
     target = categoryValue
       .filter(item => {
@@ -53,7 +47,6 @@ const Coupon = () => {
 
     let submitData = {
       searchText: text,
-      token: reduxToken,
       category: target,
       page: page,
       pagination: pagination,
@@ -63,39 +56,57 @@ const Coupon = () => {
 
     if (response?.status === 'success') {
       setSearchText(text);
-      setProduct(response.data);
+      setProductData(response.data);
       setTotal(response.total);
     }
+    // 初始化關閉
+    setInit(false)
     await appCtx.setLoading(false);
   };
 
   React.useEffect(() => {
-    if (isFocused) postSearchProduct();
-  }, [isFocused]);
+    if (init) {
+      postAllProduct();
+      setPage(1)
+    }
+  }, [init]);
+
+  useFocusEffect(
+    // 監聽頁面離開與載入
+    React.useCallback(() => {
+      // 開始初始化
+      setInit(true);
+      return () => {
+        setInit(false);
+      }
+    }, [])
+  );
 
   React.useEffect(() => {
     if (!showDialog && page > 1) onPageChange(1);
-    if (!showDialog && page == 1) postSearchProduct();
+    if (!showDialog && page == 1) postAllProduct();
   }, [showDialog]);
 
   React.useEffect(() => {
-    postSearchProduct();
+    postAllProduct();
   }, [page]);
 
   return (
-    <RN.SafeAreaView style={styles.container}>
+    <RN.View style={styles.container}>
       <RN.View style={styles.searchContainer}>
         <RN.View
           style={[
             styles.searchContent,
-            {backgroundColor: appCtx.Colors.inputContainer},
+            { backgroundColor: appCtx.Colors.inputContainer },
           ]}>
-          <RN.View style={[{marginLeft: 10}]}>
+          <RN.View style={[{ marginLeft: 10 }]}>
             <Search />
           </RN.View>
           <RN.TextInput
             style={styles.searchInput}
-            onChangeText={onChangeText}
+            onChangeText={(e) => {
+              onChangeText(e)
+            }}
             value={text}
             placeholder={'搜尋商品描述'}
             textAlign="left"
@@ -105,15 +116,15 @@ const Coupon = () => {
         <RN.TouchableOpacity
           style={[
             styles.searchContentText,
-            {backgroundColor: appCtx.Colors.primary},
+            { backgroundColor: appCtx.Colors.primary },
           ]}
-          onPress={() => postSearchProduct()}>
+          onPress={() => postAllProduct()}>
           <RN.Text
-            style={[styles.searchText, {color: appCtx.Colors.textPrimary}]}>
+            style={[styles.searchText, { color: appCtx.Colors.textPrimary }]}>
             搜尋
           </RN.Text>
         </RN.TouchableOpacity>
-        <Fillter categoryValue={setCategoryValue} ShowDialog={setShowDialog} />
+        <Filter categoryValue={setCategoryValue} ShowDialog={setShowDialog} />
         <RN.TouchableOpacity
           style={[styles.addContainer]}
           onPress={() => {
@@ -122,68 +133,61 @@ const Coupon = () => {
           <RN.View
             style={[
               styles.itemContent,
-              {alignItems: 'center', justifyContent: 'center'},
+              { alignItems: 'center', justifyContent: 'center' },
             ]}>
             <Plus />
           </RN.View>
         </RN.TouchableOpacity>
       </RN.View>
-      <RN.ScrollView
-        refreshControl={
-          <RN.RefreshControl
-            refreshing={refreshing}
-            onRefresh={onRefresh}
-            colors={[appCtx.Colors.primary]}
-            tintColor={appCtx.Colors.primary}
-            progressViewOffset={-5}
-          />
-        }>
+      <RN.ScrollView>
         <RN.View style={styles.productContainer}>
-          {product.length > 0 ? (
-            product.map((item, index) => {
+          {productData?.length > 0 ? (
+            productData.map((item, index) => {
               return (
                 <RN.TouchableOpacity
                   style={[
                     styles.itemContainer,
-                    {backgroundColor: appCtx.Colors.proudcut.cardContianer},
+                    { backgroundColor: appCtx.Colors.product.cardContainer },
                   ]}
-                  onPress={() => navigation.navigate('ProductItem', {item})}
+                  onPress={() => navigation.navigate('ProductItem', { item })}
                   key={index}>
                   <RN.ImageBackground
-                    source={{uri: `${item.imageUrl}`}}
-                    style={{width: '100%', height: '100%'}}
+                    source={{ uri: `${item.imageUrl}` }}
+                    style={{ width: '100%', height: '100%' }}
                     resizeMode="cover">
                     <RN.View style={[styles.itemContentTextContainer]}>
                       <RN.View
                         style={[
                           styles.itemContentText,
-                          {alignItems: 'flex-end'},
+                          { alignItems: 'flex-end' },
                         ]}>
-                        <RN.Text
+                        {item?.category && <RN.Text
                           style={{
                             padding: 5,
-                            color: appCtx.Colors.proudcut.cardTitleText,
-                            width: '35%',
-                            backgroundColor: appCtx.Colors.proudcut.cardTitle,
+                            color: appCtx.Colors.product.cardTitleText,
+                            width: '45%',
+                            backgroundColor: appCtx.Colors.product.cardTitle,
                           }}>
-                          {item.category}
-                        </RN.Text>
+                          {item?.category}
+                        </RN.Text>}
+
                       </RN.View>
                       <RN.View
                         style={[
                           styles.itemContentText,
                           {
-                            backgroundColor:
-                              appCtx.Colors.proudcut.cardContianer,
+                            backgroundColor: appCtx.Colors.product.cardContainer,
                             alignItems: 'center',
                           },
                         ]}>
                         <RN.Text
                           style={[
                             {
-                              color: appCtx.Colors.proudcut.cardText,
+                              color: appCtx.Colors.product.cardText,
                               flex: 6,
                               marginLeft: 15,
+                              fontSize: 20,
+                              paddingVertical: 5
                             },
                           ]}
                           numberOfLines={1}
@@ -192,11 +196,15 @@ const Coupon = () => {
                         </RN.Text>
                         <RN.Text
                           style={[
-                            {color: appCtx.Colors.proudcut.cardText, flex: 4},
+                            {
+                              color: appCtx.Colors.product.cardText,
+                              flex: 4,
+                              fontSize: 20,
+                              paddingVertical: 5
+                            },
                           ]}
                           numberOfLines={1}
                           ellipsizeMode={'tail'}>
-                          {' '}
                           $ {Number(item.price)}
                         </RN.Text>
                       </RN.View>
@@ -215,7 +223,7 @@ const Coupon = () => {
                     height: '100%',
                   },
                 ]}>
-                <RN.Text style={{fontSize: 20}}>
+                <RN.Text style={{ fontSize: 20 }}>
                   {searchText ? `搜尋 "${searchText}"  查無資料` : `尚無資料`}
                 </RN.Text>
               </RN.View>
@@ -229,7 +237,7 @@ const Coupon = () => {
         total={total}
         onPageChange={onPageChange}
       />
-    </RN.SafeAreaView>
+    </RN.View>
   );
 };
 
@@ -245,8 +253,8 @@ const styles = RN.StyleSheet.create({
     flexWrap: 'wrap',
   },
   itemContainer: {
-    height: windowHeight / 4,
-    width: windowWidth / 2 - 15,
+    height: 200,
+    width: 200,
     marginBottom: 10,
     marginRight: 5,
     marginLeft: 5,
@@ -289,7 +297,7 @@ const styles = RN.StyleSheet.create({
     height: 50,
     margin: 10,
     alignItems: 'center',
-    width: windowWidth - 20,
+    width: windowWidth - 15,
   },
   searchContent: {
     flexDirection: 'row',
@@ -328,4 +336,4 @@ const styles = RN.StyleSheet.create({
   },
 });
 
-export default Coupon;
+export default Product;

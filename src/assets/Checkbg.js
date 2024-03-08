@@ -1,6 +1,6 @@
 import * as React from 'react';
-import Svg, {Path} from 'react-native-svg';
-const SvgComponent = () => (
+import Svg, { Path } from 'react-native-svg';
+export const Checkbg = () => (
   <Svg
     xmlns="http://www.w3.org/2000/svg"
     aria-hidden="true"
@@ -17,5 +17,4 @@ const SvgComponent = () => (
       d="M29.28 6.362a2.502 2.502 0 0 0-3.458.736L14.936 23.877l-5.029-4.65a2.5 2.5 0 1 0-3.394 3.671l7.209 6.666c.48.445 1.09.665 1.696.665.673 0 1.534-.282 2.099-1.139.332-.506 12.5-19.27 12.5-19.27a2.5 2.5 0 0 0-.737-3.458z"
     />
   </Svg>
-);
-export default SvgComponent;
+);;

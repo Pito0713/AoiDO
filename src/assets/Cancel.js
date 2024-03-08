@@ -1,6 +1,6 @@
 import * as React from 'react';
-import Svg, {G, Path} from 'react-native-svg';
-const SvgComponent = () => (
+import Svg, { G, Path } from 'react-native-svg';
+export const Cancel = () => (
   <Svg
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 117 117"
@@ -18,4 +18,3 @@ const SvgComponent = () => (
     </G>
   </Svg>
 );
-export default SvgComponent;

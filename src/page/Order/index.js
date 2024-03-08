@@ -1,11 +1,11 @@
 import React from 'react';
 import * as RN from 'react-native';
-import {useNavigation, useIsFocused} from '@react-navigation/native';
+import { useNavigation, useIsFocused } from '@react-navigation/native';
 import moment from 'moment';
 import service from '../Service/service';
-import {AppContext} from '../../redux/AppContent';
+import { AppContext } from '../../redux/AppContent';
 import Pagination from '../../component/Pagination';
-import Search from '../../assets/Search';
+import { Search } from '../../assets';
 
 const Coupon = () => {
   const appCtx = React.useContext(AppContext);
@@ -63,15 +63,15 @@ const Coupon = () => {
         <RN.View
           style={[
             styles.searchContent,
-            {backgroundColor: appCtx.Colors.inputContainer},
+            { backgroundColor: appCtx.Colors.inputContainer },
           ]}>
-          <RN.View style={[{marginLeft: 10}]}>
+          <RN.View style={[{ marginLeft: 10 }]}>
             <Search />
           </RN.View>
           <RN.TextInput
             style={[
               styles.searchInput,
-              {backgroundColor: appCtx.Colors.inputContainer},
+              { backgroundColor: appCtx.Colors.inputContainer },
             ]}
             onChangeText={onChangeText}
             value={text}
@@ -83,7 +83,7 @@ const Coupon = () => {
         <RN.TouchableOpacity
           style={[
             styles.searchContentText,
-            {backgroundColor: appCtx.Colors.primary},
+            { backgroundColor: appCtx.Colors.primary },
           ]}
           onPress={() => onRefresh()}>
           <RN.Text
@@ -115,11 +115,11 @@ const Coupon = () => {
                 style={[
                   styles.itemContainer,
                   {
-                    backgroundColor: appCtx.Colors.Coupon.cardContianer,
+                    backgroundColor: appCtx.Colors.Coupon.cardContainer,
                     borderColor: appCtx.Colors.Coupon.borderColor,
                   },
                 ]}
-                onPress={() => navigation.navigate('OrderItem', {item})}
+                onPress={() => navigation.navigate('OrderItem', { item })}
                 key={index}>
                 <RN.View
                   style={[
@@ -132,14 +132,14 @@ const Coupon = () => {
                   <RN.Text
                     style={[
                       styles.itemContentTextTitle,
-                      {color: appCtx.Colors.textPrimary, fontSize: 12},
+                      { color: appCtx.Colors.textPrimary, fontSize: 12 },
                     ]}>
                     會員名稱:
                   </RN.Text>
                   <RN.Text
                     style={[
                       styles.itemContentTextTitle,
-                      {color: appCtx.Colors.textPrimary, fontSize: 10},
+                      { color: appCtx.Colors.textPrimary, fontSize: 10 },
                     ]}
                     numberOfLines={1}
                     ellipsizeMode={'tail'}>
@@ -149,14 +149,14 @@ const Coupon = () => {
                   <RN.Text
                     style={[
                       styles.itemContentTextTitle,
-                      {color: appCtx.Colors.textPrimary, fontSize: 12},
+                      { color: appCtx.Colors.textPrimary, fontSize: 12 },
                     ]}>
                     地址:
                   </RN.Text>
                   <RN.Text
                     style={[
                       styles.itemContentTextTitle,
-                      {color: appCtx.Colors.textPrimary, fontSize: 10},
+                      { color: appCtx.Colors.textPrimary, fontSize: 10 },
                     ]}
                     numberOfLines={1}
                     ellipsizeMode={'tail'}>
@@ -166,14 +166,14 @@ const Coupon = () => {
                   <RN.Text
                     style={[
                       styles.itemContentTextTitle,
-                      {color: appCtx.Colors.textPrimary, fontSize: 12},
+                      { color: appCtx.Colors.textPrimary, fontSize: 12 },
                     ]}>
                     創立時間:
                   </RN.Text>
                   <RN.Text
                     style={[
                       styles.itemContentTextTitle,
-                      {color: appCtx.Colors.textPrimary, fontSize: 10},
+                      { color: appCtx.Colors.textPrimary, fontSize: 10 },
                     ]}
                     numberOfLines={1}
                     ellipsizeMode={'tail'}>
@@ -204,8 +204,8 @@ const Coupon = () => {
                           },
                         ]}>
                         <RN.Image
-                          source={{uri: `${item.imageUrl}`}}
-                          style={{width: 25, height: 25}}
+                          source={{ uri: `${item.imageUrl}` }}
+                          style={{ width: 25, height: 25 }}
                         />
                         <RN.Text
                           style={{
@@ -227,16 +227,16 @@ const Coupon = () => {
             style={[
               styles.itemContainer,
               {
-                backgroundColor: appCtx.Colors.Coupon.cardContianer,
+                backgroundColor: appCtx.Colors.Coupon.cardContainer,
                 borderColor: appCtx.Colors.Coupon.borderColor,
               },
             ]}>
             <RN.View
               style={[
                 styles.itemContent,
-                {alignItems: 'center', justifyContent: 'center'},
+                { alignItems: 'center', justifyContent: 'center' },
               ]}>
-              <RN.Text style={{fontSize: 20}}>
+              <RN.Text style={{ fontSize: 20 }}>
                 {searchText ? `搜尋 "${searchText}"  查無資料` : `尚無資料`}
               </RN.Text>
             </RN.View>

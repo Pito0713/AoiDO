@@ -1,13 +1,13 @@
 import React from 'react';
 import * as RN from 'react-native';
-import {useNavigation, useIsFocused} from '@react-navigation/native';
-import {useFormik} from 'formik';
-import {Picker} from '@react-native-picker/picker';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
+import { useFormik } from 'formik';
+import { Picker } from '@react-native-picker/picker';
 
-import {AppContext} from '../../redux/AppContent';
+import { AppContext } from '../../redux/AppContent';
 import Goback from '../../component/Goback';
 import service from '../Service/service';
-import {useAppSelector} from '../../redux/store';
+import { useAppSelector } from '../../redux/store';
 import ImagePicker from '../../component/ImagePicker'
 import Modal from '../../component/Modal';
 
@@ -20,49 +20,56 @@ interface Item {
 
 const ProductItem = ({ route }: { route: any }) => {
   const appCtx = React.useContext(AppContext);
+  const navigation = useNavigation();
+
+  // token
+  const reduxToken = useAppSelector((state: { token: any; }) => state.token);
+
+  const [init, setInit] = React.useState(false);
   const [photo, setPhoto] = React.useState(
     route.params?.item.imageUrl ? route.params.item.imageUrl : '',
   );
-  const [orgialPhoto, setOrgialPhoto] = React.useState(
+  const [originalPhoto, setOriginalPhoto] = React.useState(
     route.params?.item.imageUrl ? route.params.item.imageUrl : '',
   );
   const [category, setCategory] = React.useState('');
   const [categoryList, setCategoryList] = React.useState([]);
-  const navigation = useNavigation();
-  const reduxToken = useAppSelector((state: { token: any; }) => state.token);
-  const isFocused = useIsFocused();
+
   const [modalOpen, setModalOpen] = React.useState(false);
 
+  // Modal
   const openModal = () => {
     setModalOpen(true);
   };
-
   const closeModal = () => {
     setModalOpen(false);
   };
 
-  const save = async (values: Item) => {
-    if (values?.describe && values?.price && values?.quantity) {
+  const postUploadProduct = async (values: Item) => {
+    console.log(values)
+    if (!['', null, undefined].includes(values?.describe) &&
+      !['', null, undefined].includes(values?.price) &&
+      !['', null, undefined].includes(values?.quantity)
+    ) {
       await appCtx.setLoading(true);
-      let target =
-        orgialPhoto !== photo ? await handleUploadPhoto() : orgialPhoto;
+      let target = originalPhoto !== photo ? await postUploadWebImage() : originalPhoto;
 
       if (target) {
         let submitData = {
           id: route.params.item._id,
-          describe: values.describe,
+          describe: values?.describe,
           category: category,
-          price: values.price,
-          remark: values.remark,
+          price: values?.price,
+          remark: values?.remark,
           token: reduxToken,
           imageUrl: target?.imageUrl,
-          quantity: values.quantity,
+          quantity: values?.quantity,
         };
 
         const response = await service.postUploadProduct(submitData);
-        await appCtx.setLoading(false);
         if (response?.status === 'success') navigation.goBack();
       }
+      await appCtx.setLoading(false);
     }
   };
 
@@ -74,27 +81,30 @@ const ProductItem = ({ route }: { route: any }) => {
       remark: route.params?.item.remark ? route.params.item.remark : '',
       quantity: route.params?.item.quantity ? route.params.item.quantity : '',
     },
-    validate: (values:any) => {
-      const regDecimalto2 = /^\d+(\.\d{1,2})?$/;
+    validate: (values: any) => {
+      const regDecimalTo2 = /^\d+(\.\d{1,2})?$/;
       const regNumber = /^\d+$/;
       const errors: Item = {};
 
+      // price
       if (values.price == 0) errors.price = '*' + '必須大於0';
-      if (!regDecimalto2.test(values.price))
-        errors.price = '*' + '必須數字且最多小數點後第2位';
+      if (!regDecimalTo2.test(values.price)) errors.price = '*' + '必須數字且最多小數點後第2位';
+
+      // quantity
       if (!regNumber.test(values.quantity)) errors.quantity = '*' + '必須數字';
 
       return errors;
     },
-    onSubmit: async (values: Item, {resetForm}: any) => {
-      save(values);
+    onSubmit: async (values: Item, { resetForm }: any) => {
+      postUploadProduct(values);
       resetForm();
       setCategory('');
       setPhoto('');
     },
   });
 
-  const handleUploadPhoto = async () => {
+  // 更新網頁圖片
+  const postUploadWebImage = async () => {
     let submitData = {
       image: photo
     }
@@ -102,7 +112,8 @@ const ProductItem = ({ route }: { route: any }) => {
     if (response?.data) return response.data
   };
 
-  const deleteCargo = async () => {
+  // 刪除商品
+  const deleteProductOne = async () => {
     let submitData = {
       id: route.params.item._id,
     };
@@ -113,47 +124,61 @@ const ProductItem = ({ route }: { route: any }) => {
     if (response?.status === 'success') navigation.goBack();
   };
 
+  // 搜尋分類
   const postProductFilter = async () => {
     const response = await service.postProductFilter();
     if (!['', null, undefined].includes(response?.data)) {
-      let target = response?.data.filter(( item:any )=>{
+      let target = response?.data.filter((item: any) => {
         return item.token !== '1';
       });
       setCategoryList(target);
     }
+    setInit(false);
   };
 
   React.useEffect(() => {
-    if (isFocused) {
+    if (init) {
       postProductFilter();
       setCategory(
         route.params?.item.category ? route.params?.item.category : '',
       );
     }
-  }, [isFocused]);
+  }, [init]);
 
-  const onValueChange = (e: any) => {
-    setPhoto(e)
-  }
+  useFocusEffect(
+    // 監聽頁面離開與載入
+    React.useCallback(() => {
+      // 開始初始化
+      setInit(true);
+      return () => {
+        setInit(false);
+      }
+    }, [])
+  );
 
   return (
     <RN.View style={styles.itemContainer}>
       <Goback />
-      <ImagePicker onValuechange={onValueChange} photo={photo} width={'100%'} height={250}/>
+      <ImagePicker
+        onValuechange={(e: string) => { setPhoto(e) }}
+        photo={photo}
+        width={'100%'}
+        height={250}
+      />
       <RN.View>
         <RN.Text style={styles.itemContainerText}>商品描述</RN.Text>
         <RN.TextInput
           style={[
             styles.input,
-            {backgroundColor: appCtx.Colors.inputContainer},
+            { backgroundColor: appCtx.Colors.inputContainer },
           ]}
           value={formik.values.describe}
           onChangeText={formik.handleChange('describe')}
           placeholder="描述"
         />
         <RN.View>
-          <RN.Text style={[{color: appCtx.Colors.errorText, fontSize: 12}]}>
-          {formik.errors.describe as String}
+          <RN.Text style={[{ color: appCtx.Colors.errorText, fontSize: 12 }]}>
+            {formik.errors.describe as String}
           </RN.Text>
         </RN.View>
       </RN.View>
@@ -162,7 +187,7 @@ const ProductItem = ({ route }: { route: any }) => {
         <Picker
           style={[
             styles.input,
-            {backgroundColor: appCtx.Colors.inputContainer},
+            { backgroundColor: appCtx.Colors.inputContainer },
           ]}
           selectedValue={category}
           onValueChange={(e: any) => { setCategory(e) }}>
@@ -183,7 +208,7 @@ const ProductItem = ({ route }: { route: any }) => {
         <RN.TextInput
           style={[
             styles.input,
-            {backgroundColor: appCtx.Colors.inputContainer},
+            { backgroundColor: appCtx.Colors.inputContainer },
           ]}
           value={formik.values.price}
           onChangeText={formik.handleChange('price')}
@@ -191,8 +216,8 @@ const ProductItem = ({ route }: { route: any }) => {
           keyboardType="phone-pad"
         />
         <RN.View>
-          <RN.Text style={[{color: appCtx.Colors.errorText, fontSize: 12}]}>
-          {formik.errors.price as String}
+          <RN.Text style={[{ color: appCtx.Colors.errorText, fontSize: 12 }]}>
+            {formik.errors.price as String}
           </RN.Text>
         </RN.View>
       </RN.View>
@@ -221,8 +246,8 @@ const ProductItem = ({ route }: { route: any }) => {
           />
         </RN.View>
         <RN.View>
-          <RN.Text style={[, {color: appCtx.Colors.errorText, fontSize: 12}]}>
-          {formik.errors.quantity as String}
+          <RN.Text style={[, { color: appCtx.Colors.errorText, fontSize: 12 }]}>
+            {formik.errors.quantity as String}
           </RN.Text>
         </RN.View>
       </RN.View>
@@ -231,23 +256,23 @@ const ProductItem = ({ route }: { route: any }) => {
         <RN.TextInput
           style={[
             styles.input,
-            {backgroundColor: appCtx.Colors.inputContainer},
+            { backgroundColor: appCtx.Colors.inputContainer },
           ]}
           value={formik.values.remark}
           onChangeText={formik.handleChange('remark')}
           placeholder="備註"
         />
         <RN.View>
-          <RN.Text style={[{color: appCtx.Colors.errorText, fontSize: 12}]}>
-          {formik.errors.remark as String}
+          <RN.Text style={[{ color: appCtx.Colors.errorText, fontSize: 12 }]}>
+            {formik.errors.remark as String}
           </RN.Text>
         </RN.View>
       </RN.View>
-      <RN.View style={styles.buttomGroup}>
+      <RN.View style={styles.bottomGroup}>
         <RN.TouchableOpacity
           style={[
             styles.saveContainer,
-            {backgroundColor: appCtx.Colors.primary},
+            { backgroundColor: appCtx.Colors.primary },
           ]}
           onPress={() => formik.submitForm()}>
           <RN.Text style={[styles.saveContainerText]}>保存</RN.Text>
@@ -260,7 +285,7 @@ const ProductItem = ({ route }: { route: any }) => {
       </RN.View>
       <Modal
         isOpen={modalOpen}
-        confirm={() => deleteCargo()}
+        confirm={() => deleteProductOne()}
         cancel={closeModal}
         content={'是否刪除'}
       />
@@ -309,7 +334,7 @@ const styles = RN.StyleSheet.create({
     borderWidth: 1.5,
     borderRadius: 5,
   },
-  buttomGroup: {
+  bottomGroup: {
     flexDirection: 'row',
   },
 });

@@ -1,10 +1,10 @@
 import React from 'react';
 import * as RN from 'react-native';
 
-import {AppContext} from '../redux/AppContent';
+import { AppContext } from '../redux/AppContent';
 import service from '../page/Service/service';
-import {useIsFocused} from '@react-navigation/native';
-import Filter from '../assets/Filter';
+import { useIsFocused } from '@react-navigation/native';
+import { Filter } from '../assets';
 
 const Fillter = e => {
   const isFocused = useIsFocused();
@@ -39,13 +39,13 @@ const Fillter = e => {
 
   const handleCheckBoxChange = itemId => {
     const updatedData = categoryList.map(item =>
-      item.category === itemId ? {...item, checked: !item.checked} : item,
+      item.category === itemId ? { ...item, checked: !item.checked } : item,
     );
     setCategoryList(updatedData);
     e.categoryValue(updatedData);
   };
 
-  const renderItem = ({item}) => (
+  const renderItem = ({ item }) => (
     <RN.View style={styles.itemcontainer}>
       <RN.CheckBox
         value={item.checked}
@@ -73,13 +73,13 @@ const Fillter = e => {
           <RN.TouchableOpacity
             style={[
               styles.confirmButton,
-              {backgroundColor: appCtx.Colors.primary},
+              { backgroundColor: appCtx.Colors.primary },
             ]}
             onPress={() => {
               setShowDialog(false);
               e.ShowDialog(false);
             }}>
-            <RN.Text style={[{color: appCtx.Colors.textPrimary}]}>確認</RN.Text>
+            <RN.Text style={[{ color: appCtx.Colors.textPrimary }]}>確認</RN.Text>
           </RN.TouchableOpacity>
         </RN.SafeAreaView>
       </RN.Modal>

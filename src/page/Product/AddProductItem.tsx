@@ -2,14 +2,18 @@ import React from "react";
 import * as RN from 'react-native';
 import { useFormik } from "formik";
 import { useNavigation } from '@react-navigation/native';
-import {Picker} from '@react-native-picker/picker';
+import { Picker } from '@react-native-picker/picker';
 
-import { AppContext } from '../../redux/AppContent';
-import Goback from '../../component/Goback'
+// api
 import service from "../Service/service";
+// redux
+import { AppContext } from '../../redux/AppContent';
 import { useAppSelector } from '../../redux/store';
+// com
 import ImagePicker from '../../component/ImagePicker'
+import Goback from '../../component/Goback'
 
+// type
 interface Item {
   describe?: string,
   price?: string,
@@ -20,21 +24,23 @@ interface Item {
 
 const AddProductItem = () => {
   type Nav = {
-    navigate: (route: string | undefined ,params:{isGo:boolean}) => void,
+    navigate: (route: string | undefined, params: { isGo: boolean }) => void,
     goBack: () => void,
   }
   const appCtx = React.useContext(AppContext);
-
   const navigation = useNavigation<Nav>();
   const reduxToken = useAppSelector((state: { token: any; }) => state.token)
-
   const [category, setCategory] = React.useState('');
   const [photo, setPhoto] = React.useState('');
   const [categoryList, setCategoryList] = React.useState([]);
 
-  const save = async (values: Item) => {
+  // 新增商品
+  const postAddProduct = async (values: Item) => {
     if (values?.describe && values?.price && values?.quantity) {
-      let target = await handleUploadPhoto()
+      await appCtx.setLoading(true);
+      // 上傳圖片到img
+      let target
+      target = await postUploadWebImage()
       let submitData = {
         "describe": values.describe,
         "price": values.price,
@@ -44,10 +50,15 @@ const AddProductItem = () => {
         "token": reduxToken,
         "imageUrl": target?.imageUrl,
       }
-      if (target.imageUrl) {
-        await appCtx.setLoading(true);
+
+      if (['', null, undefined].includes(target?.imageUrl)) {
         const response = await service.postAddProduct(submitData);
+
+        // 回到上一頁
         if (response?.status === 'success') navigation.goBack()
+      } else {
+        appCtx.setModalOpen(true)
+        appCtx.setContentModal('圖片資源錯誤')
       }
       await appCtx.setLoading(false);
     }
@@ -61,45 +72,54 @@ const AddProductItem = () => {
       remark: "",
       quantity: "",
     },
-    validate: (values: { describe: any; price: string; quantity: string; }) => {
-      const regDecimalto2 = /^\d+(\.\d{1,2})?$/
+    validate: (values: { describe: string; price: string; quantity: string; }) => {
+      const regDecimalTo2 = /^\d+(\.\d{1,2})?$/
       const regNumber = /^\d+$/
+
       const errors: Item = {};
 
       if (!values.describe) errors.describe = '*' + '必填';
-      if (!regDecimalto2.test(values.price)) errors.price = '*' + "必須數字且最多小數點後第2位";
+      if (!regDecimalTo2.test(values.price)) errors.price = '*' + "必須數字且最多小數點後第2位";
       if (!regNumber.test(values.quantity)) errors.quantity = '*' + "必須數字";
 
       return errors;
     },
     onSubmit: async (values: Item, { resetForm }: any) => {
-      save(values)
+      postAddProduct(values)
       resetForm()
       setCategory('')
       setPhoto('')
     },
   });
+  0
+  const postUploadWebImage = async () => {
+    if (!['', null, undefined].includes(photo)) {
+      let submitData = {
+        image: photo
+      }
 
-  const handleUploadPhoto = async () => {
-    let submitData = {
-      image: photo
+      // 圖片上傳功能
+      const response = await service.postUploadWebImage(submitData);
+      if (response?.data) return response.data
+    } else {
+      appCtx.setModalOpen(true)
+      appCtx.setContentModal('你少了圖片')
     }
-    const response = await service.postUploadWebImage(submitData);
-    if (response?.data) return response.data
   };
 
+  // 搜尋分類
   const postProductFilter = async () => {
     const response = await service.postProductFilter();
     if (!['', null, undefined].includes(response?.data)) {
-      let target = response?.data.filter(( item:any )=>{
-        return item.token !== '1'
+      let target = []
+      target = response?.data.filter((item: any) => {
+        //  移除 權限 1
+        return item?.token !== '1'
       })
+
+      if (target?.length > 0) setCategory(target[0]?.category)
       setCategoryList(target)
     }
-  }
-
-  const onValueChange = (e: any) => {
-    setPhoto(e)
   }
 
   React.useEffect(() => {
@@ -109,99 +129,99 @@ const AddProductItem = () => {
   return (
     <RN.View style={styles.itemContainer}>
       <Goback />
-      <ImagePicker onValuechange={onValueChange} photo={photo} width={'100%'} height={250}/>
+      <ImagePicker onValueChange={(e: string) => { setPhoto(e) }} photo={photo} width={'100%'} height={250} />
+      <RN.View>
+        <RN.Text style={styles.itemContainerText}>商品描述</RN.Text>
+        <RN.TextInput
+          style={[styles.input, { backgroundColor: appCtx.Colors.inputContainer, }]}
+          value={formik.values.describe}
+          onChangeText={formik.handleChange("describe")}
+          placeholder="描述"
+        />
         <RN.View>
-          <RN.Text style={styles.itemContainerText}>商品描述</RN.Text>
-          <RN.TextInput
-            style={[styles.input, { backgroundColor: appCtx.Colors.inputContainer, }]}
-            value={formik.values.describe}
-            onChangeText={formik.handleChange("describe")}
-            placeholder="描述"
-          />
-          <RN.View>
-            <RN.Text style={[, { color: appCtx.Colors.errorText, fontSize: 12 }]}>
-              {formik.errors.describe}
-            </RN.Text>
-          </RN.View>
+          <RN.Text style={[, { color: appCtx.Colors.errorText, fontSize: 12 }]}>
+            {formik.errors.describe}
+          </RN.Text>
         </RN.View>
-        <RN.View>
-          <RN.Text style={styles.itemContainerText}>商品分類</RN.Text>
-          <Picker
-            style={[{
-              backgroundColor: appCtx.Colors.inputContainer,
-              width: '100%',
-              paddingLeft: 15,
-              height: 45,
-              borderWidth: 1.5,
-              borderRadius: 5
-            }]}
-            selectedValue={category}
-            onValueChange={(e: any) => { setCategory(e) }}
+      </RN.View>
+      <RN.View>
+        <RN.Text style={styles.itemContainerText}>商品分類</RN.Text>
+        <Picker
+          style={[{
+            backgroundColor: appCtx.Colors.inputContainer,
+            width: '100%',
+            paddingLeft: 15,
+            height: 45,
+            borderWidth: 1.5,
+            borderRadius: 5
+          }]}
+          selectedValue={category}
+          onValueChange={(e: any) => { setCategory(e) }}
+        >
+          {categoryList.map((item: any, index: any) => (
+            <Picker.Item key={index} value={item?.category} label={item?.category} />
+          ))}
+        </Picker>
+      </RN.View>
+      <RN.View >
+        <RN.Text style={styles.itemContainerText}>商品價格</RN.Text>
+        <RN.View style={{ borderWidth: 1.5, borderRadius: 5, overflow: 'hidden', flexDirection: 'row' }}>
+          <RN.TextInput
+            style={[{ backgroundColor: appCtx.Colors.inputContainer, flex: 7, paddingLeft: 15, height: 45, }]}
+            value={formik.values.price}
+            onChangeText={formik.handleChange("price")}
+            placeholder="商品價格"
+            keyboardType="phone-pad"
+          />
+          <RN.TouchableOpacity
+            style={[styles.transferContainer, { backgroundColor: appCtx.Colors.primary, flex: 3 }]}
+            onPress={() => navigation.navigate('transfer', { isGo: true })}
           >
-            {categoryList.map((item: any, index: any) => (
-              <Picker.Item key={index} value={item?.category} label={item?.category} />
-            ))}
-          </Picker>
-        </RN.View>
-        <RN.View >
-          <RN.Text style={styles.itemContainerText}>商品價格</RN.Text>
-          <RN.View style={{ borderWidth: 1.5, borderRadius: 5, overflow: 'hidden', flexDirection: 'row' }}>
-            <RN.TextInput
-              style={[{ backgroundColor: appCtx.Colors.inputContainer, flex: 7, paddingLeft: 15, height: 45, }]}
-              value={formik.values.price}
-              onChangeText={formik.handleChange("price")}
-              placeholder="商品價格"
-              keyboardType="phone-pad"
-            />
-            <RN.TouchableOpacity
-              style={[styles.transferContainer, { backgroundColor: appCtx.Colors.primary, flex: 3 }]}
-              onPress={() => navigation.navigate('transfer', { isGo: true } )}
-            >
-              <RN.Text style={[{ color: appCtx.Colors.textPrimary }]}>換算</RN.Text>
-            </RN.TouchableOpacity>
-          </RN.View>
-          <RN.View >
-            <RN.Text style={[, { color: appCtx.Colors.errorText, fontSize: 12 }]}>
-              {formik.errors.price}
-            </RN.Text>
-          </RN.View>
-        </RN.View>
-        <RN.View >
-          <RN.Text style={styles.itemContainerText}>商品數量</RN.Text>
-          <RN.View style={{ borderWidth: 1.5, borderRadius: 5, overflow: 'hidden', flexDirection: 'row' }}>
-            <RN.TextInput
-              style={[{ backgroundColor: appCtx.Colors.inputContainer, flex: 7, paddingLeft: 15, height: 45, }]}
-              value={formik.values.quantity}
-              onChangeText={formik.handleChange("quantity")}
-              placeholder="商品數量"
-              keyboardType="phone-pad"
-            />
-          </RN.View>
-          <RN.View >
-            <RN.Text style={[, { color: appCtx.Colors.errorText, fontSize: 12 }]}>
-              {formik.errors.quantity}
-            </RN.Text>
-          </RN.View>
-        </RN.View>
-        <RN.View>
-          <RN.Text style={styles.itemContainerText}>備註</RN.Text>
-          <RN.TextInput
-            style={[styles.input, { backgroundColor: appCtx.Colors.inputContainer, }]}
-            value={formik.values.remark}
-            onChangeText={formik.handleChange("remark")}
-            placeholder="備註"
-          />
-          <RN.View >
-            <RN.Text style={[{ color: appCtx.Colors.errorText, fontSize: 12 }]}>
-              {formik.errors.remark}
-            </RN.Text>
-          </RN.View>
-        </RN.View>
-        <RN.View>
-          <RN.TouchableOpacity style={[styles.saveContainer, { backgroundColor: appCtx.Colors.primary }]} onPress={() => formik.submitForm()}>
-            <RN.Text style={styles.saveContainerText}>保存</RN.Text>
+            <RN.Text style={[{ color: appCtx.Colors.textPrimary }]}>換算</RN.Text>
           </RN.TouchableOpacity>
         </RN.View>
+        <RN.View >
+          <RN.Text style={[, { color: appCtx.Colors.errorText, fontSize: 12 }]}>
+            {formik.errors.price}
+          </RN.Text>
+        </RN.View>
+      </RN.View>
+      <RN.View >
+        <RN.Text style={styles.itemContainerText}>商品數量</RN.Text>
+        <RN.View style={{ borderWidth: 1.5, borderRadius: 5, overflow: 'hidden', flexDirection: 'row' }}>
+          <RN.TextInput
+            style={[{ backgroundColor: appCtx.Colors.inputContainer, flex: 7, paddingLeft: 15, height: 45, }]}
+            value={formik.values.quantity}
+            onChangeText={formik.handleChange("quantity")}
+            placeholder="商品數量"
+            keyboardType="phone-pad"
+          />
+        </RN.View>
+        <RN.View >
+          <RN.Text style={[, { color: appCtx.Colors.errorText, fontSize: 12 }]}>
+            {formik.errors.quantity}
+          </RN.Text>
+        </RN.View>
+      </RN.View>
+      <RN.View>
+        <RN.Text style={styles.itemContainerText}>備註</RN.Text>
+        <RN.TextInput
+          style={[styles.input, { backgroundColor: appCtx.Colors.inputContainer, }]}
+          value={formik.values.remark}
+          onChangeText={formik.handleChange("remark")}
+          placeholder="備註"
+        />
+        <RN.View >
+          <RN.Text style={[{ color: appCtx.Colors.errorText, fontSize: 12 }]}>
+            {formik.errors.remark}
+          </RN.Text>
+        </RN.View>
+      </RN.View>
+      <RN.View>
+        <RN.TouchableOpacity style={[styles.saveContainer, { backgroundColor: appCtx.Colors.primary }]} onPress={() => formik.submitForm()}>
+          <RN.Text style={styles.saveContainerText}>保存</RN.Text>
+        </RN.TouchableOpacity>
+      </RN.View>
     </RN.View>
   );
 };

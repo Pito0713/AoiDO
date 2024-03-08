@@ -1,12 +1,10 @@
 import React from 'react';
 import * as RN from 'react-native';
-import {useNavigation, useIsFocused} from '@react-navigation/native';
-import Plus from '../../assets/Plus';
-import Cancel from '../../assets/Cancel';
-
+import { useNavigation, useIsFocused } from '@react-navigation/native';
+import { Plus, Cancel } from '../../assets'
 import service from '../Service/service';
-import {AppContext} from '../../redux/AppContent';
-import {useAppSelector} from '../../redux/store';
+import { AppContext } from '../../redux/AppContent';
+import { useAppSelector } from '../../redux/store';
 import Goback from '../../component/Goback';
 import ReminderText from '../../component/ReminderText';
 import Modal from '../../component/Modal';
@@ -96,7 +94,7 @@ const Content = () => {
       <RN.View
         style={[
           styles.listContainer,
-          {borderColor: appCtx.Colors.proudcutFilter.borderPrimary},
+          { borderColor: appCtx.Colors.productFilter.borderPrimary },
         ]}>
         <ReminderText text={'* 點擊分類可以查類別商品'} />
         <ReminderText text={'* 長按可刪除分類別'} />
@@ -108,14 +106,14 @@ const Content = () => {
             return item.token !== '1' ? (
               <RN.View>
                 <RN.TouchableOpacity
-                  style={{margin: 10}}
+                  style={{ margin: 10 }}
                   onPress={() => openModal(item)}>
                   <Cancel />
                 </RN.TouchableOpacity>
                 <RN.TouchableOpacity
                   style={styles.itemContainer}
                   onPress={() =>
-                    navigation.navigate('productFilterItem', {item: item})
+                    navigation.navigate('productFilterItem', { item: item })
                   }
                   key={index}>
                   <RN.View style={styles.itemContent}>
@@ -131,7 +129,7 @@ const Content = () => {
                   <RN.Text
                     style={[
                       styles.itemContentText,
-                      {color: appCtx.Colors.productFilterDefault},
+                      { color: appCtx.Colors.productFilterDefault },
                     ]}>
                     {item.category}
                   </RN.Text>
@@ -142,12 +140,12 @@ const Content = () => {
         ) : (
           <RN.View style={styles.itemContainer}>
             <RN.View style={styles.itemContent}>
-              <RN.Text style={{fontSize: 20}}>尚無資料</RN.Text>
+              <RN.Text style={{ fontSize: 20 }}>尚無資料</RN.Text>
             </RN.View>
           </RN.View>
         )}
         <RN.TouchableOpacity
-          style={[styles.itemContainer, {marginTop: 40}]}
+          style={[styles.itemContainer, { marginTop: 40 }]}
           onPress={() => navigation.navigate('addProductFilterItem')}>
           <RN.View style={styles.itemContent}>
             <Plus />

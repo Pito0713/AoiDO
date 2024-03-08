@@ -1,12 +1,27 @@
-import React, {useCallback} from 'react';
+import React, { useCallback } from 'react';
 import * as RN from 'react-native';
 import Dropzone from 'react-dropzone';
-import Plus from '../assets/Plus';
+import { Plus } from '../assets';
+import { AppContext } from '../redux/AppContent';
 
 const ImagePicker = imageValue => {
+  const appCtx = React.useContext(AppContext);
   const handleDrop = useCallback(async acceptedFiles => {
-    if (acceptedFiles.length > 0) {
+
+
+    if (acceptedFiles?.length > 0) {
       const file = acceptedFiles[0];
+
+      if (!['image/jpg', 'image/jpeg', 'image/png', 'image/gif'].includes(file.type)) {
+        appCtx.setModalOpen(true)
+        appCtx.setContentModal('圖片規格有誤 只能用jpg, jpeg, png, gif')
+        return;
+      }
+      if (file.size > 16000) {
+        appCtx.setModalOpen(true)
+        appCtx.setContentModal('圖片大小 只能用16KB')
+        return;
+      }
       const toBase64 = file =>
         new Promise((resolve, reject) => {
           const reader = new FileReader();
@@ -17,14 +32,14 @@ const ImagePicker = imageValue => {
 
       try {
         const base64 = await toBase64(file);
-        imageValue.onValuechange(base64);
-      } catch (error) {}
+        imageValue.onValueChange(base64);
+      } catch (error) { }
     }
   }, []);
 
   return (
     <Dropzone onDrop={handleDrop}>
-      {({getRootProps, getInputProps}) => (
+      {({ getRootProps, getInputProps }) => (
         <RN.View
           {...getRootProps()}
           style={{
@@ -44,7 +59,7 @@ const ImagePicker = imageValue => {
             <img
               src={imageValue.photo}
               alt="Uploaded"
-              style={{width: 200, height: 200}}
+              style={{ width: 200, height: 200 }}
             />
           ) : (
             <Plus />
