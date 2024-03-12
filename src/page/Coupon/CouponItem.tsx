@@ -68,7 +68,7 @@ const CouponItem = ({ route }: { route: any }) => {
       count: route.params?.item.count ? route.params.item.count : '',
       remark: route.params?.item.remark ? route.params.item.remark : '',
     },
-    validate: (values:any) => {
+    validate: (values: any) => {
       const errors: Item = {};
       const reg = /^\d+$/
 
@@ -130,28 +130,28 @@ const CouponItem = ({ route }: { route: any }) => {
           />
           <RN.View>
             <RN.Text style={[{ color: appCtx.Colors.errorText }]}>
-              {formik.errors.discount as String} 
+              {formik.errors.discount as String}
             </RN.Text>
           </RN.View>
         </RN.View>
         <RN.View>
-        <RN.Text style={styles.itemContainerText}>使用次數</RN.Text>
-        <RN.TextInput
-          style={[styles.input, { backgroundColor: appCtx.Colors.inputContainer, }]}
-          onChangeText={formik.handleChange("count")}
-          value={formik.values.count}
-          placeholder="使用次數"
-        />
-        <RN.View>
-          <RN.Text style={[{ color: appCtx.Colors.errorText }]}>
-            {formik.errors.count as String}
-          </RN.Text>
-        </RN.View>
+          <RN.Text style={styles.itemContainerText}>使用次數</RN.Text>
+          <RN.TextInput
+            style={[styles.input, { backgroundColor: appCtx.Colors.inputContainer, }]}
+            onChangeText={formik.handleChange("count")}
+            value={formik.values.count}
+            placeholder="使用次數"
+          />
+          <RN.View>
+            <RN.Text style={[{ color: appCtx.Colors.errorText }]}>
+              {formik.errors.count as String}
+            </RN.Text>
+          </RN.View>
         </RN.View>
         <RN.View>
           <RN.Text style={styles.itemContainerText}>開始日期</RN.Text>
-          <RN.View style={[styles.pickerContainer, {backgroundColor: appCtx.Colors.inputContainer}]}>
-            <DatePicker value={startDate} onValueChange={onValueStartDatechange}/>
+          <RN.View style={[styles.pickerContainer, { backgroundColor: appCtx.Colors.inputContainer }]}>
+            <DatePicker value={startDate} onValueChange={onValueStartDatechange} />
           </RN.View>
           <RN.View>
             <RN.Text style={[{ color: appCtx.Colors.errorText }]}>
@@ -162,8 +162,8 @@ const CouponItem = ({ route }: { route: any }) => {
         </RN.View>
         <RN.View>
           <RN.Text style={styles.itemContainerText}>結束日期</RN.Text>
-          <RN.View style={[styles.pickerContainer, {backgroundColor: appCtx.Colors.inputContainer}]}>
-            <DatePicker value={endDate} onValueChange={onValueEndDatechange}/>
+          <RN.View style={[styles.pickerContainer, { backgroundColor: appCtx.Colors.inputContainer }]}>
+            <DatePicker value={endDate} onValueChange={onValueEndDatechange} />
           </RN.View>
           <RN.View>
             <RN.Text style={[{ color: appCtx.Colors.errorText }]}>
@@ -190,13 +190,13 @@ const CouponItem = ({ route }: { route: any }) => {
             <RN.Text style={styles.saveContainerText}>刪除</RN.Text>
           </RN.TouchableOpacity>
         </RN.View>
-        </RN.View>
-      <Modal
+      </RN.View>
+      {/* <Modal
         isOpen={modalOpen}
         confirm={() => deleteOneCoupon()}
         cancel={closeModal}
         content={'是否刪除'}
-      />
+      /> */}
     </RN.SafeAreaView>
   );
 };

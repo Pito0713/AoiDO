@@ -1,8 +1,8 @@
 import React from 'react';
 import * as RN from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 
-import {AppContext} from '../../redux/AppContent';
+import { AppContext } from '../../redux/AppContent';
 import Goback from '../../component/Goback';
 import service from '../Service/service';
 import ScrollViewComponent from '../../component/ScrollViewComponent';
@@ -12,7 +12,7 @@ interface Order {
   id: string;
 }
 
-const Content = (route : { params: any }) => {
+const Content = (route: { params: any }) => {
   const appCtx = React.useContext(AppContext);
   const navigation = useNavigation<Nav>();
   type Nav = {
@@ -61,7 +61,7 @@ const Content = (route : { params: any }) => {
       </RN.View>
       <RN.Text style={styles.titleText}>商品明細: </RN.Text>
       <RN.View style={[styles.checkListContainer]}>
-      {route.params.item.ProductList.map((item: { imageUrl: any; describe: any; quantity: any; category:any }, index: any) => {
+        {route.params.item.ProductList.map((item: { imageUrl: any; describe: any; quantity: any; category: any }, index: any) => {
           return (
             <RN.View
               style={[
@@ -74,8 +74,8 @@ const Content = (route : { params: any }) => {
               ]}
               key={index}>
               <RN.Image
-                source={{uri: `${item.imageUrl}`}}
-                style={{width: 60, height: 60}}
+                source={{ uri: `${item.imageUrl}` }}
+                style={{ width: 60, height: 60 }}
               />
               <RN.View
                 style={[
@@ -104,18 +104,18 @@ const Content = (route : { params: any }) => {
         <RN.TouchableOpacity
           style={[
             styles.buttonContent,
-            {backgroundColor: appCtx.Colors.primary},
+            { backgroundColor: appCtx.Colors.primary },
           ]}
           onPress={() => openModal()}>
           <RN.Text>刪除</RN.Text>
         </RN.TouchableOpacity>
       </RN.View>
-      <Modal
+      {/* <Modal
         isOpen={modalOpen}
         confirm={() => deleteOneOrder(route.params.item._id)}
         cancel={closeModal}
         content={'是否刪除'}
-      />
+      /> */}
     </RN.View>
   );
 };

@@ -13,13 +13,17 @@ const ImagePicker = imageValue => {
       const file = acceptedFiles[0];
 
       if (!['image/jpg', 'image/jpeg', 'image/png', 'image/gif'].includes(file.type)) {
-        appCtx.setModalOpen(true)
-        appCtx.setContentModal('圖片規格有誤 只能用jpg, jpeg, png, gif')
+        appCtx.setModalOpen(true);
+        appCtx.setModal({
+          content: '圖片規格有誤 只能用jpg, jpeg, png, gif'
+        });
         return;
       }
-      if (file.size > 16000) {
-        appCtx.setModalOpen(true)
-        appCtx.setContentModal('圖片大小 只能用16KB')
+      if (file.size > 20000) {
+        appCtx.setModalOpen(true);
+        appCtx.setModal({
+          content: '圖片大小 只能用20KB'
+        });
         return;
       }
       const toBase64 = file =>

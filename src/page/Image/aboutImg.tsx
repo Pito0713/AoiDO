@@ -161,12 +161,12 @@ const Content = () => {
           </RN.View>
         )}
       </RN.View>
-      <Modal
+      {/* <Modal
         isOpen={modalOpen}
         confirm={() => deleteOneAboutImg()}
         cancel={closeModal}
         content={'是否刪除'}
-      />
+      /> */}
     </RN.View>
   );
 };

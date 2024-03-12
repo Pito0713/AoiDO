@@ -126,9 +126,8 @@ const AppProvider = ({ children }) => {
   };
 
   const [modalOpen, setModalOpen] = React.useState(false);
-  const [confirmModal, setConfirmModal] = React.useState(false);
-  const [cancelModal, setCancelModal] = React.useState(false);
-  const [contentModal, setContentModal] = React.useState('');
+  const [modalConfig, setModalConfig] = React.useState({});
+
 
   const value = {
     ///////////////////////
@@ -139,13 +138,11 @@ const AppProvider = ({ children }) => {
     setInitialized: setInitialized,
     modalOpen: modalOpen,
     setModalOpen: (e) => setModalOpen(e),
-    confirmModal: confirmModal,
-    setConfirmModal: setConfirmModal,
-    cancelModal: cancelModal,
-    setCancelModal: setCancelModal,
-    contentModal: contentModal,
-    setContentModal: setContentModal,
     ///////////////////////
+
+    setModal: (config) => {
+      setModalConfig(config ?? {});
+    },
   };
 
   return (
@@ -153,10 +150,16 @@ const AppProvider = ({ children }) => {
       <LoadingView visible={loading} />
       <Modal
         isOpen={modalOpen}
-        confirm={() => setModalOpen(false)}
-        cancel={() => setModalOpen(false)}
-        content={contentModal}
+        widthModal={modalConfig?.widthModal ?? 250}
+        onConfirm={modalConfig?.onConfirm ?? (() => setModalOpen(false))}
+        confirmText={modalConfig?.confirmText ?? '確認'}
+        onCancel={
+          modalConfig?.onCancel ?? (() => setModalOpen(false))
+        }
+        cancelText={modalConfig?.cancelText ?? '取消'}
+        content={modalConfig?.content}
       />
+
       {children}
     </AppContext.Provider>
   );

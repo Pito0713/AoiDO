@@ -152,12 +152,12 @@ const Content = () => {
           </RN.View>
         </RN.TouchableOpacity>
       </RN.View>
-      <Modal
+      {/* <Modal
         isOpen={modalOpen}
         confirm={() => deleteCategory()}
         cancel={closeModal}
         content={'分類還有相關產品是否全部刪除'}
-      />
+      /> */}
     </RN.View>
   );
 };

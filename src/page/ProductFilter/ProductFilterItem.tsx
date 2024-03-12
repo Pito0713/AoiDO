@@ -10,7 +10,7 @@ import Modal from '../../component/Modal';
 interface ProductFilterItem {
   imageUrl?: string
   describe?: string
-  price?: string 
+  price?: string
   _id: string
 }
 
@@ -20,7 +20,7 @@ const ProductFilterItem = ({ route }: { route: any }) => {
   const reduxToken = useAppSelector((state: { token: any; }) => state.token)
   const [modalOpen, setModalOpen] = React.useState(false);
   const [deleteId, setDeleteId] = React.useState('');
-  const openModal = (item:any) => {
+  const openModal = (item: any) => {
     setModalOpen(true);
     setDeleteId(item);
   };
@@ -35,7 +35,7 @@ const ProductFilterItem = ({ route }: { route: any }) => {
   const [page, setPage] = React.useState(1);
   const [total, setTotal] = React.useState(0);
 
-  const onPageChange = async (page:any) => {
+  const onPageChange = async (page: any) => {
     setPage(page);
   };
 
@@ -74,48 +74,48 @@ const ProductFilterItem = ({ route }: { route: any }) => {
 
   return (
     <RN.SafeAreaView style={styles.container}>
-    <Goback />
-    <RN.View >
-      {productFilter.length > 0 ? productFilter.map((item : ProductFilterItem, index: any) => {
-        return (
-          <RN.View style={styles.itemContainer} key={index}>
-            <RN.View style={styles.itemContent} >
-              <RN.View style={{ width: 100 ,alignItems: 'center' ,justifyContent: 'center',}}>
-                <RN.Image
-                  source={{ uri: `${item.imageUrl }` }}
-                  style={{ width: 70, height: 70, }}
-                />
+      <Goback />
+      <RN.View >
+        {productFilter.length > 0 ? productFilter.map((item: ProductFilterItem, index: any) => {
+          return (
+            <RN.View style={styles.itemContainer} key={index}>
+              <RN.View style={styles.itemContent} >
+                <RN.View style={{ width: 100, alignItems: 'center', justifyContent: 'center', }}>
+                  <RN.Image
+                    source={{ uri: `${item.imageUrl}` }}
+                    style={{ width: 70, height: 70, }}
+                  />
+                </RN.View>
+                <RN.View style={{ width: 200 }}><RN.Text style={styles.itemContentText} numberOfLines={1} ellipsizeMode={'tail'}>{item.describe}</RN.Text></RN.View>
+                <RN.View style={{ width: 80 }}><RN.Text style={styles.itemContentText} numberOfLines={1} ellipsizeMode={'tail'}>$ {item.price}</RN.Text></RN.View>
+                <RN.TouchableOpacity
+                  style={{ width: 75, alignItems: 'center', height: '100%', justifyContent: 'center', backgroundColor: appCtx.Colors.primary }}
+                  onPress={() => openModal(item._id)}
+                >
+                  <RN.Text>刪除</RN.Text>
+                </RN.TouchableOpacity>
               </RN.View>
-              <RN.View style={{ width: 200 }}><RN.Text style={styles.itemContentText} numberOfLines={1} ellipsizeMode={'tail'}>{item.describe}</RN.Text></RN.View>
-              <RN.View style={{ width: 80 }}><RN.Text style={styles.itemContentText} numberOfLines={1} ellipsizeMode={'tail'}>$ {item.price}</RN.Text></RN.View>
-              <RN.TouchableOpacity 
-                style={{ width: 75, alignItems: 'center' ,height:'100%',justifyContent: 'center',backgroundColor: appCtx.Colors.primary}} 
-                onPress={() => openModal(item._id)}
-              >
-                <RN.Text>刪除</RN.Text>
-              </RN.TouchableOpacity>
             </RN.View>
-          </RN.View>
-        )
-      }) :
-        <RN.View style={styles.itemContainer}>
-          <RN.View style={styles.itemContent}>
-            <RN.Text style={{ fontSize: 20 }}>尚無資料</RN.Text>
-          </RN.View>
-        </RN.View>}
-      <Pagination
-        page={page}
-        pagination={pagination}
-        total={total}
-        onPageChange={onPageChange}
-      />
-    </RN.View>
-    <Modal
+          )
+        }) :
+          <RN.View style={styles.itemContainer}>
+            <RN.View style={styles.itemContent}>
+              <RN.Text style={{ fontSize: 20 }}>尚無資料</RN.Text>
+            </RN.View>
+          </RN.View>}
+        <Pagination
+          page={page}
+          pagination={pagination}
+          total={total}
+          onPageChange={onPageChange}
+        />
+      </RN.View>
+      {/* <Modal
         isOpen={modalOpen}
         confirm={() => deleteCargo()}
         cancel={closeModal}
         content={'是否刪除'}
-      />
+      /> */}
     </RN.SafeAreaView>
   );
 };
@@ -131,7 +131,7 @@ const styles = RN.StyleSheet.create({
     marginLeft: 10,
     alignItems: 'center',
     borderWidth: 1.5,
-    overflow:'hidden',
+    overflow: 'hidden',
     borderRadius: 10
   },
   itemContent: {

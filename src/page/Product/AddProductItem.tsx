@@ -30,6 +30,7 @@ const AddProductItem = () => {
   const appCtx = React.useContext(AppContext);
   const navigation = useNavigation<Nav>();
   const reduxToken = useAppSelector((state: { token: any; }) => state.token)
+
   const [category, setCategory] = React.useState('');
   const [photo, setPhoto] = React.useState('');
   const [categoryList, setCategoryList] = React.useState([]);
@@ -47,18 +48,20 @@ const AddProductItem = () => {
         "quantity": values.quantity,
         "remark": values.remark,
         "category": category,
-        "token": reduxToken,
         "imageUrl": target?.imageUrl,
       }
 
-      if (['', null, undefined].includes(target?.imageUrl)) {
+      if (!['', null, undefined].includes(target?.imageUrl)) {
         const response = await service.postAddProduct(submitData);
 
-        // 回到上一頁
+        // 成功 返回上一頁
         if (response?.status === 'success') navigation.goBack()
       } else {
-        appCtx.setModalOpen(true)
-        appCtx.setContentModal('圖片資源錯誤')
+        // 圖片網址失敗
+        appCtx.setModalOpen(true);
+        appCtx.setModal({
+          content: '圖片資源錯誤'
+        });
       }
       await appCtx.setLoading(false);
     }
@@ -92,18 +95,20 @@ const AddProductItem = () => {
     },
   });
   0
+  // 更新網頁圖片
   const postUploadWebImage = async () => {
     if (!['', null, undefined].includes(photo)) {
       let submitData = {
         image: photo
       }
-
       // 圖片上傳功能
       const response = await service.postUploadWebImage(submitData);
       if (response?.data) return response.data
     } else {
-      appCtx.setModalOpen(true)
-      appCtx.setContentModal('你少了圖片')
+      appCtx.setModalOpen(true);
+      appCtx.setModal({
+        content: '你少了圖片'
+      });
     }
   };
 
@@ -131,7 +136,7 @@ const AddProductItem = () => {
       <Goback />
       <ImagePicker onValueChange={(e: string) => { setPhoto(e) }} photo={photo} width={'100%'} height={250} />
       <RN.View>
-        <RN.Text style={styles.itemContainerText}>商品描述</RN.Text>
+        <RN.Text style={styles.itemContainerText}>{'商品描述'}</RN.Text>
         <RN.TextInput
           style={[styles.input, { backgroundColor: appCtx.Colors.inputContainer, }]}
           value={formik.values.describe}
@@ -145,7 +150,7 @@ const AddProductItem = () => {
         </RN.View>
       </RN.View>
       <RN.View>
-        <RN.Text style={styles.itemContainerText}>商品分類</RN.Text>
+        <RN.Text style={styles.itemContainerText}>{'商品分類'}</RN.Text>
         <Picker
           style={[{
             backgroundColor: appCtx.Colors.inputContainer,
@@ -164,7 +169,7 @@ const AddProductItem = () => {
         </Picker>
       </RN.View>
       <RN.View >
-        <RN.Text style={styles.itemContainerText}>商品價格</RN.Text>
+        <RN.Text style={styles.itemContainerText}>{'商品價格'}</RN.Text>
         <RN.View style={{ borderWidth: 1.5, borderRadius: 5, overflow: 'hidden', flexDirection: 'row' }}>
           <RN.TextInput
             style={[{ backgroundColor: appCtx.Colors.inputContainer, flex: 7, paddingLeft: 15, height: 45, }]}
@@ -177,7 +182,7 @@ const AddProductItem = () => {
             style={[styles.transferContainer, { backgroundColor: appCtx.Colors.primary, flex: 3 }]}
             onPress={() => navigation.navigate('transfer', { isGo: true })}
           >
-            <RN.Text style={[{ color: appCtx.Colors.textPrimary }]}>換算</RN.Text>
+            <RN.Text style={[{ color: appCtx.Colors.textPrimary }]}>{'換算'}</RN.Text>
           </RN.TouchableOpacity>
         </RN.View>
         <RN.View >
@@ -187,7 +192,7 @@ const AddProductItem = () => {
         </RN.View>
       </RN.View>
       <RN.View >
-        <RN.Text style={styles.itemContainerText}>商品數量</RN.Text>
+        <RN.Text style={styles.itemContainerText}>{'商品數量'}</RN.Text>
         <RN.View style={{ borderWidth: 1.5, borderRadius: 5, overflow: 'hidden', flexDirection: 'row' }}>
           <RN.TextInput
             style={[{ backgroundColor: appCtx.Colors.inputContainer, flex: 7, paddingLeft: 15, height: 45, }]}
@@ -204,7 +209,7 @@ const AddProductItem = () => {
         </RN.View>
       </RN.View>
       <RN.View>
-        <RN.Text style={styles.itemContainerText}>備註</RN.Text>
+        <RN.Text style={styles.itemContainerText}>{'備註'}</RN.Text>
         <RN.TextInput
           style={[styles.input, { backgroundColor: appCtx.Colors.inputContainer, }]}
           value={formik.values.remark}
@@ -219,7 +224,7 @@ const AddProductItem = () => {
       </RN.View>
       <RN.View>
         <RN.TouchableOpacity style={[styles.saveContainer, { backgroundColor: appCtx.Colors.primary }]} onPress={() => formik.submitForm()}>
-          <RN.Text style={styles.saveContainerText}>保存</RN.Text>
+          <RN.Text style={styles.saveContainerText}>{'保存'}</RN.Text>
         </RN.TouchableOpacity>
       </RN.View>
     </RN.View>

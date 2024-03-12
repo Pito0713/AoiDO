@@ -39,7 +39,10 @@ const ProductItem = ({ route }: { route: any }) => {
 
   // Modal
   const openModal = () => {
-    setModalOpen(true);
+    appCtx.setModalOpen(true);
+    appCtx.setModal({
+      onConfirm: () => { deleteProductOne() }
+    });
   };
   const closeModal = () => {
     setModalOpen(false);
@@ -283,12 +286,12 @@ const ProductItem = ({ route }: { route: any }) => {
           <RN.Text style={styles.saveContainerText}>刪除</RN.Text>
         </RN.TouchableOpacity>
       </RN.View>
-      <Modal
+      {/* <Modal
         isOpen={modalOpen}
         confirm={() => deleteProductOne()}
         cancel={closeModal}
         content={'是否刪除'}
-      />
+      /> */}
     </RN.View>
   );
 };

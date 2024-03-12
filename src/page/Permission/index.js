@@ -1,12 +1,12 @@
 import React from 'react';
 import * as RN from 'react-native';
-import {Picker} from '@react-native-picker/picker';
-import {useIsFocused} from '@react-navigation/native';
+import { Picker } from '@react-native-picker/picker';
+import { useIsFocused } from '@react-navigation/native';
 
-import {AppContext} from '../../redux/AppContent';
+import { AppContext } from '../../redux/AppContent';
 import Goback from '../../component/Goback';
 import service from '../Service/service';
-import {useAppSelector} from '../../redux/store';
+import { useAppSelector } from '../../redux/store';
 import Modal from '../../component/Modal';
 
 const Content = () => {
@@ -82,7 +82,7 @@ const Content = () => {
     <RN.View
       style={[
         styles.listContainer,
-        {borderColor: appCtx.Colors.Platform.borderPrimary},
+        { borderColor: appCtx.Colors.Platform.borderPrimary },
       ]}>
       {userList.map((item, index) => {
         return (
@@ -113,12 +113,12 @@ const Content = () => {
           </RN.View>
         );
       })}
-      <Modal
+      {/* <Modal
         isOpen={modalOpen}
         confirm={openModal}
         cancel={closeModal}
         content={'是否確認修改'}
-      />
+      /> */}
     </RN.View>
   );
 };
