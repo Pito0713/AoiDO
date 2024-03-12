@@ -8,7 +8,6 @@ import { Picker } from '@react-native-picker/picker';
 import service from "../Service/service";
 // redux
 import { AppContext } from '../../redux/AppContent';
-import { useAppSelector } from '../../redux/store';
 // com
 import ImagePicker from '../../component/ImagePicker'
 import Goback from '../../component/Goback'
@@ -29,7 +28,6 @@ const AddProductItem = () => {
   }
   const appCtx = React.useContext(AppContext);
   const navigation = useNavigation<Nav>();
-  const reduxToken = useAppSelector((state: { token: any; }) => state.token)
 
   const [category, setCategory] = React.useState('');
   const [photo, setPhoto] = React.useState('');

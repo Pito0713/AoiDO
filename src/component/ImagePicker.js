@@ -7,8 +7,6 @@ import { AppContext } from '../redux/AppContent';
 const ImagePicker = imageValue => {
   const appCtx = React.useContext(AppContext);
   const handleDrop = useCallback(async acceptedFiles => {
-
-
     if (acceptedFiles?.length > 0) {
       const file = acceptedFiles[0];
 
@@ -36,10 +34,11 @@ const ImagePicker = imageValue => {
 
       try {
         const base64 = await toBase64(file);
-        imageValue.onValueChange(base64);
+        imageValue.onValuechange(base64);
       } catch (error) { }
     }
-  }, []);
+  });
+
 
   return (
     <Dropzone onDrop={handleDrop}>

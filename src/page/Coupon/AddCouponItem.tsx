@@ -4,17 +4,23 @@ import moment from 'moment'
 import { useFormik } from "formik";
 import { useNavigation } from '@react-navigation/native';
 
+import { useAppSelector } from '../../redux/store';
 import { AppContext } from '../../redux/AppContent';
 import Goback from '../../component/Goback'
 import DatePicker from '../../component/DatePicker'
+
+// AES 加密
+import CryptoJS from 'react-native-crypto-js';
+// 金鑰
+import { APP_SECRCT_KEY } from '../../env/config';
+
 import service from "../Service/service";
-import { useAppSelector } from '../../redux/store';
-
 const windowHeight = RN.Dimensions.get('window').height;
-
+// type 
 interface Item {
   describe?: string | undefined,
   discount?: string | undefined,
+  count?: string | undefined,
   remark?: string | undefined,
 }
 
@@ -25,11 +31,11 @@ const Content = () => {
 
   const [isTimeBetween, setIsTimeBetween] = React.useState(false);
   const [startDate, setStartDate] = React.useState<string>(moment().format('YYYY-MM-DD'))
-  const onValueStartDatechange = (e: any) => {
+  const onValueStartDateChange = (e: any) => {
     setStartDate(moment(e).format('YYYY-MM-DD'))
   }
   const [endDate, setEndDate] = React.useState<string>(moment().format('YYYY-MM-DD'))
-  const onValueEndDatechange = (e: any) => {
+  const onValueEndDateChange = (e: any) => {
     setEndDate(moment(e).format('YYYY-MM-DD'))
   }
 
@@ -38,14 +44,16 @@ const Content = () => {
     initialValues: {
       describe: '',
       discount: '',
+      count: '',
       remark: '',
     },
-    validate: (values: { describe: any; discount: string; }) => {
+    validate: (values: { describe: string; discount: string; count: string }) => {
       const errors: Item = {};
       const reg = /^\d+$/
 
       if (!values?.describe) errors.describe = '*' + "必填";
       if (!values?.discount) errors.discount = '*' + "必填";
+      if (!reg.test(values.count)) errors.count = '*' + "必須數字";
       if (!reg.test(values.discount)) errors.discount = '*' + "必須數字";
 
       return errors;
@@ -55,16 +63,17 @@ const Content = () => {
         setIsTimeBetween(true)
       } else {
         setIsTimeBetween(false)
-        save(values)
+        postCreateCoupon(values)
         resetForm()
       }
     },
   });
 
-  const save = async (values: Item) => {
+  const postCreateCoupon = async (values: Item) => {
     let submitData = {
       describe: values.describe,
       discount: values.discount,
+      count: values.count,
       startDate: new Date(startDate),
       endDate: new Date(endDate),
       remark: values.remark,
@@ -73,13 +82,14 @@ const Content = () => {
     await appCtx.setLoading(true)
     const response = await service.postCreateCoupon(submitData);
     await appCtx.setLoading(false)
-    if (response?.message) navigation.goBack()
+    // 成功 返回上一頁
+    if (response?.status === 'success') navigation.goBack()
   }
 
   return (
     <RN.View style={styles.itemContainer}>
       <RN.View>
-        <RN.Text style={styles.itemContainerText}>描述</RN.Text>
+        <RN.Text style={styles.itemContainerText}>{'描述'}</RN.Text>
         <RN.TextInput
           style={[styles.input, { backgroundColor: appCtx.Colors.inputContainer, }]}
           onChangeText={formik.handleChange("describe")}
@@ -94,7 +104,7 @@ const Content = () => {
 
       </RN.View>
       <RN.View>
-        <RN.Text style={styles.itemContainerText}>折扣價格</RN.Text>
+        <RN.Text style={styles.itemContainerText}>{'折扣價格'}</RN.Text>
         <RN.TextInput
           style={[styles.input, { backgroundColor: appCtx.Colors.inputContainer, }]}
           onChangeText={formik.handleChange("discount")}
@@ -108,9 +118,23 @@ const Content = () => {
         </RN.View>
       </RN.View>
       <RN.View>
-        <RN.Text style={styles.itemContainerText}>開始日期</RN.Text>
-        <RN.View style={[styles.pickerContainer, {backgroundColor: appCtx.Colors.inputContainer}]}>
-          <DatePicker value={startDate} onValueChange={onValueStartDatechange}/>
+        <RN.Text style={styles.itemContainerText}>使用次數</RN.Text>
+        <RN.TextInput
+          style={[styles.input, { backgroundColor: appCtx.Colors.inputContainer, }]}
+          onChangeText={formik.handleChange("count")}
+          value={formik.values.count}
+          placeholder="使用次數"
+        />
+        <RN.View>
+          <RN.Text style={[{ color: appCtx.Colors.errorText }]}>
+            {formik.errors.count as String}
+          </RN.Text>
+        </RN.View>
+      </RN.View>
+      <RN.View>
+        <RN.Text style={styles.itemContainerText}>{'開始日期'}</RN.Text>
+        <RN.View style={[styles.pickerContainer, { backgroundColor: appCtx.Colors.inputContainer }]}>
+          <DatePicker value={startDate} onValueChange={onValueStartDateChange} />
         </RN.View>
         <RN.View>
           <RN.Text style={[{ color: appCtx.Colors.errorText }]}>
@@ -119,9 +143,9 @@ const Content = () => {
         </RN.View>
       </RN.View>
       <RN.View>
-        <RN.Text style={styles.itemContainerText}>結束日期</RN.Text>
-        <RN.View style={[styles.pickerContainer, {backgroundColor: appCtx.Colors.inputContainer}]}>
-          <DatePicker value={endDate} onValueChange={onValueEndDatechange}/>
+        <RN.Text style={styles.itemContainerText}>{'結束日期'}</RN.Text>
+        <RN.View style={[styles.pickerContainer, { backgroundColor: appCtx.Colors.inputContainer }]}>
+          <DatePicker value={endDate} onValueChange={onValueEndDateChange} />
         </RN.View>
         <RN.View>
           <RN.Text style={[{ color: appCtx.Colors.errorText }]}>
@@ -129,32 +153,35 @@ const Content = () => {
           </RN.Text>
         </RN.View>
       </RN.View>
-      <RN.View style={{zIndex: 1}}>
-        <RN.Text style={styles.itemContainerText}>備註</RN.Text>
+      <RN.View style={{ zIndex: 1 }}>
+        <RN.Text style={styles.itemContainerText}>{'備註'}</RN.Text>
         <RN.TextInput
           style={[styles.input, { backgroundColor: appCtx.Colors.inputContainer, }]}
           onChangeText={formik.handleChange("remark")}
           value={formik.values.remark}
           placeholder="備註"
         />
-        <RN.View><RN.Text/></RN.View>
+        <RN.View><RN.Text /></RN.View>
       </RN.View>
       <RN.View>
         <RN.TouchableOpacity style={[styles.saveContainer, { backgroundColor: appCtx.Colors.primary }]} onPress={() => formik.submitForm()}>
-          <RN.Text style={styles.saveContainerText}>保存</RN.Text>
+          <RN.Text style={styles.saveContainerText}>{'保存'}</RN.Text>
         </RN.TouchableOpacity>
       </RN.View>
     </RN.View>
   );
 };
-
 const AddCouponItem = () => {
   const reduxPermission = useAppSelector((state: { permission: any; }) => state.permission);
+  // 解碼
+  let bytes = CryptoJS.AES.decrypt(reduxPermission, APP_SECRCT_KEY);
+  let originalText = bytes.toString(CryptoJS.enc.Utf8);
+
   return (
-    <RN.SafeAreaView style={styles.container}>
+    <RN.View style={styles.container}>
       <Goback />
-      {reduxPermission !== 'admin' ? <RN.Text style={{fontSize: 20, marginLeft: 20}}>該帳戶無權限使用</RN.Text> : <Content />}
-    </RN.SafeAreaView>
+      {originalText !== 'admin' ? <RN.Text style={{ fontSize: 20, marginLeft: 20 }}>{'該帳戶無權限使用'}</RN.Text> : <Content />}
+    </RN.View>
   );
 };
 const styles = RN.StyleSheet.create({

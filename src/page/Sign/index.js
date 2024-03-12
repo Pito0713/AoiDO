@@ -1,7 +1,7 @@
 import React from 'react';
 import * as RN from 'react-native';
-import {useFormik} from 'formik';
-import {useNavigation} from '@react-navigation/native';
+import { useFormik } from 'formik';
+import { useNavigation } from '@react-navigation/native';
 import CryptoJS from 'react-native-crypto-js';
 
 import service from '../Service/service';
@@ -10,8 +10,8 @@ import {
   useAppSelector,
   useAppDispatch,
 } from '../../redux/store';
-import {AppContext} from '../../redux/AppContent';
-import {APP_SECRCT_KEY} from '../../env/config';
+import { AppContext } from '../../redux/AppContent';
+import { APP_SECRCT_KEY } from '../../env/config';
 
 const windowHeight = RN.Dimensions.get('window').height;
 
@@ -76,7 +76,12 @@ const SignInPage = () => {
       dispatch(registerActions.SET_TOKEN(values.userBack.token));
     }
     dispatch(registerActions.SET_REMEMBERINFO(rememberInfo));
-    dispatch(registerActions.SET_PERMISSION(values?.userBack?.permission));
+    // 加密
+    let cipherPermission = CryptoJS.AES.encrypt(
+      values?.userBack?.permission,
+      APP_SECRCT_KEY,
+    ).toString();
+    dispatch(registerActions.SET_PERMISSION(cipherPermission));
     dispatch(registerActions.SET_ID(values?.userBack?._id));
   };
 
@@ -87,7 +92,7 @@ const SignInPage = () => {
           <RN.View
             style={[
               styles.InputContainer,
-              {backgroundColor: appCtx.Colors.inputContainer},
+              { backgroundColor: appCtx.Colors.inputContainer },
             ]}>
             <RN.TextInput
               placeholder={'請輸入帳號'}
@@ -100,7 +105,7 @@ const SignInPage = () => {
           </RN.View>
           <RN.View style={[styles.errorText]}>
             {['', null, undefined].includes(formik.values.account) && (
-              <RN.Text style={[{color: appCtx.Colors.errorText, fontSize: 12}]}>
+              <RN.Text style={[{ color: appCtx.Colors.errorText, fontSize: 12 }]}>
                 {' '}
                 {formik.errors.account}
               </RN.Text>
@@ -111,7 +116,7 @@ const SignInPage = () => {
           <RN.View
             style={[
               styles.InputContainer,
-              {backgroundColor: appCtx.Colors.inputContainer},
+              { backgroundColor: appCtx.Colors.inputContainer },
             ]}>
             <RN.TextInput
               placeholder={'請輸入密碼'}
@@ -125,7 +130,7 @@ const SignInPage = () => {
           </RN.View>
           <RN.View style={[styles.errorText]}>
             {['', null, undefined].includes(formik.values.password) && (
-              <RN.Text style={[{color: appCtx.Colors.errorText, fontSize: 12}]}>
+              <RN.Text style={[{ color: appCtx.Colors.errorText, fontSize: 12 }]}>
                 {' '}
                 {formik.errors.password}
               </RN.Text>
@@ -138,7 +143,7 @@ const SignInPage = () => {
         <RN.TouchableOpacity
           style={[
             styles.registerContainer,
-            {textAlign: 'center', backgroundColor: appCtx.Colors.primary},
+            { textAlign: 'center', backgroundColor: appCtx.Colors.primary },
           ]}
           onPress={() => formik.submitForm()}>
           <RN.Text style={[styles.registerText]}>{'登入'}</RN.Text>
@@ -147,17 +152,17 @@ const SignInPage = () => {
       <RN.View style={styles.rememberInfoContainer}>
         <RN.TouchableOpacity
           onPress={() => setRememberInfo(!rememberInfo)}
-          style={{flexDirection: 'row'}}>
+          style={{ flexDirection: 'row' }}>
           <RN.CheckBox
             disabled={false}
             value={rememberInfo}
             onValueChange={() => setRememberInfo(!rememberInfo)}
           />
-          <RN.Text style={{marginLeft: 8}}>{'記住帳號'}</RN.Text>
+          <RN.Text style={{ marginLeft: 8 }}>{'記住帳號'}</RN.Text>
         </RN.TouchableOpacity>
         <RN.TouchableOpacity>
           <RN.Text
-            style={{marginLeft: 20}}
+            style={{ marginLeft: 20 }}
             onPress={() => navigation.navigate('register')}>
             {'創立帳號'}
           </RN.Text>

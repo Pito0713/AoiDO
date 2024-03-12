@@ -9,8 +9,6 @@ import Goback from '../../component/Goback';
 import service from '../Service/service';
 import { useAppSelector } from '../../redux/store';
 import ImagePicker from '../../component/ImagePicker'
-import Modal from '../../component/Modal';
-
 interface Item {
   describe?: string,
   price?: string,
@@ -32,22 +30,20 @@ const ProductItem = ({ route }: { route: any }) => {
   const [originalPhoto, setOriginalPhoto] = React.useState(
     route.params?.item.imageUrl ? route.params.item.imageUrl : '',
   );
+
   const [category, setCategory] = React.useState('');
   const [categoryList, setCategoryList] = React.useState([]);
-
-  const [modalOpen, setModalOpen] = React.useState(false);
 
   // Modal
   const openModal = () => {
     appCtx.setModalOpen(true);
     appCtx.setModal({
-      onConfirm: () => { deleteProductOne() }
+      onConfirm: () => { deleteProductOne(), appCtx.setModalOpen(false); },
+      content: '是否刪除'
     });
   };
-  const closeModal = () => {
-    setModalOpen(false);
-  };
 
+  // 更新商品
   const postUploadProduct = async (values: Item) => {
     console.log(values)
     if (!['', null, undefined].includes(values?.describe) &&
@@ -123,7 +119,6 @@ const ProductItem = ({ route }: { route: any }) => {
     await appCtx.setLoading(true);
     const response = await service.deleteProductOne(submitData);
     await appCtx.setLoading(false);
-    closeModal()
     if (response?.status === 'success') navigation.goBack();
   };
 
@@ -159,6 +154,7 @@ const ProductItem = ({ route }: { route: any }) => {
     }, [])
   );
 
+
   return (
     <RN.View style={styles.itemContainer}>
       <Goback />
@@ -169,7 +165,7 @@ const ProductItem = ({ route }: { route: any }) => {
         height={250}
       />
       <RN.View>
-        <RN.Text style={styles.itemContainerText}>商品描述</RN.Text>
+        <RN.Text style={styles.itemContainerText}>{'商品描述'}</RN.Text>
         <RN.TextInput
           style={[
             styles.input,
@@ -186,7 +182,7 @@ const ProductItem = ({ route }: { route: any }) => {
         </RN.View>
       </RN.View>
       <RN.View>
-        <RN.Text style={styles.itemContainerText}>商品分類</RN.Text>
+        <RN.Text style={styles.itemContainerText}>{'商品分類'}</RN.Text>
         <Picker
           style={[
             styles.input,
@@ -286,12 +282,6 @@ const ProductItem = ({ route }: { route: any }) => {
           <RN.Text style={styles.saveContainerText}>刪除</RN.Text>
         </RN.TouchableOpacity>
       </RN.View>
-      {/* <Modal
-        isOpen={modalOpen}
-        confirm={() => deleteProductOne()}
-        cancel={closeModal}
-        content={'是否刪除'}
-      /> */}
     </RN.View>
   );
 };

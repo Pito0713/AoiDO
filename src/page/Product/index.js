@@ -11,6 +11,7 @@ import { AppContext } from '../../redux/AppContent';
 import service from '../Service/service';
 import Filter from '../../component/Filter';
 import Pagination from '../../component/Pagination';
+import ReminderText from '../../component/ReminderText';
 
 const windowWidth = RN.Dimensions.get('window').width;
 const windowHeight = RN.Dimensions.get('window').height;
@@ -119,9 +120,8 @@ const Product = () => {
             { backgroundColor: appCtx.Colors.primary },
           ]}
           onPress={() => postAllProduct()}>
-          <RN.Text
-            style={[styles.searchText, { color: appCtx.Colors.textPrimary }]}>
-            搜尋
+          <RN.Text style={[styles.searchText, { color: appCtx.Colors.textPrimary }]}>
+            {'搜尋'}
           </RN.Text>
         </RN.TouchableOpacity>
         <Filter categoryValue={setCategoryValue} ShowDialog={setShowDialog} />
@@ -139,6 +139,13 @@ const Product = () => {
           </RN.View>
         </RN.TouchableOpacity>
       </RN.View>
+      <RN.View style={[styles.listContainer]}>
+        <ReminderText text={'* 右側按鈕 + 可新增商品 '} />
+        <ReminderText text={'* 右側篩選按鈕可分類大類商品 '} />
+        <ReminderText text={'* 點擊圖片可進入詳情頁'} />
+        <ReminderText text={'* 搜尋框可進行模糊搜尋'} />
+      </RN.View>
+
       <RN.ScrollView>
         <RN.View style={styles.productContainer}>
           {productData?.length > 0 ? (
@@ -161,7 +168,7 @@ const Product = () => {
                           styles.itemContentText,
                           { alignItems: 'flex-end' },
                         ]}>
-                        {item?.category && <RN.Text
+                        {item?.category ? <RN.Text
                           style={{
                             padding: 5,
                             color: appCtx.Colors.product.cardTitleText,
@@ -169,8 +176,8 @@ const Product = () => {
                             backgroundColor: appCtx.Colors.product.cardTitle,
                           }}>
                           {item?.category}
-                        </RN.Text>}
-
+                        </RN.Text> :
+                          <RN.View />}
                       </RN.View>
                       <RN.View
                         style={[
@@ -205,7 +212,7 @@ const Product = () => {
                           ]}
                           numberOfLines={1}
                           ellipsizeMode={'tail'}>
-                          $ {Number(item.price)}
+                          {`$ ${Number(item.price)}`}
                         </RN.Text>
                       </RN.View>
                     </RN.View>
@@ -333,6 +340,14 @@ const styles = RN.StyleSheet.create({
   addContainer: {
     width: '5%',
     margin: 10,
+  },
+  listContainer: {
+    alignItems: 'flex-start',
+    justifyContent: 'center',
+    marginLeft: 10,
+    marginRight: 10,
+    flexWrap: 'wrap',
+    padding: 10,
   },
 });
 

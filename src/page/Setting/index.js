@@ -1,18 +1,24 @@
 import React from 'react';
 import * as RN from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 
-import {registerActions, useAppDispatch} from '../../redux/store';
-import {AppContext} from '../../redux/AppContent';
+import { registerActions, useAppDispatch } from '../../redux/store';
+import { AppContext } from '../../redux/AppContent';
 import ScrollViewComponent from '../../component/ScrollViewComponent';
-import {useAppSelector} from '../../redux/store';
+import { useAppSelector } from '../../redux/store';
+import CryptoJS from 'react-native-crypto-js';
+import { APP_SECRCT_KEY } from '../../env/config';
+
 
 const Content = () => {
   const appCtx = React.useContext(AppContext);
   const dispatch = useAppDispatch();
   const navigation = useNavigation();
 
-  const reduxPermission = useAppSelector(state => state.permission);
+  let reduxPermission = useAppSelector(state => state.permission);
+  // 解碼
+  let bytes = CryptoJS.AES.decrypt(reduxPermission, APP_SECRCT_KEY);
+  const originalText = bytes.toString(CryptoJS.enc.Utf8);
 
   const logOut = () => {
     dispatch(registerActions.SET_TOKEN(''));
@@ -54,23 +60,23 @@ const Content = () => {
       action: () => navigation.navigate('handPassWord'),
       permission: ['admin', 'guest'],
     },
-    {title: '登出', action: () => logOut(), permission: ['admin', 'guest']},
+    { title: '登出', action: () => logOut(), permission: ['admin', 'guest'] },
   ];
 
   return (
     <RN.View style={styles.container}>
       {List.map((item, index) => {
-        if (item?.permission?.includes(reduxPermission)) {
+        if (item?.permission?.includes(originalText)) {
           return (
             <RN.TouchableOpacity
               style={[
                 styles.itemContainer,
-                {backgroundColor: appCtx.Colors.Setting.cardTitle},
+                { backgroundColor: appCtx.Colors.Setting.cardTitle },
               ]}
               onPress={item.action}
               key={index}>
               <RN.Text
-                style={[styles.text, {color: appCtx.Colors.Setting.cardText}]}>
+                style={[styles.text, { color: appCtx.Colors.Setting.cardText }]}>
                 {item.title}
               </RN.Text>
             </RN.TouchableOpacity>
@@ -84,7 +90,7 @@ const Content = () => {
 
 const Setting = () => {
   return (
-    <RN.SafeAreaView style={{flex: 1}}>
+    <RN.SafeAreaView style={{ flex: 1 }}>
       <ScrollViewComponent item={Content} />
     </RN.SafeAreaView>
   );

@@ -1,10 +1,13 @@
 import React from 'react';
-import * as RN from 'react-native';
-import { useNavigation, useIsFocused } from '@react-navigation/native';
 import moment from 'moment';
-import service from '../Service/service';
+import * as RN from 'react-native';
+
 import { AppContext } from '../../redux/AppContent';
 import { useAppSelector } from '../../redux/store';
+
+import { useNavigation, useIsFocused } from '@react-navigation/native';
+import service from '../Service/service';
+
 import Pagination from '../../component/Pagination';
 import ReminderText from '../../component/ReminderText';
 import { Plus, Search } from '../../assets';
@@ -13,7 +16,6 @@ const Coupon = () => {
   const appCtx = React.useContext(AppContext);
   const navigation = useNavigation();
   const isFocused = useIsFocused();
-  const reduxToken = useAppSelector(state => state.token);
 
   const [cargos, setCargos] = React.useState([]);
   const [text, onChangeText] = React.useState('');
@@ -39,7 +41,6 @@ const Coupon = () => {
     await appCtx.setLoading(true);
     let submitData = {
       searchText: text,
-      token: reduxToken,
       page: page,
       pagination: pagination,
     };
@@ -61,7 +62,7 @@ const Coupon = () => {
   }, [page]);
 
   return (
-    <RN.SafeAreaView style={styles.container}>
+    <RN.View style={styles.container}>
       <RN.View style={styles.searchContainer}>
         <RN.View
           style={[
@@ -96,7 +97,7 @@ const Coupon = () => {
               flex: 1,
               color: appCtx.Colors.textPrimary,
             }}>
-            搜尋
+            {'搜尋'}
           </RN.Text>
         </RN.TouchableOpacity>
         <RN.TouchableOpacity
@@ -114,8 +115,9 @@ const Coupon = () => {
         </RN.TouchableOpacity>
       </RN.View>
       <RN.View style={[styles.listContainer]}>
-        <ReminderText text={'* 長按可刪除'} />
-        <ReminderText text={'* 點擊可以修改項目'} />
+        <ReminderText text={'* 右側按鈕 + 可新增商品 '} />
+        <ReminderText text={'* 點擊項目可進入詳情頁'} />
+        <ReminderText text={'* 搜尋框可進行模糊搜尋'} />
       </RN.View>
       <RN.ScrollView
         refreshControl={
@@ -153,7 +155,7 @@ const Coupon = () => {
                       styles.itemContentTextTitle,
                       { color: appCtx.Colors.textPrimary },
                     ]}>
-                    描述
+                    {'描述'}
                   </RN.Text>
                   <RN.View
                     style={{ alignItems: 'center', justifyContent: 'center' }}>
@@ -182,7 +184,7 @@ const Coupon = () => {
                   ]}>
                   <RN.View style={{ flexDirection: 'row' }}>
                     <RN.Text style={styles.itemContentTextTitle}>
-                      折扣價格
+                      {'折扣價格'}
                     </RN.Text>
                     <RN.Text
                       style={[styles.itemContentTextTitle]}
@@ -193,7 +195,7 @@ const Coupon = () => {
                   </RN.View>
                   <RN.View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
                     <RN.Text style={styles.itemContentTextTitle}>
-                      時間區間
+                      {'時間區間'}
                     </RN.Text>
                     <RN.Text
                       style={[styles.itemContentTextTitle, { fontSize: 10 }]}>
@@ -232,7 +234,7 @@ const Coupon = () => {
         total={total}
         onPageChange={onPageChange}
       />
-    </RN.SafeAreaView>
+    </RN.View>
   );
 };
 
@@ -293,6 +295,7 @@ const styles = RN.StyleSheet.create({
     marginLeft: 5,
     width: '100%',
     fontSize: 15,
+    height: '99%',
   },
   addContainer: {
     width: '7.5%',

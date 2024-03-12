@@ -8,7 +8,6 @@ import { AppContext } from '../../redux/AppContent';
 import Goback from '../../component/Goback'
 import DatePicker from '../../component/DatePicker'
 import service from "../Service/service";
-import Modal from '../../component/Modal';
 
 interface Item {
   id?: string | undefined,
@@ -26,13 +25,14 @@ const CouponItem = ({ route }: { route: any }) => {
     goBack: () => void,
   }
   const [isTimeBetween, setIsTimeBetween] = React.useState(false);
-  const [modalOpen, setModalOpen] = React.useState(false);
-  const openModal = () => {
-    setModalOpen(true);
-  };
 
-  const closeModal = () => {
-    setModalOpen(false);
+  // Modal
+  const openModal = () => {
+    appCtx.setModalOpen(true);
+    appCtx.setModal({
+      onConfirm: () => { deleteOneCoupon(), appCtx.setModalOpen(false); },
+      content: '是否刪除'
+    });
   };
 
   const [startDate, setStartDate] = React.useState<string>(route.params?.item.startDate ? moment(route.params.item.startDate).format('YYYY-MM-DD') : moment().format('YYYY-MM-DD'))
@@ -44,7 +44,7 @@ const CouponItem = ({ route }: { route: any }) => {
     setEndDate(moment(e).format('YYYY-MM-DD'))
   }
 
-  const save = async (values: Item) => {
+  const patchUpdateCoupon = async (values: Item) => {
     let submitData = {
       "id": route.params.item._id,
       "describe": values.describe,
@@ -85,7 +85,7 @@ const CouponItem = ({ route }: { route: any }) => {
         setIsTimeBetween(true)
       } else {
         setIsTimeBetween(false)
-        save(values)
+        patchUpdateCoupon(values)
         resetForm()
       }
     },
@@ -99,7 +99,6 @@ const CouponItem = ({ route }: { route: any }) => {
     }
     const response = await service.deleteOneCoupon(submitData);
     await appCtx.setLoading(false)
-    closeModal();
     if (response?.status === 'success') navigation.goBack()
   }
   return (
@@ -107,7 +106,7 @@ const CouponItem = ({ route }: { route: any }) => {
       <Goback />
       <RN.View style={styles.itemContainer}>
         <RN.View>
-          <RN.Text style={styles.itemContainerText}>描述</RN.Text>
+          <RN.Text style={styles.itemContainerText}>{'描述'}</RN.Text>
           <RN.TextInput
             style={[styles.input, { backgroundColor: appCtx.Colors.inputContainer, }]}
             onChangeText={formik.handleChange("describe")}
@@ -121,7 +120,7 @@ const CouponItem = ({ route }: { route: any }) => {
           </RN.View>
         </RN.View>
         <RN.View>
-          <RN.Text style={styles.itemContainerText}>折扣價格</RN.Text>
+          <RN.Text style={styles.itemContainerText}>{'折扣價格'}</RN.Text>
           <RN.TextInput
             style={[styles.input, { backgroundColor: appCtx.Colors.inputContainer, }]}
             onChangeText={formik.handleChange("discount")}
@@ -135,7 +134,7 @@ const CouponItem = ({ route }: { route: any }) => {
           </RN.View>
         </RN.View>
         <RN.View>
-          <RN.Text style={styles.itemContainerText}>使用次數</RN.Text>
+          <RN.Text style={styles.itemContainerText}>{'使用次數'}</RN.Text>
           <RN.TextInput
             style={[styles.input, { backgroundColor: appCtx.Colors.inputContainer, }]}
             onChangeText={formik.handleChange("count")}
@@ -149,7 +148,7 @@ const CouponItem = ({ route }: { route: any }) => {
           </RN.View>
         </RN.View>
         <RN.View>
-          <RN.Text style={styles.itemContainerText}>開始日期</RN.Text>
+          <RN.Text style={styles.itemContainerText}>{'開始日期'}</RN.Text>
           <RN.View style={[styles.pickerContainer, { backgroundColor: appCtx.Colors.inputContainer }]}>
             <DatePicker value={startDate} onValueChange={onValueStartDatechange} />
           </RN.View>
@@ -161,7 +160,7 @@ const CouponItem = ({ route }: { route: any }) => {
 
         </RN.View>
         <RN.View>
-          <RN.Text style={styles.itemContainerText}>結束日期</RN.Text>
+          <RN.Text style={styles.itemContainerText}>{'結束日期'}</RN.Text>
           <RN.View style={[styles.pickerContainer, { backgroundColor: appCtx.Colors.inputContainer }]}>
             <DatePicker value={endDate} onValueChange={onValueEndDatechange} />
           </RN.View>
@@ -173,7 +172,7 @@ const CouponItem = ({ route }: { route: any }) => {
 
         </RN.View>
         <RN.View>
-          <RN.Text style={styles.itemContainerText}>備註</RN.Text>
+          <RN.Text style={styles.itemContainerText}>{'備註'}</RN.Text>
           <RN.TextInput
             style={[styles.input, { backgroundColor: appCtx.Colors.inputContainer, }]}
             onChangeText={formik.handleChange("remark")}
@@ -184,19 +183,14 @@ const CouponItem = ({ route }: { route: any }) => {
         </RN.View>
         <RN.View style={styles.buttomGroup}>
           <RN.TouchableOpacity style={[styles.saveContainer, { backgroundColor: appCtx.Colors.primary }]} onPress={() => formik.submitForm()}>
-            <RN.Text style={styles.saveContainerText}>保存</RN.Text>
+            <RN.Text style={styles.saveContainerText}>{'保存'}</RN.Text>
           </RN.TouchableOpacity>
           <RN.TouchableOpacity style={[styles.saveContainer]} onPress={() => openModal()}>
-            <RN.Text style={styles.saveContainerText}>刪除</RN.Text>
+            <RN.Text style={styles.saveContainerText}>{'刪除'}</RN.Text>
           </RN.TouchableOpacity>
         </RN.View>
       </RN.View>
-      {/* <Modal
-        isOpen={modalOpen}
-        confirm={() => deleteOneCoupon()}
-        cancel={closeModal}
-        content={'是否刪除'}
-      /> */}
+
     </RN.SafeAreaView>
   );
 };

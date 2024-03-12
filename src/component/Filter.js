@@ -46,7 +46,7 @@ const Fillter = e => {
   };
 
   const renderItem = ({ item }) => (
-    <RN.View style={styles.itemcontainer}>
+    <RN.View style={styles.itemContainer}>
       <RN.CheckBox
         value={item.checked}
         onValueChange={() => handleCheckBoxChange(item.category)}
@@ -115,7 +115,7 @@ const styles = RN.StyleSheet.create({
     padding: 15,
     width: '100%',
   },
-  itemcontainer: {
+  itemContainer: {
     flexDirection: 'row',
     margin: 10,
     justifyContent: 'flex-start',
