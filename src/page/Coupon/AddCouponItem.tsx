@@ -118,12 +118,12 @@ const Content = () => {
         </RN.View>
       </RN.View>
       <RN.View>
-        <RN.Text style={styles.itemContainerText}>使用次數</RN.Text>
+        <RN.Text style={styles.itemContainerText}>{'可使用次數'}</RN.Text>
         <RN.TextInput
           style={[styles.input, { backgroundColor: appCtx.Colors.inputContainer, }]}
           onChangeText={formik.handleChange("count")}
           value={formik.values.count}
-          placeholder="使用次數"
+          placeholder="可使用次數"
         />
         <RN.View>
           <RN.Text style={[{ color: appCtx.Colors.errorText }]}>

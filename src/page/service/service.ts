@@ -367,6 +367,7 @@ const Service = {
     );
     return data;
   },
+  // 搜尋優惠卷
   postSearchCoupon: async (submitData: Platform) => {
     let data = await fetchApi_AuthData(
       'POST',
@@ -376,6 +377,7 @@ const Service = {
     );
     return data;
   },
+  // 更新優惠卷
   patchUpdateCoupon: async (submitData: Platform) => {
     let data = await fetchApi_AuthData(
       'patch',
@@ -582,6 +584,7 @@ const Service = {
     );
     return data;
   },
+  // 搜尋訂單
   postSearchOrder: async (submitData: Order) => {
     let data = await fetchApi_AuthData(
       'post',

@@ -17,8 +17,12 @@ const DatePickerCOM = dateValue => {
     setIsOpen(!isOpen);
   };
 
+  React.useEffect(() => {
+    setSelectedDate(new Date(dateValue.value))
+  }, []);
+
   return (
-    <RN.View style={{zIndex: 100}}>
+    <RN.View style={{ zIndex: 100 }}>
       <RN.TouchableOpacity
         className="example-custom-input"
         onPress={handleClick}>

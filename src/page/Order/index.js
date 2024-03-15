@@ -1,6 +1,6 @@
 import React from 'react';
 import * as RN from 'react-native';
-import { useNavigation, useIsFocused } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import moment from 'moment';
 import service from '../Service/service';
 import { AppContext } from '../../redux/AppContent';
@@ -10,27 +10,27 @@ import { Search } from '../../assets';
 const Coupon = () => {
   const appCtx = React.useContext(AppContext);
   const navigation = useNavigation();
-  const isFocused = useIsFocused();
 
+  const [init, setInit] = React.useState(false);
   const [order, setOrder] = React.useState([]);
   const [text, onChangeText] = React.useState('');
   const [searchText, setSearchText] = React.useState('');
-  const [refreshing, setRefreshing] = React.useState(false);
+
   const [pagination, setPagination] = React.useState(10);
   const [page, setPage] = React.useState(1);
   const [total, setTotal] = React.useState(0);
 
+  //  刷新用
   const onRefresh = () => {
-    setRefreshing(true);
     setPage(1);
     postSearchOrder();
-    setRefreshing(false);
   };
 
   const onPageChange = page => {
     setPage(page);
   };
 
+  // 搜尋訂單
   const postSearchOrder = async () => {
     await appCtx.setLoading(true);
     let submitData = {
@@ -40,25 +40,42 @@ const Coupon = () => {
     };
     const response = await service.postSearchOrder(submitData);
 
-    if (response.status == 'success') {
+    if (response?.status == 'success') {
       setSearchText(text);
       setOrder(response.data);
       setTotal(response.total);
+    } else {
+      // 失敗回傳空值
+      setSearchText(text);
+      setOrder([]);
+      setTotal(0);
     }
     await appCtx.setLoading(false);
   };
 
   React.useEffect(() => {
-    if (isFocused) postSearchOrder();
-    else setPage(1);
-  }, [isFocused]);
-
-  React.useEffect(() => {
     postSearchOrder();
   }, [page]);
 
+  React.useEffect(() => {
+    if (init) {
+      onRefresh()
+    }
+  }, [init]);
+
+  useFocusEffect(
+    // 監聽頁面離開與載入
+    React.useCallback(() => {
+      // 開始初始化
+      setInit(true);
+      return () => {
+        setInit(false);
+      }
+    }, [])
+  );
+
   return (
-    <RN.SafeAreaView style={styles.container}>
+    <RN.View style={styles.container}>
       <RN.View style={styles.searchContainer}>
         <RN.View
           style={[
@@ -98,17 +115,8 @@ const Coupon = () => {
         </RN.TouchableOpacity>
       </RN.View>
       <RN.View style={[styles.listContainer]}></RN.View>
-      <RN.ScrollView
-        refreshControl={
-          <RN.RefreshControl
-            refreshing={refreshing}
-            onRefresh={onRefresh}
-            colors={[appCtx.Colors.primary]}
-            tintColor={appCtx.Colors.primary}
-            progressViewOffset={-5}
-          />
-        }>
-        {order.length > 0 ? (
+      <RN.ScrollView>
+        {(order?.length > 0 && Array.isArray(order)) ? (
           order.map((item, index) => {
             return (
               <RN.TouchableOpacity
@@ -134,7 +142,7 @@ const Coupon = () => {
                       styles.itemContentTextTitle,
                       { color: appCtx.Colors.textPrimary, fontSize: 12 },
                     ]}>
-                    會員名稱:
+                    {'會員名稱:'}
                   </RN.Text>
                   <RN.Text
                     style={[
@@ -151,7 +159,7 @@ const Coupon = () => {
                       styles.itemContentTextTitle,
                       { color: appCtx.Colors.textPrimary, fontSize: 12 },
                     ]}>
-                    地址:
+                    {'地址:'}
                   </RN.Text>
                   <RN.Text
                     style={[
@@ -168,7 +176,7 @@ const Coupon = () => {
                       styles.itemContentTextTitle,
                       { color: appCtx.Colors.textPrimary, fontSize: 12 },
                     ]}>
-                    創立時間:
+                    {'創立時間:'}
                   </RN.Text>
                   <RN.Text
                     style={[
@@ -249,7 +257,7 @@ const Coupon = () => {
         total={total}
         onPageChange={onPageChange}
       />
-    </RN.SafeAreaView>
+    </RN.View>
   );
 };
 
@@ -309,8 +317,10 @@ const styles = RN.StyleSheet.create({
   },
   searchInput: {
     marginLeft: 5,
+    paddingLeft: 10,
     width: '100%',
     fontSize: 15,
+    height: '99%',
   },
   addContainer: {
     width: '7.5%',

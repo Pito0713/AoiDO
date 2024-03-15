@@ -3,9 +3,8 @@ import moment from 'moment';
 import * as RN from 'react-native';
 
 import { AppContext } from '../../redux/AppContent';
-import { useAppSelector } from '../../redux/store';
 
-import { useNavigation, useIsFocused } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import service from '../Service/service';
 
 import Pagination from '../../component/Pagination';
@@ -15,28 +14,26 @@ import { Plus, Search } from '../../assets';
 const Coupon = () => {
   const appCtx = React.useContext(AppContext);
   const navigation = useNavigation();
-  const isFocused = useIsFocused();
 
+  const [init, setInit] = React.useState(false);
   const [cargos, setCargos] = React.useState([]);
   const [text, onChangeText] = React.useState('');
   const [searchText, setSearchText] = React.useState('');
-  const [refreshing, setRefreshing] = React.useState(false);
   const [pagination, setPagination] = React.useState(10);
   const [page, setPage] = React.useState(1);
   const [total, setTotal] = React.useState(0);
 
+  //  刷新用
   const onRefresh = () => {
-    setRefreshing(true);
     setPage(1);
     postSearchCoupon();
-    /// 預防請求失敗
-    setRefreshing(false);
   };
 
   const onPageChange = page => {
     setPage(page);
   };
 
+  // 搜尋優惠卷
   const postSearchCoupon = async () => {
     await appCtx.setLoading(true);
     let submitData = {
@@ -45,17 +42,35 @@ const Coupon = () => {
       pagination: pagination,
     };
     const response = await service.postSearchCoupon(submitData);
-    if (response.status == 'success') {
+    if (response?.status == 'success') {
       setSearchText(text);
       setCargos(response.data);
       setTotal(response.total);
+    } else {
+      // 失敗回傳空值
+      setSearchText(text);
+      setCargos([]);
+      setTotal(0);
     }
     await appCtx.setLoading(false);
   };
 
   React.useEffect(() => {
-    if (isFocused) postSearchCoupon();
-  }, [isFocused]);
+    if (init) {
+      onRefresh()
+    }
+  }, [init]);
+
+  useFocusEffect(
+    // 監聽頁面離開與載入
+    React.useCallback(() => {
+      // 開始初始化
+      setInit(true);
+      return () => {
+        setInit(false);
+      }
+    }, [])
+  );
 
   React.useEffect(() => {
     postSearchCoupon();
@@ -119,17 +134,8 @@ const Coupon = () => {
         <ReminderText text={'* 點擊項目可進入詳情頁'} />
         <ReminderText text={'* 搜尋框可進行模糊搜尋'} />
       </RN.View>
-      <RN.ScrollView
-        refreshControl={
-          <RN.RefreshControl
-            refreshing={refreshing}
-            onRefresh={onRefresh}
-            colors={[appCtx.Colors.primary]}
-            tintColor={appCtx.Colors.primary}
-            progressViewOffset={-5}
-          />
-        }>
-        {cargos.length > 0 ? (
+      <RN.ScrollView>
+        {(cargos?.length > 0 && Array.isArray(cargos)) ? (
           cargos.map((item, index) => {
             return (
               <RN.TouchableOpacity
@@ -182,23 +188,32 @@ const Coupon = () => {
                       justifyContent: 'center',
                     },
                   ]}>
-                  <RN.View style={{ flexDirection: 'row' }}>
+                  <RN.View style={{ flexDirection: 'row', alignItems: 'center' }}>
                     <RN.Text style={styles.itemContentTextTitle}>
                       {'折扣價格'}
                     </RN.Text>
                     <RN.Text
-                      style={[styles.itemContentTextTitle]}
+                      style={[styles.itemContentText]}
                       numberOfLines={1}
                       ellipsizeMode={'tail'}>
                       {item.discount}
                     </RN.Text>
+                    <RN.Text style={[styles.itemContentTextTitle, { marginLeft: 15 }]}>
+                      {'可使用次數'}
+                    </RN.Text>
+                    <RN.Text
+                      style={[styles.itemContentText]}
+                      numberOfLines={1}
+                      ellipsizeMode={'tail'}>
+                      {item?.count}
+                    </RN.Text>
                   </RN.View>
-                  <RN.View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+                  <RN.View style={{ flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center' }}>
                     <RN.Text style={styles.itemContentTextTitle}>
                       {'時間區間'}
                     </RN.Text>
                     <RN.Text
-                      style={[styles.itemContentTextTitle, { fontSize: 10 }]}>
+                      style={[styles.itemContentText, { fontSize: 10 }]}>
                       {moment(item.startDate).format('YYYY/MM/DD')} ~
                       {moment(item.endDate).format('YYYY/MM/DD')}
                     </RN.Text>
@@ -262,6 +277,11 @@ const styles = RN.StyleSheet.create({
   itemContentTextTitle: {
     marginLeft: 5,
     marginTop: 5,
+    fontSize: 14,
+  },
+  itemContentText: {
+    marginLeft: 5,
+    marginTop: 5,
     fontSize: 12,
   },
   searchContainer: {
@@ -293,6 +313,7 @@ const styles = RN.StyleSheet.create({
   },
   searchInput: {
     marginLeft: 5,
+    paddingLeft: 10,
     width: '100%',
     fontSize: 15,
     height: '99%',

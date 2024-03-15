@@ -59,6 +59,10 @@ const Product = () => {
       setSearchText(text);
       setProductData(response.data);
       setTotal(response.total);
+    } else {
+      setSearchText(text);
+      setProductData([]);
+      setTotal(0);
     }
     // 初始化關閉
     setInit(false)
