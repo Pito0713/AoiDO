@@ -16,8 +16,8 @@ const Coupon = () => {
   const navigation = useNavigation();
 
   const [init, setInit] = React.useState(false);
-  const [cargos, setCargos] = React.useState([]);
-  const [text, onChangeText] = React.useState('');
+  const [coupon, setCoupon] = React.useState([]);
+  const [text, setChangeText] = React.useState('');
   const [searchText, setSearchText] = React.useState('');
   const [pagination, setPagination] = React.useState(10);
   const [page, setPage] = React.useState(1);
@@ -25,7 +25,6 @@ const Coupon = () => {
 
   //  刷新用
   const onRefresh = () => {
-    setPage(1);
     postSearchCoupon();
   };
 
@@ -44,13 +43,13 @@ const Coupon = () => {
     const response = await service.postSearchCoupon(submitData);
     if (response?.status == 'success') {
       setSearchText(text);
-      setCargos(response.data);
+      setCoupon(response.data);
       setTotal(response.total);
     } else {
       // 失敗回傳空值
       setSearchText(text);
-      setCargos([]);
-      setTotal(0);
+      setCoupon([]);
+      setTotal(0)
     }
     await appCtx.setLoading(false);
   };
@@ -68,6 +67,10 @@ const Coupon = () => {
       setInit(true);
       return () => {
         setInit(false);
+        setChangeText('');
+        setSearchText('');
+        setCoupon([]);
+        setPage(1)
       }
     }, [])
   );
@@ -92,7 +95,7 @@ const Coupon = () => {
               styles.searchInput,
               { backgroundColor: appCtx.Colors.inputContainer },
             ]}
-            onChangeText={onChangeText}
+            setChangeText={setChangeText}
             value={text}
             placeholder={'搜尋優惠'}
             textAlign="left"
@@ -118,7 +121,7 @@ const Coupon = () => {
         <RN.TouchableOpacity
           style={[styles.addContainer]}
           onPress={() => {
-            navigation.navigate('AddCouponItem'), onChangeText('');
+            navigation.navigate('AddCouponItem'), setChangeText('');
           }}>
           <RN.View
             style={[
@@ -135,8 +138,8 @@ const Coupon = () => {
         <ReminderText text={'* 搜尋框可進行模糊搜尋'} />
       </RN.View>
       <RN.ScrollView>
-        {(cargos?.length > 0 && Array.isArray(cargos)) ? (
-          cargos.map((item, index) => {
+        {(coupon?.length > 0 && Array.isArray(coupon)) ? (
+          coupon.map((item, index) => {
             return (
               <RN.TouchableOpacity
                 style={[

@@ -110,7 +110,7 @@ const Content = () => {
         </RN.TouchableOpacity>
       </RN.View>
       <RN.View style={{ margin: 10 }}>
-        <ImagePicker onValuechange={onValueChange} photo={photo} width={200} height={200} />
+        <ImagePicker onValueChange={onValueChange} photo={photo} width={200} height={200} />
       </RN.View>
       <RN.View style={[styles.listContainer]}>
         <ReminderText text={'* 長按圖片可刪除'} />

@@ -10,7 +10,7 @@ const Colors = {
   default: '#000000',
   primary: '#f5a442',
   errorText: '#bf0000',
-  textPrimary: '#FFFFFF',
+  textPrimary: '#4d4537',
   // product
   product: {
     cardContainer: '#ffc852',
@@ -33,7 +33,7 @@ const Colors = {
     borderColor: '#4d402d',
   },
 
-  // Coupon
+  // Transfer
   Transfer: {
     cardTitle: '#f2c274',
     cardTitleText: '#453f36',
@@ -69,9 +69,11 @@ const Colors = {
   },
   // Order
   Order: {
-    cardContainer: '#faefe3',
+    cardContainer: '#FFFFFF',
     cardText: '#4d4537',
     cardTitleText: '#FFFFFF',
+    borderColor: '#4d402d',
+    cardTitle: '#d6572d',
   },
 };
 

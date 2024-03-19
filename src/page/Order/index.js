@@ -5,25 +5,26 @@ import moment from 'moment';
 import service from '../Service/service';
 import { AppContext } from '../../redux/AppContent';
 import Pagination from '../../component/Pagination';
+import ReminderText from '../../component/ReminderText';
 import { Search } from '../../assets';
 
-const Coupon = () => {
+const Order = () => {
   const appCtx = React.useContext(AppContext);
   const navigation = useNavigation();
 
+  // 初始化
   const [init, setInit] = React.useState(false);
-  const [order, setOrder] = React.useState([]);
-  const [text, onChangeText] = React.useState('');
-  const [searchText, setSearchText] = React.useState('');
 
+  const [order, setOrder] = React.useState([]);
+  const [text, setChangeText] = React.useState('');
+  const [searchText, setSearchText] = React.useState('');
   const [pagination, setPagination] = React.useState(10);
   const [page, setPage] = React.useState(1);
   const [total, setTotal] = React.useState(0);
 
   //  刷新用
   const onRefresh = () => {
-    setPage(1);
-    postSearchOrder();
+    postSearchOrder()
   };
 
   const onPageChange = page => {
@@ -48,7 +49,7 @@ const Coupon = () => {
       // 失敗回傳空值
       setSearchText(text);
       setOrder([]);
-      setTotal(0);
+      setTotal(0)
     }
     await appCtx.setLoading(false);
   };
@@ -70,6 +71,10 @@ const Coupon = () => {
       setInit(true);
       return () => {
         setInit(false);
+        setChangeText('');
+        setSearchText('');
+        setOrder([]);
+        setPage(1)
       }
     }, [])
   );
@@ -90,7 +95,7 @@ const Coupon = () => {
               styles.searchInput,
               { backgroundColor: appCtx.Colors.inputContainer },
             ]}
-            onChangeText={onChangeText}
+            setChangeText={setChangeText}
             value={text}
             placeholder={'搜尋會員名稱'}
             textAlign="left"
@@ -114,7 +119,10 @@ const Coupon = () => {
           </RN.Text>
         </RN.TouchableOpacity>
       </RN.View>
-      <RN.View style={[styles.listContainer]}></RN.View>
+      <RN.View style={[styles.listContainer]}>
+        <ReminderText text={'* 點擊項目可進入詳情頁'} />
+        <ReminderText text={'* 搜尋框可進行模糊搜尋'} />
+      </RN.View>
       <RN.ScrollView>
         {(order?.length > 0 && Array.isArray(order)) ? (
           order.map((item, index) => {
@@ -123,8 +131,8 @@ const Coupon = () => {
                 style={[
                   styles.itemContainer,
                   {
-                    backgroundColor: appCtx.Colors.Coupon.cardContainer,
-                    borderColor: appCtx.Colors.Coupon.borderColor,
+                    backgroundColor: appCtx.Colors.Order.cardContainer,
+                    borderColor: appCtx.Colors.Order.borderColor,
                   },
                 ]}
                 onPress={() => navigation.navigate('OrderItem', { item })}
@@ -133,7 +141,7 @@ const Coupon = () => {
                   style={[
                     styles.itemContent,
                     {
-                      backgroundColor: appCtx.Colors.Coupon.cardTitle,
+                      backgroundColor: appCtx.Colors.Order.cardTitle,
                       flex: 4,
                     },
                   ]}>
@@ -151,7 +159,7 @@ const Coupon = () => {
                     ]}
                     numberOfLines={1}
                     ellipsizeMode={'tail'}>
-                    {item.infoData.uesrName}
+                    {item.infoData.userName}
                   </RN.Text>
 
                   <RN.Text
@@ -159,7 +167,7 @@ const Coupon = () => {
                       styles.itemContentTextTitle,
                       { color: appCtx.Colors.textPrimary, fontSize: 12 },
                     ]}>
-                    {'地址:'}
+                    {'地址: '}
                   </RN.Text>
                   <RN.Text
                     style={[
@@ -168,7 +176,7 @@ const Coupon = () => {
                     ]}
                     numberOfLines={1}
                     ellipsizeMode={'tail'}>
-                    {`${item.infoData.city} ${item.infoData.town} ${item.infoData.addres}`}
+                    {`${item.infoData.city} ${item.infoData.town} ${item.infoData.address}`}
                   </RN.Text>
 
                   <RN.Text
@@ -176,7 +184,7 @@ const Coupon = () => {
                       styles.itemContentTextTitle,
                       { color: appCtx.Colors.textPrimary, fontSize: 12 },
                     ]}>
-                    {'創立時間:'}
+                    {'創立時間: '}
                   </RN.Text>
                   <RN.Text
                     style={[
@@ -210,7 +218,8 @@ const Coupon = () => {
                             flexDirection: 'row',
                             padding: 5,
                           },
-                        ]}>
+                        ]}
+                        key={item.imageUrl + index}>
                         <RN.Image
                           source={{ uri: `${item.imageUrl}` }}
                           style={{ width: 25, height: 25 }}
@@ -235,8 +244,8 @@ const Coupon = () => {
             style={[
               styles.itemContainer,
               {
-                backgroundColor: appCtx.Colors.Coupon.cardContainer,
-                borderColor: appCtx.Colors.Coupon.borderColor,
+                backgroundColor: appCtx.Colors.Order.cardContainer,
+                borderColor: appCtx.Colors.Order.borderColor,
               },
             ]}>
             <RN.View
@@ -266,7 +275,6 @@ const windowHeight = RN.Dimensions.get('window').height;
 const styles = RN.StyleSheet.create({
   container: {
     flex: 1,
-    // alignItems: 'flex-start',
   },
   itemContainer: {
     height: windowHeight / 5,
@@ -341,4 +349,4 @@ const styles = RN.StyleSheet.create({
   },
 });
 
-export default Coupon;
+export default Order;

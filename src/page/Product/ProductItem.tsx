@@ -159,7 +159,7 @@ const ProductItem = ({ route }: { route: any }) => {
     <RN.View style={styles.itemContainer}>
       <Goback />
       <ImagePicker
-        onValuechange={(e: string) => { setPhoto(e) }}
+        onValueChange={(e: string) => { setPhoto(e) }}
         photo={photo}
         width={'100%'}
         height={250}

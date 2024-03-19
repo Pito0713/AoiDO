@@ -21,7 +21,7 @@ const Product = () => {
   const navigation = useNavigation();
 
   const [init, setInit] = React.useState(false);
-  const [text, onChangeText] = React.useState('');
+  const [text, setChangeText] = React.useState('');
   const [categoryValue, setCategoryValue] = React.useState([]);
   const [showDialog, setShowDialog] = React.useState(false);
   const [searchText, setSearchText] = React.useState('');
@@ -72,7 +72,6 @@ const Product = () => {
   React.useEffect(() => {
     if (init) {
       postAllProduct();
-      setPage(1)
     }
   }, [init]);
 
@@ -83,6 +82,10 @@ const Product = () => {
       setInit(true);
       return () => {
         setInit(false);
+        setChangeText('');
+        setSearchText('');
+        setProductData([]);
+        setPage(1);
       }
     }, [])
   );
@@ -109,8 +112,8 @@ const Product = () => {
           </RN.View>
           <RN.TextInput
             style={styles.searchInput}
-            onChangeText={(e) => {
-              onChangeText(e)
+            setChangeText={(e) => {
+              setChangeText(e)
             }}
             value={text}
             placeholder={'搜尋商品描述'}

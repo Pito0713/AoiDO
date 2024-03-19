@@ -5,14 +5,8 @@ import { useNavigation } from '@react-navigation/native';
 import { AppContext } from '../../redux/AppContent';
 import Goback from '../../component/Goback';
 import service from '../Service/service';
-import ScrollViewComponent from '../../component/ScrollViewComponent';
-import Modal from '../../component/Modal';
 
-interface Order {
-  id: string;
-}
-
-const Content = (route: { params: any }) => {
+const Content = (route: any) => {
   const appCtx = React.useContext(AppContext);
   const navigation = useNavigation<Nav>();
   type Nav = {
@@ -22,7 +16,6 @@ const Content = (route: { params: any }) => {
 
   const deleteOneOrder = async (item: string) => {
     await appCtx.setLoading(true);
-
     let submitData = {
       id: item,
     };
@@ -30,36 +23,37 @@ const Content = (route: { params: any }) => {
     await appCtx.setLoading(false);
     if (response?.status === 'success') navigation.goBack();
   };
-  const [modalOpen, setModalOpen] = React.useState(false);
 
+  // Modal
   const openModal = () => {
-    setModalOpen(true);
+    appCtx.setModalOpen(true);
+    appCtx.setModal({
+      onConfirm: () => { deleteOneOrder(route.params.item._id), appCtx.setModalOpen(false); },
+      content: '是否刪除'
+    });
   };
 
-  const closeModal = () => {
-    setModalOpen(false);
-  };
   return (
     <RN.View style={styles.itemContainer}>
-      <RN.Text style={styles.titleText}>訂單資料: </RN.Text>
+      <RN.Text style={styles.titleText}>{"訂單資料: "}</RN.Text>
       <RN.View style={[styles.infoContainer]}>
         <RN.View style={styles.infoContent}>
-          <RN.Text>姓名:</RN.Text>
-          <RN.Text>{route.params.item.infoData.uesrName}</RN.Text>
+          <RN.Text>{"姓名: "}</RN.Text>
+          <RN.Text>{route.params.item.infoData.userName}</RN.Text>
         </RN.View>
         <RN.View style={styles.infoContent}>
-          <RN.Text>地址:</RN.Text>
+          <RN.Text>{"地址: "}</RN.Text>
           <RN.Text>
-            {route.params.item.infoData.city} {route.params.item.infoData.town}{' '}
-            {route.params.item.infoData.addres}
+            {route.params.item.infoData.city} {route.params.item.infoData.town}
+            {route.params.item.infoData.address}
           </RN.Text>
         </RN.View>
         <RN.View style={styles.infoContent}>
-          <RN.Text>電話:</RN.Text>
+          <RN.Text>{"電話: "}</RN.Text>
           <RN.Text>{route.params.item.infoData.phone}</RN.Text>
         </RN.View>
       </RN.View>
-      <RN.Text style={styles.titleText}>商品明細: </RN.Text>
+      <RN.Text style={styles.titleText}>{"商品明細: "}</RN.Text>
       <RN.View style={[styles.checkListContainer]}>
         {route.params.item.ProductList.map((item: { imageUrl: any; describe: any; quantity: any; category: any }, index: any) => {
           return (
@@ -91,13 +85,13 @@ const Content = (route: { params: any }) => {
           );
         })}
       </RN.View>
-      <RN.Text style={styles.titleText}>訂單詳情: </RN.Text>
+      <RN.Text style={styles.titleText}>{"訂單詳情: "}</RN.Text>
       <RN.View style={[styles.totalContainer]}>
         <RN.View style={styles.totalContent}>
-          <RN.Text>商品筆數: {route.params.item.totalQuantity}</RN.Text>
+          <RN.Text>{`商品筆數: ${route.params.item.totalQuantity}`}</RN.Text>
         </RN.View>
         <RN.View style={styles.totalContent}>
-          <RN.Text>總訂單金額: {route.params.item.totalPrice}</RN.Text>
+          <RN.Text>{`總訂單金額: ${route.params.item.totalPrice}`}</RN.Text>
         </RN.View>
       </RN.View>
       <RN.View style={styles.buttonContainer}>
@@ -107,24 +101,19 @@ const Content = (route: { params: any }) => {
             { backgroundColor: appCtx.Colors.primary },
           ]}
           onPress={() => openModal()}>
-          <RN.Text>刪除</RN.Text>
+          <RN.Text>{"刪除"}</RN.Text>
         </RN.TouchableOpacity>
       </RN.View>
-      {/* <Modal
-        isOpen={modalOpen}
-        confirm={() => deleteOneOrder(route.params.item._id)}
-        cancel={closeModal}
-        content={'是否刪除'}
-      /> */}
+
     </RN.View>
   );
 };
 
-const CouponItem = ({ route }: { route: any }) => {
+const OrderItem = () => {
   return (
     <RN.SafeAreaView style={styles.container}>
       <Goback />
-      <ScrollViewComponent item={() => Content(route)} />
+      <Content />
     </RN.SafeAreaView>
   );
 };
@@ -183,4 +172,4 @@ const styles = RN.StyleSheet.create({
   },
 });
 
-export default CouponItem;
+export default OrderItem;

@@ -4,9 +4,10 @@ import service from '../Service/service';
 import { AppContext } from '../../redux/AppContent';
 import Goback from '../../component/Goback'
 import ReminderText from '../../component/ReminderText';
+import TitleText from '../../component/TitleText';
 import { Checkbg, Cancel } from '../../assets'
 import ImagePicker from '../../component/ImagePicker'
-import Modal from '../../component/Modal';
+import { useFocusEffect } from '@react-navigation/native';
 
 const Content = () => {
   const appCtx = React.useContext(AppContext);
@@ -17,21 +18,20 @@ const Content = () => {
     isActive?: boolean | undefined,
   }
 
+  // 初始化
+  const [init, setInit] = React.useState(false);
+
   const [photoList, setPhotoList] = React.useState([]);
   const [photo, setPhoto] = React.useState('');
-  const [modalOpen, setModalOpen] = React.useState(false);
-  const [deleteId, setDeleteId] = React.useState('');
 
-  const openModal = (item: any) => {
-    setModalOpen(true);
-    setDeleteId(item)
+  // Modal
+  const openModal = (_id: string | undefined) => {
+    appCtx.setModalOpen(true);
+    appCtx.setModal({
+      onConfirm: () => { deleteOneAboutImg(_id), appCtx.setModalOpen(false); },
+      content: '是否刪除'
+    });
   };
-
-  const closeModal = () => {
-    setModalOpen(false);
-    setDeleteId('')
-  };
-
 
   const handleUploadPhoto = async () => {
     let submitData = {
@@ -41,19 +41,22 @@ const Content = () => {
     if (response?.data) return response.data
   };
 
+  // 新增關於照片
   const postCreateAboutImg = async () => {
     await appCtx.setLoading(true);
     let target = await handleUploadPhoto()
 
-    if (target) {
+    if (target?.imageUrl) {
       let submitData = {
         img: target?.imageUrl,
+        // 直接帶入未啟動狀態
         isActive: false
       }
 
-      if (submitData.img) {
+      if (submitData?.img) {
         const response = await service.postCreateAboutImg(submitData);
         if (response?.status === 'success') {
+          // 成功後重整
           getFindAllAboutImg()
         }
       }
@@ -61,11 +64,11 @@ const Content = () => {
     await appCtx.setLoading(false);
   };
 
+  // 取得關於照片
   const getFindAllAboutImg = async () => {
     await appCtx.setLoading(true);
 
     const response = await service.getFindAllAboutImg();
-
     if (response?.status === 'success') {
       setPhotoList(response.data);
       setPhoto('')
@@ -73,24 +76,29 @@ const Content = () => {
     await appCtx.setLoading(false);
   };
 
-  const deleteOneAboutImg = async () => {
+  // 刪除關於照片
+  const deleteOneAboutImg = async (_id: string | undefined) => {
     let submitData = {
-      id: deleteId,
+      id: _id,
     };
     await appCtx.setLoading(true);
     const response = await service.deleteOneAboutImg(submitData);
+
+    // 成功後重整
     if (response?.status === 'success') getFindAllAboutImg();
-    closeModal()
     await appCtx.setLoading(false);
   };
 
+  // 更新關於照片
   const patchUploadAboutImg = async (item: submitData) => {
     let submitData = {
-      id: item._id,
-      isActive: !item.isActive
+      id: item?._id,
+      isActive: !item?.isActive
     };
     await appCtx.setLoading(true);
     const response = await service.patchUploadAboutImg(submitData);
+
+    // 成功後重整
     if (response?.status === 'success') getFindAllAboutImg();
     await appCtx.setLoading(false);
   };
@@ -100,25 +108,47 @@ const Content = () => {
   }
 
   React.useEffect(() => {
-    getFindAllAboutImg();
-  }, []);
+    if (init) {
+      getFindAllAboutImg()
+    }
+  }, [init]);
+
+  useFocusEffect(
+    // 監聽頁面離開與載入
+    React.useCallback(() => {
+      // 開始初始化
+      setInit(true);
+      return () => {
+        setInit(false);
+        setPhotoList([]);
+        setPhoto('')
+      }
+    }, [])
+  );
 
   return (
     <RN.View style={styles.container}>
+      <RN.View style={{ marginHorizontal: 20, marginVertical: 10 }}>
+        <ImagePicker onValueChange={onValueChange} photo={photo} width={200} height={200} />
+      </RN.View>
       <RN.View style={[styles.addContainer, { backgroundColor: appCtx.Colors.photo.cardBottom }]}>
         <RN.TouchableOpacity style={[{ alignItems: 'center', justifyContent: 'center' }]} onPress={postCreateAboutImg}>
-          <RN.Text>上傳</RN.Text>
+          <RN.Text>{"上傳"}</RN.Text>
         </RN.TouchableOpacity>
       </RN.View>
-      <RN.View style={{ margin: 10 }}>
-        <ImagePicker onValuechange={onValueChange} photo={photo} width={200} height={200} />
+      <RN.View style={[styles.listContainer]}>
+        <ReminderText text={'* 選擇圖片後, 需點選上傳更新至資源區'} />
+      </RN.View>
+      <RN.View style={{ width: '75%', height: 1, backgroundColor: appCtx.Colors.borderColor, marginHorizontal: 10, marginVertical: 20 }} />
+      <RN.View style={[styles.titleContainer]}>
+        <TitleText text={'關於圖片'} />
       </RN.View>
       <RN.View style={[styles.listContainer]}>
         <ReminderText text={'* 長按圖片可刪除'} />
         <ReminderText text={'* 點擊圖片可啟用或取消'} />
       </RN.View>
       <RN.View style={styles.photoContainer}>
-        {photoList.length > 0 ? (
+        {(photoList?.length > 0 && Array.isArray(photoList)) ? (
           photoList.map((item: submitData, index: any) => {
             return (
               <RN.View >
@@ -156,17 +186,11 @@ const Content = () => {
                   height: '100%',
                 },
               ]}>
-              <RN.Text style={{ fontSize: 20 }}>暫無資料</RN.Text>
+              <RN.Text style={{ fontSize: 20 }}>{"暫無資料"}</RN.Text>
             </RN.View>
           </RN.View>
         )}
       </RN.View>
-      {/* <Modal
-        isOpen={modalOpen}
-        confirm={() => deleteOneAboutImg()}
-        cancel={closeModal}
-        content={'是否刪除'}
-      /> */}
     </RN.View>
   );
 };
@@ -214,8 +238,8 @@ const styles = RN.StyleSheet.create({
     alignContent: 'center',
     height: 50,
     width: 80,
-    marginLeft: 10,
-    marginBottom: 10,
+    marginHorizontal: 20,
+    marginVertical: 5,
     borderWidth: 1.5,
     borderRadius: 10,
   },
@@ -235,6 +259,12 @@ const styles = RN.StyleSheet.create({
     marginRight: 10,
     flexWrap: 'wrap',
     padding: 10,
+  },
+  titleContainer: {
+    alignItems: 'flex-start',
+    justifyContent: 'center',
+    marginHorizontal: 20,
+    flexWrap: 'wrap',
   },
 });
 

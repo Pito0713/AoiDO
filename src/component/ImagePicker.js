@@ -34,7 +34,7 @@ const ImagePicker = imageValue => {
 
       try {
         const base64 = await toBase64(file);
-        imageValue.onValuechange(base64);
+        imageValue.onValueChange(base64);
       } catch (error) { }
     }
   });
@@ -54,7 +54,6 @@ const ImagePicker = imageValue => {
             justifyContent: 'center',
             textAlign: 'center',
             overflow: 'hidden',
-            marginTop: 20,
           }}>
           <input {...getInputProps()} />
 

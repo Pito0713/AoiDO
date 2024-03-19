@@ -130,7 +130,7 @@ const Service = {
   postAllCargos: async (submitData: Cargo) => {
     let data = await fetchApi_AuthData(
       'POST',
-      `http://192.168.23.196:8082/allCargos`,
+      `http://localhost:8082/allCargos`,
       '',
       submitData,
     );
@@ -140,7 +140,7 @@ const Service = {
   postAddCargo: async (submitData: Cargo) => {
     let data = await fetchApi_AuthData(
       'POST',
-      `http://192.168.23.196:8082/addCargo`,
+      `http://localhost:8082/addCargo`,
       '',
       submitData
     );
@@ -150,7 +150,7 @@ const Service = {
   patchUpdateCargo: async (submitData: Cargo) => {
     let data = await fetchApi_AuthData(
       'PATCH',
-      `http://192.168.23.196:8082/updateCargo/`,
+      `http://localhost:8082/updateCargo/`,
       submitData.id,
       submitData
     );
@@ -160,7 +160,7 @@ const Service = {
   deleteCargo: async (submitData: Cargo) => {
     let data = await fetchApi_AuthData(
       'DELETE',
-      `http://192.168.23.196:8082/delCargo/`,
+      `http://localhost:8082/delCargo/`,
       submitData.id,
       {},
     );
@@ -170,7 +170,7 @@ const Service = {
   postRegister: async (submitData: register) => {
     let data = await fetchApi_AuthData(
       'POST',
-      `http://192.168.23.196:8082/register`,
+      `http://localhost:8082/register`,
       '',
       submitData
     );
@@ -179,7 +179,7 @@ const Service = {
   postLogin: async (submitData: register) => {
     let data = await fetchApi_AuthData(
       'POST',
-      `http://192.168.23.196:8082/login`,
+      `http://localhost:8082/login`,
       '',
       submitData
     );
@@ -188,7 +188,7 @@ const Service = {
   postPlatformRate: async (submitData: Platform) => {
     let data = await fetchApi_AuthData(
       'POST',
-      `http://192.168.23.196:8082/platformRate`,
+      `http://localhost:8082/platformRate`,
       '',
       submitData,
     );
@@ -198,7 +198,7 @@ const Service = {
   postCreateModifyRate: async (submitData: Platform) => {
     let data = await fetchApi_AuthData(
       'POST',
-      `http://192.168.23.196:8082/createModifyRate`,
+      `http://localhost:8082/createModifyRate`,
       '',
       submitData
     );
@@ -208,7 +208,7 @@ const Service = {
   updateModifyRate: async (submitData: Platform) => {
     let data = await fetchApi_AuthData(
       'POST',
-      `http://192.168.23.196:8082/updateModifyRate`,
+      `http://localhost:8082/updateModifyRate`,
       '',
       submitData
     );
@@ -218,7 +218,7 @@ const Service = {
   deleteModifyRate: async (submitData: Platform) => {
     let data = await fetchApi_AuthData(
       'DELETE',
-      `http://192.168.23.196:8082/deleteModifyRate`,
+      `http://localhost:8082/deleteModifyRate`,
       '',
       submitData
     );
@@ -228,7 +228,7 @@ const Service = {
   postSearchCargo: async (submitData: Cargo) => {
     let data = await fetchApi_AuthData(
       'POST',
-      `http://192.168.23.196:8082/searchCargo`,
+      `http://localhost:8082/searchCargo`,
       '',
       submitData
     );
@@ -238,7 +238,7 @@ const Service = {
   postHandPassWord: async (submitData: Cargo) => {
     let data = await fetchApi_AuthData(
       'POST',
-      `http://192.168.23.196:8082/handPassWord`,
+      `http://localhost:8082/handPassWord`,
       '',
       submitData
     );
@@ -248,7 +248,7 @@ const Service = {
   postAllProduct: async (submitData: Cargo) => {
     let data = await fetchApi_AuthData(
       'POST',
-      `http://192.168.23.196:8082/allProduct`,
+      `http://localhost:8082/allProduct`,
       '',
       submitData
     );
@@ -258,7 +258,7 @@ const Service = {
   postAddProduct: async (submitData: Cargo) => {
     let data = await fetchApi_AuthData(
       'POST',
-      `http://192.168.23.196:8082/addProduct`,
+      `http://localhost:8082/addProduct`,
       '',
       submitData
     );
@@ -268,7 +268,7 @@ const Service = {
   postUploadProduct: async (submitData: Product) => {
     let data = await fetchApi_AuthData(
       'POST',
-      `http://192.168.23.196:8082/uploadProduct`,
+      `http://localhost:8082/uploadProduct`,
       '',
       submitData
     );
@@ -279,7 +279,7 @@ const Service = {
   deleteProductOne: async (submitData: Cargo) => {
     let data = await fetchApi_AuthData(
       'DELETE',
-      `http://192.168.23.196:8082/deleteProductOne/`,
+      `http://localhost:8082/deleteProductOne/`,
       submitData.id,
       {},
     );
@@ -289,7 +289,7 @@ const Service = {
   deleteProductCategory: async (submitData: Cargo) => {
     let data = await fetchApi_AuthData(
       'DELETE',
-      `http://192.168.23.196:8082/deleteProductCategory`,
+      `http://localhost:8082/deleteProductCategory`,
       '',
       submitData,
     );
@@ -299,7 +299,7 @@ const Service = {
   postUploadImage: async (submitData: FormData | undefined) => {
     let data = await fetchApi_upload_file(
       'POST',
-      `http://192.168.23.196:8082/uploadImage`,
+      `http://localhost:8082/uploadImage`,
       '',
       submitData
     );
@@ -310,7 +310,7 @@ const Service = {
   postUploadWebImage: async (submitData:any) => {
     let data = await fetchApi_AuthData(
       'POST',
-      `http://192.168.23.196:8082/uploadWebImage`,
+      `http://localhost:8082/uploadWebImage`,
       '',
       submitData
     );
@@ -321,7 +321,7 @@ const Service = {
   postProductFilter: async () => {
     let data = await fetchApi_AuthData(
       'POST',
-      `http://192.168.23.196:8082/productFilter`,
+      `http://localhost:8082/productFilter`,
       '',
       {},
     );
@@ -331,7 +331,7 @@ const Service = {
   postCreateProductFilter: async (submitData: Platform) => {
     let data = await fetchApi_AuthData(
       'POST',
-      `http://192.168.23.196:8082/createProductFilter`,
+      `http://localhost:8082/createProductFilter`,
       '',
       submitData
     );
@@ -341,7 +341,7 @@ const Service = {
   deleteProductFilter: async (submitData: Platform) => {
     let data = await fetchApi_AuthData(
       'DELETE',
-      `http://192.168.23.196:8082/deleteProductFilter`,
+      `http://localhost:8082/deleteProductFilter`,
       '',
       submitData
     );
@@ -352,7 +352,7 @@ const Service = {
   postCreateCoupon: async (submitData: Platform) => {
     let data = await fetchApi_AuthData(
       'POST',
-      `http://192.168.23.196:8082/createCoupon`,
+      `http://localhost:8082/createCoupon`,
       '',
       submitData
     );
@@ -361,7 +361,7 @@ const Service = {
   postFindAllCoupon: async (submitData: Platform) => {
     let data = await fetchApi_AuthData(
       'POST',
-      `http://192.168.23.196:8082/findAllCoupon`,
+      `http://localhost:8082/findAllCoupon`,
       '',
       submitData
     );
@@ -371,7 +371,7 @@ const Service = {
   postSearchCoupon: async (submitData: Platform) => {
     let data = await fetchApi_AuthData(
       'POST',
-      `http://192.168.23.196:8082/searchCoupon`,
+      `http://localhost:8082/searchCoupon`,
       '',
       submitData
     );
@@ -381,7 +381,7 @@ const Service = {
   patchUpdateCoupon: async (submitData: Platform) => {
     let data = await fetchApi_AuthData(
       'patch',
-      `http://192.168.23.196:8082/updateCoupon/`,
+      `http://localhost:8082/updateCoupon/`,
       submitData.id,
       submitData,
     );
@@ -390,7 +390,7 @@ const Service = {
   patchUpdateCouponUser: async (submitData: Platform) => {
     let data = await fetchApi_AuthData(
       'patch',
-      `http://192.168.23.196:8082/updateCouponUser/`,
+      `http://localhost:8082/updateCouponUser/`,
       submitData.id,
       {},
     );
@@ -399,7 +399,7 @@ const Service = {
   deleteOneCoupon: async (submitData: Platform) => {
     let data = await fetchApi_AuthData(
       'DELETE',
-      `http://192.168.23.196:8082/deleteOneCoupon/`,
+      `http://localhost:8082/deleteOneCoupon/`,
       submitData.id,
       {},
     );
@@ -408,7 +408,7 @@ const Service = {
   deleteAllCoupon: async (submitData: Platform) => {
     let data = await fetchApi_AuthData(
       'DELETE',
-      `http://192.168.23.196:8082/deleteAllCoupon`,
+      `http://localhost:8082/deleteAllCoupon`,
       submitData.id,
       {},
     );
@@ -417,7 +417,7 @@ const Service = {
   postCreateCarouselImg: async (submitData: Image) => {
     let data = await fetchApi_AuthData(
       'POST',
-      `http://192.168.23.196:8082/createCarouselImg`,
+      `http://localhost:8082/createCarouselImg`,
       '',
       submitData,
     );
@@ -426,7 +426,7 @@ const Service = {
   getFindAllCarouselImg: async () => {
     let data = await fetchApi_AuthData(
       'GET',
-      `http://192.168.23.196:8082/findAllCarouselImg`,
+      `http://localhost:8082/findAllCarouselImg`,
       '',
       '',
     );
@@ -435,7 +435,7 @@ const Service = {
   patchUploadCarouselImg: async (submitData: Image) => {
     let data = await fetchApi_AuthData(
       'PATCH',
-      `http://192.168.23.196:8082/uploadCarouselImg`,
+      `http://localhost:8082/uploadCarouselImg`,
       '',
       submitData
     );
@@ -445,45 +445,49 @@ const Service = {
   deleteOneCarouselImg: async (submitData: Image) => {
     let data = await fetchApi_AuthData(
       'DELETE',
-      `http://192.168.23.196:8082/deleteOneCarouselImg/`,
+      `http://localhost:8082/deleteOneCarouselImg/`,
       submitData.id,
       '',
     );
     return data;
   },
 
+  // 新增關於照片
   postCreateAboutImg: async (submitData: Image) => {
     let data = await fetchApi_AuthData(
       'POST',
-      `http://192.168.23.196:8082/createAboutImg`,
+      `http://localhost:8082/createAboutImg`,
       '',
       submitData
     );
     return data;
   },
+  // 取得關於照片
   getFindAllAboutImg: async () => {
     let data = await fetchApi_AuthData(
       'GET',
-      `http://192.168.23.196:8082/findAllAboutImg`,
+      `http://localhost:8082/findAllAboutImg`,
       '',
       '',
     );
     return data;
   },
+  // 更新關於照片
   patchUploadAboutImg: async (submitData: Image) => {
     let data = await fetchApi_AuthData(
       'PATCH',
-      `http://192.168.23.196:8082/uploadAboutImg`,
+      `http://localhost:8082/uploadAboutImg`,
       '',
       submitData
     );
     return data;
   },
 
+  // 刪除關於照片
   deleteOneAboutImg: async (submitData: Image) => {
     let data = await fetchApi_AuthData(
       'DELETE',
-      `http://192.168.23.196:8082/deleteOneAboutImg/`,
+      `http://localhost:8082/deleteOneAboutImg/`,
       submitData.id,
       '',
     );
@@ -493,7 +497,7 @@ const Service = {
   postCreateMainImg: async (submitData: Image) => {
     let data = await fetchApi_AuthData(
       'POST',
-      `http://192.168.23.196:8082/createMainImg`,
+      `http://localhost:8082/createMainImg`,
       '',
       submitData
     );
@@ -502,7 +506,7 @@ const Service = {
   getFindAllMainImg: async () => {
     let data = await fetchApi_AuthData(
       'GET',
-      `http://192.168.23.196:8082/findAllMainImg`,
+      `http://localhost:8082/findAllMainImg`,
       '',
       '',
     );
@@ -511,7 +515,7 @@ const Service = {
   patchUploadMainImg: async (submitData: Image) => {
     let data = await fetchApi_AuthData(
       'PATCH',
-      `http://192.168.23.196:8082/uploadMainImg`,
+      `http://localhost:8082/uploadMainImg`,
       '',
       submitData
     );
@@ -521,7 +525,7 @@ const Service = {
   deleteOneMainImg: async (submitData: Image) => {
     let data = await fetchApi_AuthData(
       'DELETE',
-      `http://192.168.23.196:8082/deleteOneMainImg/`,
+      `http://localhost:8082/deleteOneMainImg/`,
       submitData.id,
       '',
     );
@@ -531,7 +535,7 @@ const Service = {
   posUserBackRegister: async (submitData: register) => {
     let data = await fetchApi_AuthData(
       'POST',
-      `http://192.168.23.196:8082/userBackRegister`,
+      `http://localhost:8082/userBackRegister`,
       '',
       submitData
     );
@@ -540,7 +544,7 @@ const Service = {
   postUserBackLogin: async (submitData: register) => {
     let data = await fetchApi_AuthData(
       'POST',
-      `http://192.168.23.196:8082/userBackLogin`,
+      `http://localhost:8082/userBackLogin`,
       '',
       submitData
     );
@@ -549,7 +553,7 @@ const Service = {
   postUserBackhandPassWord: async (submitData: register) => {
     let data = await fetchApi_AuthData(
       'POST',
-      `http://192.168.23.196:8082/userBackhandPassWord`,
+      `http://localhost:8082/userBackhandPassWord`,
       '',
       submitData
     );
@@ -558,7 +562,7 @@ const Service = {
   getUserBackInfo: async (submitData: register) => {
     let data = await fetchApi_AuthData(
       'GET',
-      `http://192.168.23.196:8082/userBackInfo`,
+      `http://localhost:8082/userBackInfo`,
       '',
       submitData
     );
@@ -568,7 +572,7 @@ const Service = {
   getFindAllUserBack: async (submitData: register) => {
     let data = await fetchApi_AuthData(
       'POST',
-      `http://192.168.23.196:8082/findAllUserBack`,
+      `http://localhost:8082/findAllUserBack`,
       '',
       submitData
     );
@@ -578,7 +582,7 @@ const Service = {
   patchUploadUserPermission: async (submitData: register) => {
     let data = await fetchApi_AuthData(
       'PATCH',
-      `http://192.168.23.196:8082/uploadUserPermission`,
+      `http://localhost:8082/uploadUserPermission`,
       '',
       submitData
     );
@@ -588,17 +592,18 @@ const Service = {
   postSearchOrder: async (submitData: Order) => {
     let data = await fetchApi_AuthData(
       'post',
-      `http://192.168.23.196:8082/searchOrder`,
+      `http://localhost:8082/searchOrder`,
       '',
       submitData
     );
     return data;
   },
 
+  // 刪除訂單
   deleteOneOrder: async (submitData: Order) => {
     let data = await fetchApi_AuthData(
       'DELETE',
-      `http://192.168.23.196:8082/deleteOneOrder/`,
+      `http://localhost:8082/deleteOneOrder/`,
       submitData.id,
       '',
     );
