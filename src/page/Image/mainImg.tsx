@@ -4,9 +4,10 @@ import service from '../Service/service';
 import { AppContext } from '../../redux/AppContent';
 import Goback from '../../component/Goback'
 import ReminderText from '../../component/ReminderText';
+import TitleText from '../../component/TitleText';
 import { Checkbg, Cancel } from '../../assets';
 import ImagePicker from '../../component/ImagePicker'
-import Modal from '../../component/Modal';
+import { useFocusEffect } from '@react-navigation/native';
 
 const Content = () => {
   const appCtx = React.useContext(AppContext);
@@ -17,19 +18,19 @@ const Content = () => {
     isActive?: boolean | undefined,
   }
 
+  // 初始化
+  const [init, setInit] = React.useState(false);
+
   const [photoList, setPhotoList] = React.useState([]);
   const [photo, setPhoto] = React.useState('');
-  const [modalOpen, setModalOpen] = React.useState(false);
-  const [deleteId, setDeleteId] = React.useState('');
 
-  const openModal = (item: any) => {
-    setModalOpen(true);
-    setDeleteId(item)
-  };
-
-  const closeModal = () => {
-    setModalOpen(false);
-    setDeleteId('')
+  // Modal
+  const openModal = (_id: string | undefined) => {
+    appCtx.setModalOpen(true);
+    appCtx.setModal({
+      onConfirm: () => { deleteOneMainImg(_id), appCtx.setModalOpen(false); },
+      content: '是否刪除'
+    });
   };
 
   const handleUploadPhoto = async () => {
@@ -40,6 +41,7 @@ const Content = () => {
     if (response?.data) return response.data
   };
 
+  // 新增大綱照片
   const postCreateMainImg = async () => {
     await appCtx.setLoading(true);
     let target = await handleUploadPhoto()
@@ -47,12 +49,14 @@ const Content = () => {
     if (target) {
       let submitData = {
         img: target.imageUrl,
+        // 直接帶入未啟動狀態
         isActive: false
       }
 
       if (submitData.img) {
         const response = await service.postCreateMainImg(submitData);
         if (response?.status === 'success') {
+          // 成功後重整
           getFindAllMainImg()
         }
       }
@@ -60,6 +64,7 @@ const Content = () => {
     await appCtx.setLoading(false);
   };
 
+  // 取得大綱照片
   const getFindAllMainImg = async () => {
     await appCtx.setLoading(true);
 
@@ -72,17 +77,20 @@ const Content = () => {
     await appCtx.setLoading(false);
   };
 
-  const deleteOneMainImg = async () => {
+  // 刪除大綱照片
+  const deleteOneMainImg = async (_id: string | undefined) => {
     let submitData = {
-      id: deleteId,
+      id: _id,
     };
     await appCtx.setLoading(true);
     const response = await service.deleteOneMainImg(submitData);
+    // 成功後重整
     if (response?.status === 'success') getFindAllMainImg();
-    closeModal()
+
     await appCtx.setLoading(false);
   };
 
+  // 更新大綱照片
   const patchUploadMainImg = async (item: submitData) => {
     let submitData = {
       id: item._id,
@@ -90,6 +98,8 @@ const Content = () => {
     };
     await appCtx.setLoading(true);
     const response = await service.patchUploadMainImg(submitData);
+
+    // 成功後重整
     if (response?.status === 'success') getFindAllMainImg();
     await appCtx.setLoading(false);
   };
@@ -99,25 +109,48 @@ const Content = () => {
   }
 
   React.useEffect(() => {
-    getFindAllMainImg();
-  }, []);
+    if (init) {
+      getFindAllMainImg()
+    }
+  }, [init]);
+
+  useFocusEffect(
+    // 監聽頁面離開與載入
+    React.useCallback(() => {
+      // 開始初始化
+      setInit(true);
+      return () => {
+        setInit(false);
+        setPhotoList([]);
+        setPhoto('')
+      }
+    }, [])
+  );
 
   return (
-    <RN.View>
-      <RN.View style={[styles.addContainer, { backgroundColor: appCtx.Colors.photo.cardBottom }]}>
-        <RN.TouchableOpacity style={[{ alignItems: 'center', justifyContent: 'center' }]} onPress={postCreateMainImg}>
-          <RN.Text>上傳</RN.Text>
-        </RN.TouchableOpacity>
-      </RN.View>
-      <RN.View style={{ margin: 10 }}>
+    <RN.View style={styles.container}>
+      <RN.View style={{ margin: 20, flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'flex-start' }}>
         <ImagePicker onValueChange={onValueChange} photo={photo} width={200} height={200} />
+        <RN.View style={[styles.listContainer]}>
+          <ReminderText text={'* 點擊後選擇圖片, 圖片大小 只能用20KB'} />
+          <ReminderText text={'* 需點選上傳, 更新至資源區'} />
+          {photo && <RN.View style={[styles.addContainer, { backgroundColor: appCtx.Colors.photo.cardBottom }]}>
+            <RN.TouchableOpacity style={[{ alignItems: 'center', justifyContent: 'center' }]} onPress={postCreateMainImg}>
+              <RN.Text>{"上傳"}</RN.Text>
+            </RN.TouchableOpacity>
+          </RN.View>}
+        </RN.View>
+      </RN.View>
+      <RN.View style={[styles.titleContainer]}>
+        <TitleText text={'圖片資源區'} />
       </RN.View>
       <RN.View style={[styles.listContainer]}>
-        <ReminderText text={'* 長按圖片可刪除'} />
         <ReminderText text={'* 點擊圖片可啟用或取消'} />
+        <ReminderText text={'* 啟用後, 顯示於首頁'} />
+        <ReminderText text={'* 點擊X 可刪除圖片'} />
       </RN.View>
       <RN.View style={styles.photoContainer}>
-        {photoList.length > 0 ? (
+        {(photoList?.length > 0 && Array.isArray(photoList)) ? (
           photoList.map((item: submitData, index: any) => {
             return (
               <RN.View >
@@ -155,17 +188,11 @@ const Content = () => {
                   height: '100%',
                 },
               ]}>
-              <RN.Text style={{ fontSize: 20 }}>暫無資料</RN.Text>
+              <RN.Text style={{ fontSize: 20 }}>{'暫無資料'}</RN.Text>
             </RN.View>
           </RN.View>
         )}
       </RN.View>
-      {/* <Modal
-        isOpen={modalOpen}
-        confirm={() => deleteOneMainImg()}
-        cancel={closeModal}
-        content={'是否刪除'}
-      /> */}
     </RN.View>
   );
 };
@@ -188,16 +215,14 @@ const styles = RN.StyleSheet.create({
   photoContainer: {
     flex: 1,
     flexDirection: 'row',
-    marginRight: 5,
-    marginLeft: 5,
+    marginHorizontal: 20,
     flexWrap: 'wrap',
   },
   itemContainer: {
     height: 200,
     width: 200,
     marginBottom: 10,
-    marginRight: 5,
-    marginLeft: 5,
+    marginHorizontal: 5,
     alignItems: 'center',
     borderWidth: 1.5,
     overflow: 'hidden',
@@ -232,10 +257,15 @@ const styles = RN.StyleSheet.create({
   listContainer: {
     alignItems: 'flex-start',
     justifyContent: 'center',
-    marginLeft: 10,
-    marginRight: 10,
+    marginHorizontal: 10,
     flexWrap: 'wrap',
     padding: 10,
+  },
+  titleContainer: {
+    alignItems: 'flex-start',
+    justifyContent: 'center',
+    marginHorizontal: 20,
+    flexWrap: 'wrap',
   },
 });
 

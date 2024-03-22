@@ -5,7 +5,7 @@ import { AppContext } from '../redux/AppContent';
 const TitleText = (props: any) => {
   const appCtx = React.useContext(AppContext);
   return (
-    <RN.View>
+    <RN.View style={{ flexDirection: 'row', width: '100%', backgroundColor: appCtx.Colors.titleBG, padding: 10 }}>
       <RN.Text
         style={[
           styles.listText,
@@ -20,7 +20,7 @@ const TitleText = (props: any) => {
 const styles = RN.StyleSheet.create({
   listText: {
     textAlign: 'center',
-    margin: 2,
+    marginHorizontal: 10,
     fontSize: 20,
   },
 });

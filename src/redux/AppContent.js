@@ -11,6 +11,7 @@ const Colors = {
   primary: '#f5a442',
   errorText: '#bf0000',
   textPrimary: '#4d4537',
+  titleBG: '#e0e0e0',
   // product
   product: {
     cardContainer: '#ffc852',
@@ -47,8 +48,18 @@ const Colors = {
 
   // Platform
   Platform: {
-    cardTitle: '#f2c274',
-    cardTitleText: '#453f36',
+    cardContainer: '#FFFFFF',
+    cardTitle: '#d6572d',
+    cardTitleText: '#FFFFFF',
+    unActiveItem: '#8af29b',
+    activeItem: '#f2c274',
+  },
+
+  // Permission
+  Permission: {
+    cardContainer: '#FFFFFF',
+    cardTitle: '#d6572d',
+    cardTitleText: '#FFFFFF',
   },
 
   // input
@@ -66,7 +77,9 @@ const Colors = {
   photo: {
     cardContainer: '#ffc852',
     cardBottom: '#f2c274',
+
   },
+
   // Order
   Order: {
     cardContainer: '#FFFFFF',

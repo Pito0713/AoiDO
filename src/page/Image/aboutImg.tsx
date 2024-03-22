@@ -130,22 +130,25 @@ const Content = () => {
     <RN.View style={styles.container}>
       <RN.View style={{ marginHorizontal: 20, marginVertical: 10 }}>
         <ImagePicker onValueChange={onValueChange} photo={photo} width={200} height={200} />
+        <RN.View style={[styles.listContainer]}>
+          <ReminderText text={'* 點擊後選擇圖片, 圖片大小 只能用20KB'} />
+          <ReminderText text={'* 需點選上傳, 更新至資源區'} />
+          {photo && <RN.View style={[styles.addContainer, { backgroundColor: appCtx.Colors.photo.cardBottom }]}>
+            <RN.TouchableOpacity style={[{ alignItems: 'center', justifyContent: 'center' }]} onPress={postCreateAboutImg}>
+              <RN.Text>{"上傳"}</RN.Text>
+            </RN.TouchableOpacity>
+          </RN.View>}
+        </RN.View>
       </RN.View>
-      <RN.View style={[styles.addContainer, { backgroundColor: appCtx.Colors.photo.cardBottom }]}>
-        <RN.TouchableOpacity style={[{ alignItems: 'center', justifyContent: 'center' }]} onPress={postCreateAboutImg}>
-          <RN.Text>{"上傳"}</RN.Text>
-        </RN.TouchableOpacity>
-      </RN.View>
-      <RN.View style={[styles.listContainer]}>
-        <ReminderText text={'* 選擇圖片後, 需點選上傳更新至資源區'} />
-      </RN.View>
-      <RN.View style={{ width: '75%', height: 1, backgroundColor: appCtx.Colors.borderColor, marginHorizontal: 10, marginVertical: 20 }} />
+
+
       <RN.View style={[styles.titleContainer]}>
-        <TitleText text={'關於圖片'} />
+        <TitleText text={'圖片資源區'} />
       </RN.View>
       <RN.View style={[styles.listContainer]}>
-        <ReminderText text={'* 長按圖片可刪除'} />
         <ReminderText text={'* 點擊圖片可啟用或取消'} />
+        <ReminderText text={'* 啟用後, 顯示於首頁'} />
+        <ReminderText text={'* 點擊X 可刪除圖片'} />
       </RN.View>
       <RN.View style={styles.photoContainer}>
         {(photoList?.length > 0 && Array.isArray(photoList)) ? (
@@ -211,16 +214,14 @@ const styles = RN.StyleSheet.create({
   photoContainer: {
     flex: 1,
     flexDirection: 'row',
-    marginRight: 5,
-    marginLeft: 5,
+    marginHorizontal: 20,
     flexWrap: 'wrap',
   },
   itemContainer: {
     height: 200,
     width: 200,
     marginBottom: 10,
-    marginRight: 5,
-    marginLeft: 5,
+    marginHorizontal: 5,
     alignItems: 'center',
     borderWidth: 1.5,
     overflow: 'hidden',
@@ -238,8 +239,8 @@ const styles = RN.StyleSheet.create({
     alignContent: 'center',
     height: 50,
     width: 80,
-    marginHorizontal: 20,
-    marginVertical: 5,
+    marginLeft: 10,
+    marginBottom: 10,
     borderWidth: 1.5,
     borderRadius: 10,
   },
@@ -255,8 +256,7 @@ const styles = RN.StyleSheet.create({
   listContainer: {
     alignItems: 'flex-start',
     justifyContent: 'center',
-    marginLeft: 10,
-    marginRight: 10,
+    marginHorizontal: 10,
     flexWrap: 'wrap',
     padding: 10,
   },

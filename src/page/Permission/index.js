@@ -1,29 +1,30 @@
 import React from 'react';
 import * as RN from 'react-native';
 import { Picker } from '@react-native-picker/picker';
-import { useIsFocused } from '@react-navigation/native';
+import { useFocusEffect } from '@react-navigation/native';
 
 import { AppContext } from '../../redux/AppContent';
 import Goback from '../../component/Goback';
 import service from '../Service/service';
 import { useAppSelector } from '../../redux/store';
-import Modal from '../../component/Modal';
+import ReminderText from '../../component/ReminderText';
 
 const Content = () => {
-  const isFocused = useIsFocused();
   const appCtx = React.useContext(AppContext);
+  // 初始化
+  const [init, setInit] = React.useState(false);
   const [userList, setUserList] = React.useState([]);
   const [userPermission, setUserPermission] = React.useState({});
   const reduxId = useAppSelector(state => state.id);
-  const [modalOpen, setModalOpen] = React.useState(false);
-  const openModal = () => {
-    patchUploadUserPermission();
-    setModalOpen(false);
-  };
 
-  const closeModal = () => {
-    getFindAllUserBack();
-    setModalOpen(false);
+  // Modal
+  const openModal = (_id) => {
+    appCtx.setModalOpen(true);
+    appCtx.setModal({
+      onConfirm: () => { patchUploadUserPermission(), appCtx.setModalOpen(false); },
+      onCancel: () => { getFindAllUserBack(), appCtx.setModalOpen(false); },
+      content: '是否確認修改'
+    });
   };
 
   const permissionList = [
@@ -71,35 +72,63 @@ const Content = () => {
   };
 
   React.useEffect(() => {
-    getFindAllUserBack();
-  }, [isFocused]);
+    if (init) {
+      getFindAllUserBack()
+    }
+  }, [init]);
+
+  useFocusEffect(
+    // 監聽頁面離開與載入
+    React.useCallback(() => {
+      // 開始初始化
+      setInit(true);
+      return () => {
+        setInit(false);
+        setUserPermission({});
+      }
+    }, [])
+  );
 
   React.useEffect(() => {
-    if (userPermission._id) setModalOpen(true);
+    if (userPermission._id) openModal();
   }, [userPermission]);
 
   return (
-    <RN.View
-      style={[
-        styles.listContainer,
-        { borderColor: appCtx.Colors.Platform.borderPrimary },
-      ]}>
+    <RN.View style={{ width: '50%' }}>
+      <RN.View
+        style={[
+          styles.listContainer,
+          { borderColor: appCtx.Colors.Platform.borderPrimary },
+        ]}>
+        <ReminderText text={'* 預設費用無法刪除'} />
+        <ReminderText text={'* 點擊X 可刪除圖片'} />
+        <ReminderText text={'* 點擊項目, 可啟用平台匯率'} />
+        <ReminderText text={'* 點擊+ 可新增匯率項目'} />
+      </RN.View>
       {userList.map((item, index) => {
         return (
           <RN.View style={[styles.pickerContainer]} key={index}>
-            <RN.Text style={[styles.pickerContainerText]}>
-              {`帳號: ${item.account}`}
-            </RN.Text>
-            <RN.View style={[styles.pickerContent]}>
+            <RN.View style={[styles.pickerContent, {
+              flex: 5,
+              backgroundColor: appCtx.Colors.Platform.cardTitle,
+            },]}>
+              <RN.Text style={[styles.pickerContainerText]}>
+                {`帳號: ${item.account}`}
+              </RN.Text>
+            </RN.View>
+            <RN.View style={[styles.pickerContent, {
+              flex: 5,
+
+            },]}>
               <Picker
                 selectedValue={item.permission}
                 onValueChange={e => handleChange(item, e)}
                 style={{
                   fontSize: 17,
-                  marginRight: 40,
-                  borderBottomWidth: 1,
-                  width: '100%',
+                  borderWidth: 0,
                   textAlign: 'center',
+                  width: '80%',
+                  height: '100%',
                 }}>
                 {permissionList.map((item, index) => (
                   <Picker.Item
@@ -113,12 +142,6 @@ const Content = () => {
           </RN.View>
         );
       })}
-      {/* <Modal
-        isOpen={modalOpen}
-        confirm={openModal}
-        cancel={closeModal}
-        content={'是否確認修改'}
-      /> */}
     </RN.View>
   );
 };
@@ -137,21 +160,25 @@ const styles = RN.StyleSheet.create({
     flex: 1,
   },
   pickerContainer: {
-    display: 'flex',
+    flex: 1,
+    height: 70,
+    marginBottom: 10,
+    marginHorizontal: 10,
+    borderWidth: 1.5,
+    borderRadius: 10,
     flexDirection: 'row',
-    justifyContent: 'center',
     alignItems: 'center',
-    width: '100%',
-    marginTop: 20,
+    justifyContent: 'space-between',
+    overflow: 'hidden',
   },
   pickerContainerText: {
     fontSize: 17,
-    width: 200,
     textAlign: 'center',
   },
   pickerContent: {
-    marginTop: 10,
-    width: 200,
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 70,
   },
   listContainer: {
     alignItems: 'flex-start',

@@ -1,7 +1,7 @@
 import React from 'react';
 import * as RN from 'react-native';
-import { useNavigation, useIsFocused } from '@react-navigation/native';
-
+import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect } from '@react-navigation/native';
 import service from '../Service/service';
 import { AppContext } from '../../redux/AppContent';
 import Goback from '../../component/Goback';
@@ -12,55 +12,72 @@ import Modal from '../../component/Modal';
 const Content = () => {
   const appCtx = React.useContext(AppContext);
   const navigation = useNavigation();
-  const isFocused = useIsFocused();
+  // 初始化
+  const [init, setInit] = React.useState(false);
+
   const [platform, setPlatform] = React.useState([]);
-  const [modalOpen, setModalOpen] = React.useState(false);
-  const [deleteId, setDeleteId] = React.useState('');
-  const openModal = item => {
-    setModalOpen(true);
-    setDeleteId(item);
+  // Modal
+  const openModal = (_id) => {
+    appCtx.setModalOpen(true);
+    appCtx.setModal({
+      onConfirm: () => { deleteModifyRate(_id), appCtx.setModalOpen(false); },
+      content: '是否刪除'
+    });
   };
 
-  const closeModal = () => {
-    setModalOpen(false);
-    setDeleteId('');
-  };
 
+  // 取得平台匯率
   const postPlatformRate = async () => {
     await appCtx.setLoading(true);
     const response = await service.postPlatformRate();
-    if (!['', null, undefined].includes(response?.data)) {
+    if (response?.status === 'success') {
       setPlatform(response.data);
     }
     await appCtx.setLoading(false);
   };
 
-  const updateModifyRate = async item => {
+  // 更新平台匯率
+  const postUpdateModifyRate = async item => {
     let submitData = {
       id: item,
     };
     await appCtx.setLoading(true);
-    const response = await service.updateModifyRate(submitData);
-    await appCtx.setLoading(false);
+    const response = await service.postUpdateModifyRate(submitData);
+
+    // 成功後重整
     if (response?.status === 'success') postPlatformRate();
+    await appCtx.setLoading(false);
   };
 
-  const deleteModifyRate = async () => {
+  const deleteModifyRate = async (_id) => {
     let submitData = {
-      id: deleteId,
+      id: _id,
     };
-
     await appCtx.setLoading(true);
     const response = await service.deleteModifyRate(submitData);
-    await appCtx.setLoading(false);
-    closeModal();
+
+    // 成功後重整
     if (response?.status === 'success') postPlatformRate();
+    await appCtx.setLoading(false);
   };
 
   React.useEffect(() => {
-    postPlatformRate();
-  }, [isFocused]);
+    if (init) {
+      postPlatformRate()
+    }
+  }, [init]);
 
+  useFocusEffect(
+    // 監聽頁面離開與載入
+    React.useCallback(() => {
+      // 開始初始化
+      setInit(true);
+      return () => {
+        setInit(false);
+        setPlatform([]);
+      }
+    }, [])
+  );
   return (
     <RN.View>
       <RN.View
@@ -69,92 +86,81 @@ const Content = () => {
           { borderColor: appCtx.Colors.Platform.borderPrimary },
         ]}>
         <ReminderText text={'* 預設費用無法刪除'} />
-        <ReminderText text={'* 長按可刪除分類別'} />
+        <ReminderText text={'* 點擊X 可刪除圖片'} />
+        <ReminderText text={'* 點擊項目, 可啟用平台匯率'} />
+        <ReminderText text={'* 點擊+ 可新增匯率項目'} />
       </RN.View>
       <RN.View>
-        {platform.length > 0 ? (
+        {(platform?.length > 0 && Array.isArray(platform)) ? (
           platform.map((item, index) => {
-            return item.token !== '1' ? (
+            return (
               <RN.View key={index}>
-                <RN.TouchableOpacity
+                {item.token !== '1' && <RN.TouchableOpacity
                   style={{ margin: 10 }}
                   onPress={() => openModal(item._id)}>
                   <Cancel />
-                </RN.TouchableOpacity>
+                </RN.TouchableOpacity>}
                 <RN.TouchableOpacity
                   style={styles.itemContainer}
-                  onPress={() => updateModifyRate(item._id)}
+                  onPress={() => postUpdateModifyRate(item._id)}
                 // // onLongPress={() => deleteItem(item._id)}
                 >
-                  <RN.View style={styles.itemContent}>
-                    <RN.Text style={styles.itemContentText}>
+                  <RN.View style={[
+                    styles.itemContent,
+                    {
+                      flex: 2,
+                      backgroundColor: appCtx.Colors.Platform.cardTitle,
+                    },
+                  ]}>
+                    <RN.Text style={[styles.itemContentText, {
+                      color: appCtx.Colors.Platform.textPrimary
+                    }]}>
                       {item.label}
                     </RN.Text>
+                  </RN.View>
+                  <RN.View style={[
+                    styles.itemContent,
+                    {
+                      flex: 6.5,
+                    },
+                  ]}>
                     <RN.Text style={styles.itemContentText}>
                       {item.rate} %
                     </RN.Text>
                   </RN.View>
-                  <RN.View style={styles.itemContent}>
+                  <RN.View
+                    style={[
+                      styles.itemContent,
+                      {
+                        flex: 1.5,
+                        backgroundColor: item.isActive ? appCtx.Colors.Platform.activeItem : appCtx.Colors.Platform.cardContainer,
+                      }
+                    ]}>
                     {item.isActive ? (
                       <RN.Text style={styles.itemContentText}>進行中</RN.Text>
                     ) : (
-                      <RN.Text style={styles.itemContentText}>啟用</RN.Text>
+                      <RN.Text style={styles.itemContentText}>未啟用</RN.Text>
                     )}
                   </RN.View>
                 </RN.TouchableOpacity>
               </RN.View>
-            ) : (
-              <RN.View
-                style={styles.itemContainer}
-                key={index}
-                onPress={() => updateModifyRate(item.token)}>
-                <RN.View style={styles.itemContent}>
-                  <RN.Text
-                    style={[
-                      styles.itemContentText,
-                      { color: appCtx.Colors.platformDefault },
-                    ]}>
-                    {item.label}
-                  </RN.Text>
-                  <RN.Text
-                    style={[
-                      styles.itemContentText,
-                      { color: appCtx.Colors.platformDefault },
-                    ]}>
-                    {item.rate} %
-                  </RN.Text>
-                </RN.View>
-                <RN.View style={styles.itemContent}>
-                  {item.isActive ? (
-                    <RN.Text style={styles.itemContentText}>進行中</RN.Text>
-                  ) : (
-                    <RN.Text style={styles.itemContentText}>啟用</RN.Text>
-                  )}
-                </RN.View>
-              </RN.View>
-            );
+            )
           })
         ) : (
           <RN.View style={styles.itemContainer}>
             <RN.View style={styles.itemContent}>
-              <RN.Text style={{ fontSize: 20 }}>尚無資料</RN.Text>
+              <RN.Text style={{ fontSize: 20 }}>{'尚無資料'}</RN.Text>
             </RN.View>
           </RN.View>
         )}
         <RN.TouchableOpacity
           style={[styles.itemContainer, { marginTop: 40 }]}
           onPress={() => navigation.navigate('AddPlatformItem')}>
-          <RN.View style={styles.itemContent}>
+          <RN.View style={[styles.itemContent, { flex: 1 }]}>
             <Plus />
           </RN.View>
         </RN.TouchableOpacity>
       </RN.View>
-      {/* <Modal
-        isOpen={modalOpen}
-        confirm={() => deleteModifyRate()}
-        cancel={closeModal}
-        content={'是否刪除'}
-      /> */}
     </RN.View>
   );
 };
@@ -175,35 +181,31 @@ const styles = RN.StyleSheet.create({
   itemContainer: {
     height: 70,
     marginBottom: 10,
-    marginRight: 10,
-    marginLeft: 10,
+    marginHorizontal: 10,
     borderWidth: 1.5,
     borderRadius: 10,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    overflow: 'hidden',
   },
   itemContent: {
-    flexDirection: 'row',
-    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    height: '100%'
   },
   itemContentText: {
-    paddingLeft: 20,
     fontSize: 20,
   },
   listContainer: {
     alignItems: 'flex-start',
     justifyContent: 'center',
-    marginLeft: 10,
-    marginRight: 10,
+    marginHorizontal: 10,
     flexWrap: 'wrap',
     padding: 10,
   },
   listText: {
     textAlign: 'center',
-    margin: 2,
     fontSize: 12.5,
   },
 });

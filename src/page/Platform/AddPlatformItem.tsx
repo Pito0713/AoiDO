@@ -5,7 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 
 import service from "../Service/service";
 import Goback from '../../component/Goback'
-import { useAppSelector } from '../../redux/store';
+// import { useAppSelector } from '../../redux/store';
 import { AppContext } from '../../redux/AppContent';
 
 const windowHeight = RN.Dimensions.get('window').height;
@@ -17,7 +17,7 @@ interface PlatformItem {
 const Content = () => {
   const appCtx = React.useContext(AppContext);
   const navigation = useNavigation();
-  const reduxToken = useAppSelector((state: { token: any; }) => state.token)
+  // const reduxToken = useAppSelector((state: { token: any; }) => state.token)
 
   const formik = useFormik({
     validateOnChange: false,
@@ -45,11 +45,12 @@ const Content = () => {
     let submitData = {
       "label": values.label,
       "rate": values.rate,
-      "token": reduxToken,
+      // "token": reduxToken,
       "isActive": false,
     }
     await appCtx.setLoading(true)
     const response = await service.postCreateModifyRate(submitData);
+    // 成功後返回
     if (response?.status === 'success') navigation.goBack()
     await appCtx.setLoading(false);
   }
@@ -59,7 +60,7 @@ const Content = () => {
     <RN.View style={styles.itemContainer}>
       <RN.View style={styles.inputContainer}>
         <RN.View style={styles.inputText}>
-          <RN.Text>新增名稱</RN.Text>
+          <RN.Text>{'新增名稱'}</RN.Text>
         </RN.View>
         <RN.TextInput
           placeholder={'請輸入新增名稱'}
@@ -77,7 +78,7 @@ const Content = () => {
       </RN.View>
       <RN.View style={styles.inputContainer}>
         <RN.View style={styles.inputText}>
-          <RN.Text>新增費用匯率</RN.Text>
+          <RN.Text>{'新增費用匯率'}</RN.Text>
         </RN.View>
         <RN.TextInput
           placeholder={'請輸入新增費用匯率'}
@@ -95,8 +96,8 @@ const Content = () => {
       </RN.View>
 
       <RN.TouchableOpacity style={styles.registerContainer} onPress={() => formik.submitForm()}>
-        <RN.View style={[styles.registerText,{backgroundColor:appCtx.Colors.primary}]}>
-          <RN.Text style={[{textAlign: 'center', }]}>新增資料</RN.Text>
+        <RN.View style={[styles.registerText, { backgroundColor: appCtx.Colors.primary }]}>
+          <RN.Text style={[{ textAlign: 'center', }]}>{'新增資料'}</RN.Text>
         </RN.View>
       </RN.TouchableOpacity>
 

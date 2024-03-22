@@ -185,6 +185,7 @@ const Service = {
     );
     return data;
   },
+ // 取得平台匯率
   postPlatformRate: async (submitData: Platform) => {
     let data = await fetchApi_AuthData(
       'POST',
@@ -205,7 +206,9 @@ const Service = {
     return data;
   },
 
-  updateModifyRate: async (submitData: Platform) => {
+  
+  // 更新平台匯率
+  postUpdateModifyRate: async (submitData: Platform) => {
     let data = await fetchApi_AuthData(
       'POST',
       `http://localhost:8082/updateModifyRate`,
@@ -414,6 +417,7 @@ const Service = {
     );
     return data;
   },
+  // 新增輪播圖照片
   postCreateCarouselImg: async (submitData: Image) => {
     let data = await fetchApi_AuthData(
       'POST',
@@ -423,6 +427,7 @@ const Service = {
     );
     return data;
   },
+  // 取得輪播圖照片
   getFindAllCarouselImg: async () => {
     let data = await fetchApi_AuthData(
       'GET',
@@ -432,6 +437,7 @@ const Service = {
     );
     return data;
   },
+  // 更新輪播照片
   patchUploadCarouselImg: async (submitData: Image) => {
     let data = await fetchApi_AuthData(
       'PATCH',
@@ -442,6 +448,7 @@ const Service = {
     return data;
   },
 
+  // 刪除輪播照片
   deleteOneCarouselImg: async (submitData: Image) => {
     let data = await fetchApi_AuthData(
       'DELETE',
@@ -494,6 +501,7 @@ const Service = {
     return data;
   },
 
+   // 新增大綱照片
   postCreateMainImg: async (submitData: Image) => {
     let data = await fetchApi_AuthData(
       'POST',
@@ -503,6 +511,7 @@ const Service = {
     );
     return data;
   },
+      // 取得大綱照片
   getFindAllMainImg: async () => {
     let data = await fetchApi_AuthData(
       'GET',
@@ -512,6 +521,7 @@ const Service = {
     );
     return data;
   },
+  // 更新大綱照片
   patchUploadMainImg: async (submitData: Image) => {
     let data = await fetchApi_AuthData(
       'PATCH',
@@ -522,6 +532,7 @@ const Service = {
     return data;
   },
 
+  // 刪除大綱照片
   deleteOneMainImg: async (submitData: Image) => {
     let data = await fetchApi_AuthData(
       'DELETE',
