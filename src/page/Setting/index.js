@@ -4,10 +4,10 @@ import { useNavigation } from '@react-navigation/native';
 
 import { registerActions, useAppDispatch } from '../../redux/store';
 import { AppContext } from '../../redux/AppContent';
-import ScrollViewComponent from '../../component/ScrollViewComponent';
 import { useAppSelector } from '../../redux/store';
 import CryptoJS from 'react-native-crypto-js';
 import { APP_SECRCT_KEY } from '../../env/config';
+import ReminderText from '../../component/ReminderText';
 
 
 const Content = () => {
@@ -65,6 +65,13 @@ const Content = () => {
 
   return (
     <RN.View style={styles.container}>
+      <RN.View
+        style={[
+          styles.listContainer,
+        ]}>
+        <ReminderText text={'* 非管理員權限不可拜訪以下'} />
+        <ReminderText text={'1.自訂跑馬燈, 2.自訂商品大綱圖片, 3.自訂關於圖片, 4.自訂平台費用, 5.自訂商品分類, 6.權限修改'} />
+      </RN.View>
       {List.map((item, index) => {
         if (item?.permission?.includes(originalText)) {
           return (
@@ -91,7 +98,9 @@ const Content = () => {
 const Setting = () => {
   return (
     <RN.SafeAreaView style={{ flex: 1 }}>
-      <ScrollViewComponent item={Content} />
+      <RN.ScrollView>
+        <Content />
+      </RN.ScrollView>
     </RN.SafeAreaView>
   );
 };
@@ -113,6 +122,15 @@ const styles = RN.StyleSheet.create({
   text: {
     fontSize: 17.5,
     borderWidth: 0,
+  },
+  listContainer: {
+    alignItems: 'flex-start',
+    justifyContent: 'flex-start',
+    marginLeft: 10,
+    marginRight: 10,
+    flexWrap: 'wrap',
+    padding: 10,
+    width: '75%',
   },
 });
 

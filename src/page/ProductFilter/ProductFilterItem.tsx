@@ -5,7 +5,6 @@ import service from "../Service/service";
 import Goback from '../../component/Goback'
 import { useAppSelector } from '../../redux/store';
 import Pagination from '../../component/Pagination';
-import Modal from '../../component/Modal';
 
 interface ProductFilterItem {
   imageUrl?: string

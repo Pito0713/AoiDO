@@ -1,13 +1,12 @@
 import React from 'react';
 import * as RN from 'react-native';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
-import { Plus, Cancel } from '../../assets'
+import { Plus, CancelCir } from '../../assets'
 import service from '../Service/service';
 import { AppContext } from '../../redux/AppContent';
 import { useAppSelector } from '../../redux/store';
 import Goback from '../../component/Goback';
 import ReminderText from '../../component/ReminderText';
-import Modal from '../../component/Modal';
 
 const Content = () => {
   const appCtx = React.useContext(AppContext);
@@ -108,7 +107,7 @@ const Content = () => {
                 <RN.TouchableOpacity
                   style={{ margin: 10 }}
                   onPress={() => openModal(item)}>
-                  <Cancel />
+                  <CancelCir />
                 </RN.TouchableOpacity>
                 <RN.TouchableOpacity
                   style={styles.itemContainer}

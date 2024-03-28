@@ -133,7 +133,7 @@ const Coupon = () => {
         </RN.TouchableOpacity>
       </RN.View>
       <RN.View style={[styles.listContainer]}>
-        <ReminderText text={'* 右側按鈕 + 可新增商品 '} />
+        <ReminderText text={'* 右側按鈕 + 可新增商品 (需管理員權限) '} />
         <ReminderText text={'* 點擊項目可進入詳情頁'} />
         <ReminderText text={'* 搜尋框可進行模糊搜尋'} />
       </RN.View>

@@ -115,7 +115,7 @@ const Order = () => {
               flex: 1,
               color: appCtx.Colors.textPrimary,
             }}>
-            搜尋
+            {'搜尋'}
           </RN.Text>
         </RN.TouchableOpacity>
       </RN.View>

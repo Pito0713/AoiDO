@@ -1,11 +1,11 @@
 import * as React from 'react';
-import {Provider} from 'react-redux';
-import {store, persistor, useAppSelector} from './redux/store';
-import {AppProvider, AppContext} from './redux/AppContent';
-import {PersistGate} from 'redux-persist/integration/react';
-import {NavigationContainer} from '@react-navigation/native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {authedPages, unAuthedPages} from './router/routes';
+import { Provider } from 'react-redux';
+import { store, persistor, useAppSelector } from './redux/store';
+import { AppProvider, AppContext } from './redux/AppContent';
+import { PersistGate } from 'redux-persist/integration/react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { authedPages, unAuthedPages } from './router/routes';
 
 const Stack = createNativeStackNavigator();
 

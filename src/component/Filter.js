@@ -1,17 +1,20 @@
 import React from 'react';
 import * as RN from 'react-native';
-
 import { AppContext } from '../redux/AppContent';
 import service from '../page/Service/service';
-import { useIsFocused } from '@react-navigation/native';
-import { Filter } from '../assets';
+import { useFocusEffect } from '@react-navigation/native';
+import ReminderText from './ReminderText';
 
-const Fillter = e => {
-  const isFocused = useIsFocused();
+import { Filter, Cancel } from '../assets';
+
+const FilterContent = e => {
   const appCtx = React.useContext(AppContext);
+  // 初始化
+  const [init, setInit] = React.useState(false);
   const [showDialog, setShowDialog] = React.useState(false);
   const [categoryList, setCategoryList] = React.useState([]);
 
+  // 搜尋分類
   const postProductFilter = async () => {
     // call api
     const response = await service.postProductFilter();
@@ -26,11 +29,25 @@ const Fillter = e => {
     }
   };
 
+
   React.useEffect(() => {
-    (async () => {
-      if (isFocused) await postProductFilter();
-    })();
-  }, [isFocused]);
+    if (init) {
+      postProductFilter()
+    }
+  }, [init]);
+
+  useFocusEffect(
+    // 監聽頁面離開與載入
+    React.useCallback(() => {
+      // 開始初始化
+      setInit(true);
+      return () => {
+        setInit(false);
+        setCategoryList([]);
+        setShowDialog(false);
+      }
+    }, [])
+  );
 
   const show = () => {
     setShowDialog(!showDialog);
@@ -64,7 +81,19 @@ const Fillter = e => {
         animationType="slide"
         style={styles.dialog}
         visible={showDialog}>
-        <RN.SafeAreaView>
+        <RN.TouchableOpacity style={styles.cleanFilter} onPress={() => show()}>
+          <Cancel />
+        </RN.TouchableOpacity>
+
+        <RN.View>
+          <RN.View
+            style={[
+              styles.listContainer,
+              { borderColor: appCtx.Colors.Platform.borderPrimary },
+            ]}>
+            <ReminderText text={'* 勾選大類進行篩選'} />
+            <ReminderText text={'* 可複選'} />
+          </RN.View>
           <RN.FlatList
             data={categoryList}
             renderItem={renderItem}
@@ -79,9 +108,9 @@ const Fillter = e => {
               setShowDialog(false);
               e.ShowDialog(false);
             }}>
-            <RN.Text style={[{ color: appCtx.Colors.textPrimary }]}>確認</RN.Text>
+            <RN.Text style={[{ color: appCtx.Colors.textPrimary, fontSize: 17.5, }]}>{'確認'}</RN.Text>
           </RN.TouchableOpacity>
-        </RN.SafeAreaView>
+        </RN.View>
       </RN.Modal>
     </RN.View>
   );
@@ -107,24 +136,34 @@ const styles = RN.StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 15,
-    width: '100%',
-    marginTop: 10,
+    margin: 10,
+    borderRadius: 10,
+    width: '30%',
   },
-  cleanFillter: {
-    flexDirection: 'row-reverse',
-    padding: 15,
-    width: '100%',
+  cleanFilter: {
+    marginHorizontal: 10,
   },
   itemContainer: {
     flexDirection: 'row',
     margin: 10,
     justifyContent: 'flex-start',
     alignItems: 'center',
+    width: '30%',
+    borderWidth: 1,
+    padding: 15,
+    borderRadius: 10
   },
   checkBoxText: {
     fontSize: 20,
     marginLeft: 10,
   },
+  listContainer: {
+    alignItems: 'flex-start',
+    justifyContent: 'center',
+    marginHorizontal: 10,
+    flexWrap: 'wrap',
+    padding: 10,
+  },
 });
 
-export default Fillter;
+export default FilterContent;

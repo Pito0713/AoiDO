@@ -176,12 +176,12 @@ const AddProductItem = () => {
             placeholder="商品價格"
             keyboardType="phone-pad"
           />
-          <RN.TouchableOpacity
+          {/* <RN.TouchableOpacity
             style={[styles.transferContainer, { backgroundColor: appCtx.Colors.primary, flex: 3 }]}
             onPress={() => navigation.navigate('transfer', { isGo: true })}
           >
             <RN.Text style={[{ color: appCtx.Colors.textPrimary }]}>{'換算'}</RN.Text>
-          </RN.TouchableOpacity>
+          </RN.TouchableOpacity> */}
         </RN.View>
         <RN.View >
           <RN.Text style={[, { color: appCtx.Colors.errorText, fontSize: 12 }]}>

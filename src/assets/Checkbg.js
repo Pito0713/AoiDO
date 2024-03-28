@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Svg, { Path } from 'react-native-svg';
-export const Checkbg = () => (
+export const CheckBG = () => (
   <Svg
     xmlns="http://www.w3.org/2000/svg"
     aria-hidden="true"

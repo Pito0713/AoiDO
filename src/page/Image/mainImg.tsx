@@ -5,7 +5,7 @@ import { AppContext } from '../../redux/AppContent';
 import Goback from '../../component/Goback'
 import ReminderText from '../../component/ReminderText';
 import TitleText from '../../component/TitleText';
-import { Checkbg, Cancel } from '../../assets';
+import { CheckBG, CancelCir } from '../../assets';
 import ImagePicker from '../../component/ImagePicker'
 import { useFocusEffect } from '@react-navigation/native';
 
@@ -158,7 +158,7 @@ const Content = () => {
                   style={{ margin: 10 }}
                   onPress={() => openModal(item._id)}
                 >
-                  <Cancel />
+                  <CancelCir />
                 </RN.TouchableOpacity>
                 <RN.TouchableOpacity
                   style={[
@@ -171,7 +171,7 @@ const Content = () => {
                     source={{ uri: `${item.img}` }}
                     style={{ width: '100%', height: '100%' }}
                     resizeMode="cover">
-                    {item.isActive ? <Checkbg
+                    {item.isActive ? <CheckBG
                     /> : <RN.View />}
                   </RN.ImageBackground>
                 </RN.TouchableOpacity>

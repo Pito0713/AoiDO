@@ -59,11 +59,11 @@ const SignInPage = () => {
     if (!['', null, undefined].includes(response?.data)) {
       dispatchHandler(response.data);
       // 加密
-      let ciphertext = CryptoJS.AES.encrypt(
-        formik.values.password,
-        APP_SECRCT_KEY,
-      ).toString();
-      dispatch(registerActions.SET_PASSWORD(ciphertext));
+      // let ciphertext = CryptoJS.AES.encrypt(
+      //   formik.values.password,
+      //   APP_SECRCT_KEY,
+      // ).toString();
+      // dispatch(registerActions.SET_PASSWORD(ciphertext));
     }
     appCtx.setLoading(false);
   };

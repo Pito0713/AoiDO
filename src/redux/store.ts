@@ -9,7 +9,7 @@ type AppDispatch = typeof store.dispatch
 interface State {
   token: string | undefined | null,
   account: string,
-  password: string,
+  // password: string,
   rememberInfo: boolean,
   permission: string,
   id: string,
@@ -26,7 +26,7 @@ interface action {
 const initialState = {
   token: '',
   account: '',
-  password: '',
+  // password: '',
   rememberInfo: false,
   permission: ''
 } as State
@@ -51,13 +51,13 @@ const tokenMiddleWare = (store: any) => (next: any) => (action: action) => {
   next(action);
 }
 
-const passwordMiddleWare = (store: any) => (next: any) => (action: action) => {
-  if (action.type === 'register/SET_PASSWORD') {
-    let TextRes = reduxText(action)
-    console.log(TextRes)
-  }
-  next(action);
-}
+// const passwordMiddleWare = (store: any) => (next: any) => (action: action) => {
+//   if (action.type === 'register/SET_PASSWORD') {
+//     let TextRes = reduxText(action)
+//     console.log(TextRes)
+//   }
+//   next(action);
+// }
 const rememberInfoMiddleWare = (store: any) => (next: any) => (action: action) => {
   if (action.type === 'register/SET_REMEMBERINFO') {
     let TextRes = reduxText(action)
@@ -88,9 +88,9 @@ const registerSlice = createSlice({
     SET_ACCOUNT(state, action) {
       state.account = action.payload;
     },
-    SET_PASSWORD(state, action) {
-      state.password = action.payload;
-    },
+    // SET_PASSWORD(state, action) {
+    //   state.password = action.payload;
+    // },
     SET_TOKEN(state, action) {
       state.token = action.payload;
     },
@@ -111,7 +111,14 @@ const persistedReducer = persistReducer(persistConfig, registerSlice.reducer);
 
 const store = configureStore({
   reducer: persistedReducer,
-  middleware: [accountMiddleWare, passwordMiddleWare, tokenMiddleWare, rememberInfoMiddleWare, permissionMiddleWare, IdMiddleWare],
+  middleware: [
+    accountMiddleWare, 
+    tokenMiddleWare,
+    rememberInfoMiddleWare,
+    permissionMiddleWare,
+    IdMiddleWare,
+    //passwordMiddleWare
+  ],
 })
 
 const persistor = persistStore(store)

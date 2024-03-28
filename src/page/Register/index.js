@@ -1,12 +1,11 @@
 import React from 'react';
 import * as RN from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 
-import {AppContext} from '../../redux/AppContent';
-import {useFormik} from 'formik';
+import { AppContext } from '../../redux/AppContent';
+import { useFormik } from 'formik';
 import service from '../Service/service';
 import Goback from '../../component/Goback';
-import ScrollViewComponent from '../../component/ScrollViewComponent';
 
 const Content = () => {
   const appCtx = React.useContext(AppContext);
@@ -73,11 +72,11 @@ const Content = () => {
           onChangeText={formik.handleChange('account')}
           style={[
             styles.input,
-            {backgroundColor: appCtx.Colors.inputContainer},
+            { backgroundColor: appCtx.Colors.inputContainer },
           ]}
         />
         <RN.View style={styles.inputText}>
-          <RN.Text style={[{color: appCtx.Colors.errorText}]}>
+          <RN.Text style={[{ color: appCtx.Colors.errorText }]}>
             {formik.errors.account}
           </RN.Text>
         </RN.View>
@@ -96,11 +95,11 @@ const Content = () => {
             secureTextEntry={true}
             style={[
               styles.input,
-              {backgroundColor: appCtx.Colors.inputContainer},
+              { backgroundColor: appCtx.Colors.inputContainer },
             ]}
           />
           <RN.View style={styles.inputText}>
-            <RN.Text style={[, {color: appCtx.Colors.errorText}]}>
+            <RN.Text style={[, { color: appCtx.Colors.errorText }]}>
               {formik.errors.password}
             </RN.Text>
           </RN.View>
@@ -120,11 +119,11 @@ const Content = () => {
             secureTextEntry={true}
             style={[
               styles.input,
-              {backgroundColor: appCtx.Colors.inputContainer},
+              { backgroundColor: appCtx.Colors.inputContainer },
             ]}
           />
           <RN.View style={styles.inputText}>
-            <RN.Text style={[, {color: appCtx.Colors.errorText}]}>
+            <RN.Text style={[, { color: appCtx.Colors.errorText }]}>
               {formik.errors.confirmPassword}
             </RN.Text>
           </RN.View>
@@ -136,10 +135,10 @@ const Content = () => {
         <RN.View
           style={[
             styles.registerText,
-            {backgroundColor: appCtx.Colors.primary},
+            { backgroundColor: appCtx.Colors.primary },
           ]}>
           <RN.Text
-            style={[{color: appCtx.Colors.registerText, textAlign: 'center'}]}>
+            style={[{ color: appCtx.Colors.registerText, textAlign: 'center' }]}>
             註冊
           </RN.Text>
         </RN.View>
@@ -150,10 +149,12 @@ const Content = () => {
 
 const RegisterPage = () => {
   return (
-    <RN.SafeAreaView style={styles.container}>
+    <RN.View style={styles.container}>
       <Goback />
-      <ScrollViewComponent item={Content} />
-    </RN.SafeAreaView>
+      <RN.ScrollView>
+        <Content />
+      </RN.ScrollView>
+    </RN.View>
   );
 };
 const windowHeight = RN.Dimensions.get('window').height;

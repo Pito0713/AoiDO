@@ -100,10 +100,7 @@ const Content = () => {
           styles.listContainer,
           { borderColor: appCtx.Colors.Platform.borderPrimary },
         ]}>
-        <ReminderText text={'* 預設費用無法刪除'} />
-        <ReminderText text={'* 點擊X 可刪除圖片'} />
-        <ReminderText text={'* 點擊項目, 可啟用平台匯率'} />
-        <ReminderText text={'* 點擊+ 可新增匯率項目'} />
+        <ReminderText text={'* 管理員可調整權限'} />
       </RN.View>
       {userList.map((item, index) => {
         return (

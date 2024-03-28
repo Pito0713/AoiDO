@@ -1,15 +1,15 @@
 import React from 'react';
 import * as RN from 'react-native';
-import {useFormik} from 'formik';
-import {useNavigation} from '@react-navigation/native';
+import { useFormik } from 'formik';
+import { useNavigation } from '@react-navigation/native';
 import CryptoJS from 'react-native-crypto-js';
 
-import {AppContext} from '../../redux/AppContent';
+import { AppContext } from '../../redux/AppContent';
 import service from '../Service/service';
 import Goback from '../../component/Goback';
-import {APP_SECRCT_KEY} from '../../env/config';
+import { APP_SECRCT_KEY } from '../../env/config';
 import {
-  registerActions,
+  // registerActions,
   useAppSelector,
   useAppDispatch,
 } from '../../redux/store';
@@ -71,11 +71,11 @@ const Content = () => {
     const response = await service.postHandPassWord(submitData);
     if (response?.status === 'success') {
       // 加密
-      let encryptValue = CryptoJS.AES.encrypt(
-        values.newPassWord,
-        APP_SECRCT_KEY,
-      ).toString();
-      dispatch(registerActions.SET_PASSWORD(encryptValue));
+      // let encryptValue = CryptoJS.AES.encrypt(
+      //   values.newPassWord,
+      //   APP_SECRCT_KEY,
+      // ).toString();
+      // dispatch(registerActions.SET_PASSWORD(encryptValue));
 
       navigation.goBack();
     }
@@ -86,7 +86,7 @@ const Content = () => {
     <RN.View style={styles.itemContainer}>
       <RN.View style={styles.inputContainer}>
         <RN.View style={styles.inputText}>
-          <RN.Text>舊密碼</RN.Text>
+          <RN.Text>{'舊密碼'}</RN.Text>
         </RN.View>
         <RN.TextInput
           placeholder={'舊密碼'}
@@ -96,18 +96,18 @@ const Content = () => {
           onChangeText={formik.handleChange('oldPassWord')}
           style={[
             styles.input,
-            {backgroundColor: appCtx.Colors.inputContainer},
+            { backgroundColor: appCtx.Colors.inputContainer },
           ]}
         />
         <RN.View style={styles.inputText}>
-          <RN.Text style={[, {color: appCtx.Colors.errorText}]}>
+          <RN.Text style={[, { color: appCtx.Colors.errorText }]}>
             {formik.errors.oldPassWord}
           </RN.Text>
         </RN.View>
       </RN.View>
       <RN.View style={styles.inputContainer}>
         <RN.View style={styles.inputText}>
-          <RN.Text>新的密碼</RN.Text>
+          <RN.Text>{'新的密碼'}</RN.Text>
         </RN.View>
         <RN.TextInput
           placeholder={'新的密碼'}
@@ -117,18 +117,18 @@ const Content = () => {
           onChangeText={formik.handleChange('newPassWord')}
           style={[
             styles.input,
-            {backgroundColor: appCtx.Colors.inputContainer},
+            { backgroundColor: appCtx.Colors.inputContainer },
           ]}
         />
         <RN.View style={styles.inputText}>
-          <RN.Text style={[{color: appCtx.Colors.errorText}]}>
+          <RN.Text style={[{ color: appCtx.Colors.errorText }]}>
             {formik.errors.newPassWord}
           </RN.Text>
         </RN.View>
       </RN.View>
       <RN.View style={styles.inputContainer}>
         <RN.View style={styles.inputText}>
-          <RN.Text>重新確認新的密碼</RN.Text>
+          <RN.Text>{'重新確認新的密碼'}</RN.Text>
         </RN.View>
         <RN.TextInput
           placeholder={'重新確認新的密碼'}
@@ -138,11 +138,11 @@ const Content = () => {
           onChangeText={formik.handleChange('newPassWordAgain')}
           style={[
             styles.input,
-            {backgroundColor: appCtx.Colors.inputContainer},
+            { backgroundColor: appCtx.Colors.inputContainer },
           ]}
         />
         <RN.View style={styles.inputText}>
-          <RN.Text style={[{color: appCtx.Colors.errorText}]}>
+          <RN.Text style={[{ color: appCtx.Colors.errorText }]}>
             {formik.errors.newPassWordAgain}
           </RN.Text>
         </RN.View>
@@ -154,11 +154,11 @@ const Content = () => {
         <RN.View
           style={[
             styles.registerText,
-            {backgroundColor: appCtx.Colors.primary},
+            { backgroundColor: appCtx.Colors.primary },
           ]}>
           <RN.Text
-            style={[{color: appCtx.Colors.registerText, textAlign: 'center'}]}>
-            修改資料
+            style={[{ color: appCtx.Colors.registerText, textAlign: 'center' }]}>
+            {"修改資料"}
           </RN.Text>
         </RN.View>
       </RN.TouchableOpacity>

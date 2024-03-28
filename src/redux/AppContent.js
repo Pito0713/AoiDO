@@ -12,6 +12,7 @@ const Colors = {
   errorText: '#bf0000',
   textPrimary: '#4d4537',
   titleBG: '#e0e0e0',
+
   // product
   product: {
     cardContainer: '#ffc852',
@@ -36,8 +37,8 @@ const Colors = {
 
   // Transfer
   Transfer: {
-    cardTitle: '#f2c274',
-    cardTitleText: '#453f36',
+    Title: '#f2c274',
+    TitleText: '#453f36',
   },
 
   // Setting

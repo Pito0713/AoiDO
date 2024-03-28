@@ -6,8 +6,7 @@ import service from '../Service/service';
 import { AppContext } from '../../redux/AppContent';
 import Goback from '../../component/Goback';
 import ReminderText from '../../component/ReminderText';
-import { Plus, Cancel } from '../../assets';
-import Modal from '../../component/Modal';
+import { Plus, CancelCir } from '../../assets';
 
 const Content = () => {
   const appCtx = React.useContext(AppContext);
@@ -98,7 +97,7 @@ const Content = () => {
                 {item.token !== '1' && <RN.TouchableOpacity
                   style={{ margin: 10 }}
                   onPress={() => openModal(item._id)}>
-                  <Cancel />
+                  <CancelCir />
                 </RN.TouchableOpacity>}
                 <RN.TouchableOpacity
                   style={styles.itemContainer}
